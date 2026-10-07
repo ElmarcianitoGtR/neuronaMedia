@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev:reports": "pnpm --filter @reports/quality-hub dev",
+    "dev:slave-frontend": "pnpm --filter frontend start:dev",
+    "dev:slave-backend": "pnpm --filter backend start:dev",
+    "dev:slides": "pnpm --filter slides dev"
+  }
+}
