@@ -57,7 +57,7 @@ services:
     container_name: ms-frontend
     profiles: ["master-slave-dev", "full"]
     environment:
-      - VITE_TENANT_NAME=${TENANT_NAME:-CANACINTRA CORP}
+      - VITE_TENANT_NAME=${TENANT_NAME:-NEURONA Y MEDIA}
       - VITE_TENANT_LOGO=${TENANT_LOGO:-}
       - NODE_ENV=development
     ports:

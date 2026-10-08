@@ -1,5 +1,6 @@
 ---
 theme: default
+favicon: /favicon.svg
 title: Reto Mitsubishi - Captura Única y Análisis 8D
 info: |
   ## Reto Mitsubishi
