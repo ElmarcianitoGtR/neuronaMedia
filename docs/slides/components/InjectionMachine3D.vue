@@ -166,8 +166,7 @@ onBeforeUnmount(() => {
   <div class="card-clean p-3 flex flex-col items-center justify-between relative w-full h-full">
     <div class="w-full flex items-center justify-between text-[10px] font-mono mb-1">
       <span class="flex items-center gap-1.5 text-amber-400 font-semibold">
-        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-        INYECTORA 3D
+
       </span>
     </div>
     <div 

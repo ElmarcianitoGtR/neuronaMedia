@@ -13,22 +13,21 @@ transition: slide-left
 mdc: true
 ---
 
-<!-- ========================================== -->
-<!-- SLIDE 1: PORTADA CON MARCO CIRCULAR PARA FOTO -->
-<!-- ========================================== -->
-
 <div class="h-full flex items-center justify-between px-6 pb-12">
   <div class="flex-1 pr-6 text-left">
-    <h2 class="text-lg font-medium text-slate-300 mb-6">
-      Sistema Digital de Captura Única para Análisis Causa Raíz (8D) y Monitoreo en Vivo
-    </h2>
+    <TypeWriter/>
+    <h1 class="text-5xl md:text-6xl font-black text-slate-100 tracking-tight mb-6">
+      <span class="block text-2xl md:text-3xl font-semibold text-slate-400 mt-4 tracking-normal">
+        Para Análisis Causa Raíz (8D) y Monitoreo en Vivo
+      </span>
+    </h1>
     <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 mb-6">
       <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Reto Mitsubishi</span>
       <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> 8D • Ishikawa • 5 Porqués</span>
       <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Gatillos IoT & OEE</span>
     </div>
     <div class="text-xs text-slate-400 border-t border-slate-800 pt-3">
-      Presentado por: <strong class="text-slate-200">Neurona y Media</strong>
+      <strong class="text-slate-200">Neurona y Media</strong>
     </div>
   </div>
 
@@ -51,6 +50,7 @@ mdc: true
   </div>
 </div>
 
+
 <div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
   <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
 </div>
@@ -61,7 +61,7 @@ transition: slide-left
 
 # El Problema: Captura Redundante y Retraso en Análisis 8D
 
-<p class="text-slate-400 text-sm mb-3">La captura manual de fallas en inyección dispersa evidencias y demora días la resolución de causa raíz:</p>
+<p class="text-slate-400 text-sm mb-3">La captura manual de fallas dispersa evidencias y demora días la resolución de causa raíz:</p>
 
 <div class="grid grid-cols-5 gap-3.5 items-start">
   <div class="col-span-3 space-y-2">
@@ -180,36 +180,63 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
 
 ---
 transition: slide-left
-layout: end
-class: text-center
+layout: default
+class: final-slide-clean relative overflow-hidden
 ---
 
-<div class="h-full flex flex-col justify-center items-center pb-12">
-
-  <h1 class="text-4xl font-extrabold text-white mb-3">
-    Captura única, calidad inmediata, cero recapturas.
-  </h1>
-
-  <p class="text-slate-300 text-sm max-w-lg mb-8">
-    Integrando gatillos en piso con la generación automática de 8D, Ishikawa y control visual en tiempo real.
-  </p>
-
-  <div class="card-clean p-4 max-w-md w-full text-left">
-    <div class="text-xs font-mono text-cyan-400 mb-1">ESTADO DEL MVP:</div>
-    <div class="text-xs text-slate-300 mb-3 space-y-1">
-      <div>Captura digital única y contexto de falla</div>
-      <div>Alineación de formatos 8D, Ishikawa y 5 Porqués</div>
-      <div>Gatillos IoT en máquina/molde y dashboards OEE derivados</div>
+<div class="grid grid-cols-2 gap-6 h-[460px] items-stretch relative z-10 px-6 py-2">
+  <!-- Columna Izquierda: Glass Panel con toda la información -->
+  <div class="card-clean p-6 flex flex-col justify-between h-full bg-slate-900/70 backdrop-blur-xl border border-slate-700/60 rounded-2xl shadow-2xl relative overflow-hidden text-left">
+    <div class="flex items-center justify-between text-xs font-mono text-cyan-400">
+      <span class="flex items-center gap-2 font-bold tracking-wide">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        MVP
+      </span>
     </div>
-    <div class="text-center font-bold text-sm text-white pt-2 border-t border-slate-800">
-      ¿Preguntas o comentarios?
+    <div>
+      <h1 class="text-3xl font-extrabold text-white leading-tight mb-2 drop-shadow-md">
+        Captura única, calidad inmediata, <span class="text-emerald-400">cero recapturas</span>.
+      </h1>
+      <p class="text-slate-300 text-xs leading-relaxed">
+        Integrando gatillos en piso con la generación automática de formatos 8D, Ishikawa y control visual en tiempo real.
+      </p>
     </div>
+    <div class="space-y-2 py-3 border-y border-slate-800/80 text-xs text-slate-200">
+      <div class="flex items-center gap-2.5">
+        <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">✓</span>
+        <span>Captura digital única de evidencias y contexto de falla</span>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">✓</span>
+        <span>Alimentación automática de formatos 8D, Ishikawa y 5 Porqués</span>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">✓</span>
+        <span>Gatillos IoT y dashboards OEE derivados</span>
+      </div>
+    </div>
+    <div class="flex items-center justify-between pt-1 text-xs">
+    </div>
+  </div>
+
+  <!-- Columna Derecha: Modelo 3D con paquetes ascendentes -->
+  <div class="h-full w-full relative flex items-center justify-center overflow-hidden rounded-2xl bg-slate-900/30 backdrop-blur-md border border-slate-800/50 shadow-2xl">
+    <div class="absolute top-3 right-4 z-10 flex items-center gap-1.5 text-[10px] font-mono text-cyan-400/80 pointer-events-none">
+      <span></span>
+    </div>
+    <Paquetes3D></Paquetes3D>
   </div>
 </div>
 
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+.final-slide-clean,
+.slidev-layout.final-slide-clean {
+  background-image: none !important;
+  background: #0b0f17 !important;
+  background-color: #0b0f17 !important;
+}
 
 .slidev-layout {
   font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
