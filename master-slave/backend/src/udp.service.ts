@@ -21,11 +21,11 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
     this.server = dgram.createSocket('udp4');
 
     this.server.on('error', (err) => {
-      this.logger.error(\`UDP Server error:\\n\${err.stack}\`);
+      this.logger.error(`UDP Server error:\n${err.stack}`);
       this.server.close();
     });
 
-    this.server.on('message', (msg, rinfo) => {
+    this.server.on('message', (msg) => {
       // Expected payload: 9 uint16 elements = 18 bytes
       if (msg.length >= 18) {
         this.processNewData(msg);
@@ -34,7 +34,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
 
     this.server.on('listening', () => {
       const address = this.server.address();
-      this.logger.log(\`UDP Server listening on \${address.address}:\${address.port}\`);
+      this.logger.log(`UDP Server listening on ${address.address}:${address.port}`);
     });
 
     // Start listening on port 4000
@@ -42,7 +42,9 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
   }
 
   onModuleDestroy() {
-    this.server.close();
+    if (this.server) {
+      this.server.close();
+    }
   }
 
   async processNewData(msg: Buffer) {
@@ -78,7 +80,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       const oee = totalPiezas > 0 ? (piezasOk / totalPiezas) * 100 : 0;
       
       const telemetry = {
-        maquinaId: \`M-\${maquinaId.toString().padStart(2, '0')}\`,
+        maquinaId: `M-${maquinaId.toString().padStart(2, '0')}`,
         etapa,
         falla,
         piezasOk,
@@ -95,22 +97,19 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
 
       // 2. Log Alert to Database if there's a new fault
       if (falla !== 0 && falla !== this.lastFalla) {
-        this.logger.warn(\`New Andon Alert detected! Machine: \${telemetry.maquinaId}, Fault Code: \${falla}\`);
+        this.logger.warn(`New Andon Alert detected! Machine: ${telemetry.maquinaId}, Fault Code: ${falla}`);
         
         const newAlert = this.alertRepository.create({
-          machineId: telemetry.maquinaId,
-          faultCode: falla.toString(),
-          faultDescription: falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)',
-          temperatureAtFault: telemetry.temp,
-          pressureAtFault: telemetry.presion,
+          lineName: telemetry.maquinaId,
           status: 'OPEN',
+          message: `Código ${falla}: ${falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)'} (Temp: ${telemetry.temp}°C, Presión: ${telemetry.presion} bar)`,
         });
         
         await this.alertRepository.save(newAlert);
       }
       this.lastFalla = falla;
-    } catch (err) {
-      this.logger.error(\`Error parsing UDP payload: \${err.message}\`);
+    } catch (err: any) {
+      this.logger.error(`Error parsing UDP payload: ${err?.message}`);
     }
   }
 }
