@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AndonAlert } from './andon-alert.entity.js';
+import { TelemetryGateway } from './telemetry.gateway.js';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { AndonAlert } from './andon-alert.entity.js';
     TypeOrmModule.forFeature([AndonAlert]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TelemetryGateway],
 })
 export class AppModule {}
