@@ -91,11 +91,12 @@ function AndonBoard() {
         body: JSON.stringify(mockIncidencia)
       });
       if (!response.ok) throw new Error('API Error');
+      const isHtmlFallback = response.headers.get('content-type')?.includes('text/html');
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Reporte-${lineName}.pdf`;
+      a.download = isHtmlFallback ? \`Reporte-\${lineName}.html\` : \`Reporte-\${lineName}.pdf\`;
       document.body.appendChild(a);
       a.click();
       a.remove();
