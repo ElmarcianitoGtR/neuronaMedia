@@ -239,7 +239,8 @@ function Dashboard() {
             trendData: data.trendData,
             defectsData: data.defectsData,
             downtimeData: data.downtimeData,
-            latestAlert: data.latestAlert
+            latestAlert: data.latestAlert,
+            lines: data.lines
           });
           if (!isConnected && data.latestTelemetry) setLiveData(data.latestTelemetry);
           setIsDbLoaded(true);
