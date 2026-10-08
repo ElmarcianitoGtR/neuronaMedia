@@ -184,7 +184,7 @@ function Dashboard() {
           <div className="relative w-64 h-32 mt-8 flex flex-col items-center justify-end">
             <svg viewBox="0 0 200 100" className="absolute top-0 left-0 w-full h-full overflow-visible">
               {/* Background Red (85% - 100%) */}
-              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" strokeWidth="20" strokeLinecap="round" />
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" strokeWidth="20" strokeLinecap="butt" />
               
               {/* Yellow Zone (Prod% - 85%) */}
               <path 
@@ -192,7 +192,7 @@ function Dashboard() {
                 fill="none" 
                 stroke="#eab308" 
                 strokeWidth="20" 
-                strokeLinecap="round"
+                strokeLinecap="butt"
                 strokeDasharray={251.2} 
                 strokeDashoffset={251.2 - 0.85 * 251.2}
               />
@@ -203,7 +203,7 @@ function Dashboard() {
                 fill="none" 
                 stroke="#14b8a6" 
                 strokeWidth="20" 
-                strokeLinecap="round"
+                strokeLinecap="butt"
                 strokeDasharray={251.2} 
                 strokeDashoffset={251.2 - (Math.min(liveData.productivity || 0, 100) / 100) * 251.2}
                 className="transition-all duration-700 ease-out"
