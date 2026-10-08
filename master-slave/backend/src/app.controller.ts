@@ -31,50 +31,26 @@ export class AppController {
       fill: ['#64748b', '#475569', '#334155'][i % 3]
     }));
 
-    // Generate trend data dynamically (since we just started DB, mock the last 6 days + today from DB)
-    const [todayLog] = await this.telemetryRepository.find({ order: { id: 'DESC' }, take: 1 });
-    const todayProd = todayLog ? todayLog.actualUnits : 0;
-    
-    const trendData = [
-      { time: 'Lun', produccion: 5200 }, { time: 'Mar', produccion: 6100 },
-      { time: 'Mie', produccion: 5800 }, { time: 'Jue', produccion: 7400 },
-      { time: 'Vie', produccion: 7100 }, { time: 'Sab', produccion: 8500 },
-      { time: 'Hoy', produccion: todayProd > 0 ? todayProd : 1200 },
-    ];
-
-    // Andon Lines
     // Andon Lines from Database
-
     const distinctMachines = await this.telemetryRepository
-
       .createQueryBuilder("t")
-
       .select("t.machineId", "machineId")
-
       .addSelect("MAX(t.id)", "maxId")
-
       .groupBy("t.machineId")
-
       .getRawMany();
 
-
-
+    let todayProd = 0;
     const lines = [];
 
     for (const m of distinctMachines) {
-
       const log = await this.telemetryRepository.findOne({ where: { id: m.maxId } });
-
+      if (log) todayProd += log.actualUnits || 0;
+      
       const machineAlerts = alerts.filter((a: any) => a.lineName === m.machineId && a.status === "OPEN");
-
       const isDanger = machineAlerts.length > 0;
-
       lines.push({
-
         id: m.machineId,
-
         name: m.machineId,
-
         status: isDanger ? "danger" : ((log?.productivity || 0) > 80 ? "success" : "warning"),
         message: isDanger ? machineAlerts[0].message : "Operando Nominal",
         speed: `${log?.actualUnits || 0} u/h`,
@@ -82,8 +58,14 @@ export class AppController {
         actualUnits: log?.actualUnits || 0,
         targetUnits: log?.targetUnits || 1500
       });
-
     }
+
+    const trendData = [
+      { time: 'Lun', produccion: 5200 }, { time: 'Mar', produccion: 6100 },
+      { time: 'Mie', produccion: 5800 }, { time: 'Jue', produccion: 7400 },
+      { time: 'Vie', produccion: 7100 }, { time: 'Sab', produccion: 8500 },
+      { time: 'Hoy', produccion: todayProd > 0 ? todayProd : 1200 },
+    ];
 
 
 
@@ -109,6 +91,8 @@ export class AppController {
     });
 
 
+
+    const [todayLog] = await this.telemetryRepository.find({ order: { id: 'DESC' }, take: 1 });
 
     return {
       latestAlert: alerts.length > 0 ? alerts[0] : null,

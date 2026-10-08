@@ -262,29 +262,21 @@ function Dashboard() {
 
   const { trendData, defectsData, downtimeData, latestAlert, lines = [] } = dbData;
 
-  const displayTrendData = [...trendData];
-  if (displayTrendData.length > 0) {
-    displayTrendData[displayTrendData.length - 1] = { 
-      ...displayTrendData[displayTrendData.length - 1], 
-      produccion: liveData.actualUnits || 0 
-    };
-  }
-
-
   // Calculate total productivity
   let totalTarget = 0;
   let totalActual = 0;
-  
-  const machinesArray = Object.values(liveMachines);
-  if (machinesArray.length > 0) {
-    machinesArray.forEach((m: any) => {
-      totalTarget += m.targetUnits || 1500;
-      totalActual += m.actualUnits || 0;
-    });
-  } else if (lines.length > 0) {
-    lines.forEach((l: any) => {
-      totalTarget += l.targetUnits || 1500;
-      totalActual += l.actualUnits || 0;
+
+  const allMachineNames = new Set([
+    ...lines.map((l: any) => l.name),
+    ...Object.keys(liveMachines)
+  ]);
+
+  if (allMachineNames.size > 0) {
+    allMachineNames.forEach(name => {
+      const live = liveMachines[name];
+      const db = lines.find((l: any) => l.name === name);
+      totalTarget += live?.targetUnits || db?.targetUnits || 1500;
+      totalActual += live?.actualUnits || db?.actualUnits || 0;
     });
   } else {
     totalTarget = liveData.targetUnits || 0;
@@ -292,6 +284,14 @@ function Dashboard() {
   }
   
   const totalProductivity = totalTarget > 0 ? parseFloat(((totalActual / totalTarget) * 100).toFixed(1)) : 0;
+
+  const displayTrendData = [...trendData];
+  if (displayTrendData.length > 0) {
+    displayTrendData[displayTrendData.length - 1] = { 
+      ...displayTrendData[displayTrendData.length - 1], 
+      produccion: totalActual
+    };
+  }
 
   const DbOverlay = () => !isDbLoaded && (
     <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
