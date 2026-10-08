@@ -1,5 +1,6 @@
 ---
 import { getIncidenteById } from '../../lib/memgraph';
+import { censorName } from '../../lib/utils';
 import IshikawaDiagram from '../../components/IshikawaDiagram.astro';
 import '../../styles/global.css';
 
@@ -304,7 +305,7 @@ const evidencias = analisis?.evidencias || [];
                 <td class="py-3 px-4 font-mono font-bold text-teal-400">{act.disciplina}</td>
                 <td class="py-3 px-4 text-slate-300">{act.tipo}</td>
                 <td class="py-3 px-4 text-slate-300">{act.descripcion}</td>
-                <td class="py-3 px-4 text-slate-400">{act.responsable}</td>
+                <td class="py-3 px-4 text-slate-400">{censorName(act.responsable)}</td>
                 <td class="py-3 px-4 text-center">
                   <span class={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
                     act.estado === 'Completada'

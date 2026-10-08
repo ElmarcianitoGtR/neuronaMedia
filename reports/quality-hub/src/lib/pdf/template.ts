@@ -1,4 +1,5 @@
 import type { Incidencia, IshikawaFactor } from '../types';
+import { censorName } from '../utils';
 
 function wrapSvgText(text: string, maxLineLen: number, maxLines: number = 4): string[] {
   const words = text.split(/\s+/);
@@ -605,7 +606,7 @@ export function renderQualityReportHtml(
         </div>
         <div class="meta-item">
           <div class="meta-label">Auditor Responsable</div>
-          <div class="meta-value">${incidente.validadoPor || 'Equipo de Calidad en Planta'}</div>
+          <div class="meta-value">${censorName(incidente.validadoPor) || 'Equipo de Calidad en Planta'}</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Código de Trazabilidad</div>
@@ -770,7 +771,7 @@ export function renderQualityReportHtml(
               <td><strong style="color: #0f766e;">${a.disciplina}</strong></td>
               <td><strong>${a.tipo}</strong></td>
               <td>${a.descripcion}</td>
-              <td>${a.responsable}</td>
+              <td>${censorName(a.responsable)}</td>
               <td style="text-align: center;">
                 <span class="badge-pill" style="background: ${a.estado === 'Completada' ? '#dcfce7' : a.estado === 'En Proceso' ? '#fef3c7' : '#f1f5f9'}; color: ${a.estado === 'Completada' ? '#166534' : a.estado === 'En Proceso' ? '#92400e' : '#475569'}; border: 1px solid ${a.estado === 'Completada' ? '#86efac' : a.estado === 'En Proceso' ? '#fcd34d' : '#cbd5e1'};">
                   ${a.estado}
@@ -793,7 +794,7 @@ export function renderQualityReportHtml(
         <div class="cert-grid">
           <div class="cert-col">
             <div class="sig-line">
-              ${incidente.validadoPor || 'ING. AUDITOR DE CALIDAD RESPONSABLE'}
+              ${censorName(incidente.validadoPor) || 'ING. AUDITOR DE CALIDAD RESPONSABLE'}
             </div>
             <div class="sig-meta">Auditor de Calidad en Planta // Neurona y Media</div>
             <div class="sig-meta">Fecha de Validación: ${incidente.fechaValidacion ? new Date(incidente.fechaValidacion).toLocaleDateString('es-MX') : new Date().toLocaleDateString('es-MX')}</div>
