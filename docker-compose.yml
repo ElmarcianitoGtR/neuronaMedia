@@ -76,6 +76,7 @@ services:
       - NODE_ENV=development
       - PDF_RENDERER_URL=http://pdf-renderer:3000
       - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GRAPH_DB_URI=bolt://graph-db:7687
     ports:
       - "4321:4321"
     volumes:
