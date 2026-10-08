@@ -88,12 +88,27 @@ export class AppController {
 
 
     // Downtime summary (stacked bar: mech, elec, ops)
-    const downtimeData = [
-      { name: 'L1', mech: (defectCounts['Mecánica'] || 0), elec: (defectCounts['Termal'] || 0), ops: (defectCounts['Presión'] || 0) },
-      { name: 'L2', mech: 15, elec: 25, ops: 10 },
-      { name: 'L3', mech: 30, elec: 5, ops: 15 },
-      { name: 'L4', mech: 10, elec: 15, ops: 20 },
-    ];
+    const downtimeData = distinctMachines.map(m => {
+
+      const machineAlerts = alerts.filter(a => a.lineName === m.machineId);
+
+      let mech = 0, elec = 0, ops = 0;
+
+      machineAlerts.forEach(a => {
+
+        if (a.message.includes("Térmica")) elec++;
+
+        else if (a.message.includes("Presión")) ops++;
+
+        else mech++;
+
+      });
+
+      return { name: m.machineId, mech, elec, ops };
+
+    });
+
+
 
     return {
       latestAlert: alerts.length > 0 ? alerts[0] : null,
