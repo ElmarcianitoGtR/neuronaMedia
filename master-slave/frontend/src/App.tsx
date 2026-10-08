@@ -153,10 +153,10 @@ function AndonBoard() {
 
 function Dashboard() {
   const [liveData, setLiveData] = useState<any>({
-    oee: '69.2',
-    productivity: 73,
-    targetUnits: 1284,
-    actualUnits: 937
+    oee: 0,
+    productivity: 0,
+    targetUnits: 0,
+    actualUnits: 0
   });
 
   const [dbData, setDbData] = useState<any>({
@@ -165,9 +165,12 @@ function Dashboard() {
     downtimeData: []
   });
 
+  const [isConnected, setIsConnected] = useState(false);
+
   useEffect(() => {
     socket.on('telemetry_update', (data) => {
       setLiveData(data);
+      setIsConnected(true);
     });
     
     const loadDb = () => {
@@ -198,6 +201,16 @@ function Dashboard() {
       ...displayTrendData[displayTrendData.length - 1], 
       produccion: liveData.actualUnits || 0 
     };
+  }
+
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full min-h-[500px]">
+        <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mb-6"></div>
+        <h2 className="text-xl font-bold text-slate-200 tracking-widest uppercase animate-pulse">Esperando Telemetría...</h2>
+        <p className="text-slate-400 mt-2 text-sm">Estableciendo enlace de datos con Controlador / MATLAB Simulink</p>
+      </div>
+    );
   }
 
   return (
