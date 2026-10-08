@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import './App.css';
 
 function App() {
@@ -64,6 +65,18 @@ function AndonBoard() {
 }
 
 function Dashboard() {
+  // Mock data for production over time
+  const data = [
+    { time: '08:00', produccion: 120, scrap: 5, meta: 150 },
+    { time: '09:00', produccion: 250, scrap: 12, meta: 300 },
+    { time: '10:00', produccion: 410, scrap: 18, meta: 450 },
+    { time: '11:00', produccion: 580, scrap: 22, meta: 600 },
+    { time: '12:00', produccion: 720, scrap: 30, meta: 750 },
+    { time: '13:00', produccion: 850, scrap: 35, meta: 900 },
+    { time: '14:00', produccion: 1020, scrap: 40, meta: 1050 },
+    { time: '15:00', produccion: 1240, scrap: 45, meta: 1200 },
+  ];
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Métricas de Producción</h2>
@@ -82,8 +95,29 @@ function Dashboard() {
         </div>
       </div>
       
-      <div className="mt-8 bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-64 flex items-center justify-center">
-        <p className="text-slate-400 italic">Espacio reservado para gráfico de avance (Recharts)</p>
+      <div className="mt-8 bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-96">
+        <h3 className="text-lg font-semibold text-slate-700 mb-4">Avance de Producción vs Meta</h3>
+        <ResponsiveContainer width="100%" height="90%">
+          <AreaChart
+            data={data}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="colorProd" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="time" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="meta" stroke="#94a3b8" strokeDasharray="5 5" name="Meta Planeada" />
+            <Area type="monotone" dataKey="produccion" stroke="#1d4ed8" fillOpacity={1} fill="url(#colorProd)" name="Piezas Producidas" />
+            <Line type="monotone" dataKey="scrap" stroke="#dc2626" name="Scrap" strokeWidth={2} />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
