@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AndonAlert } from './andon-alert.entity.js';
+import { TelemetryLog } from './telemetry.entity.js';
 import { TelemetryGateway } from './telemetry.gateway.js';
 import { UdpService } from './udp.service.js';
 import { TelemetrySimulatorService } from './telemetry-simulator.service.js';
@@ -16,10 +17,10 @@ import { TelemetrySimulatorService } from './telemetry-simulator.service.js';
       username: 'ms_user',
       password: 'ms_password',
       database: 'ms_database',
-      entities: [AndonAlert],
+      entities: [AndonAlert, TelemetryLog],
       synchronize: true, // auto-creates tables (only for development)
     }),
-    TypeOrmModule.forFeature([AndonAlert]),
+    TypeOrmModule.forFeature([AndonAlert, TelemetryLog]),
   ],
   controllers: [AppController],
   providers: [AppService, TelemetryGateway, UdpService, TelemetrySimulatorService],

@@ -3,6 +3,7 @@ import * as dgram from 'dgram';
 import { TelemetryGateway } from './telemetry.gateway.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AndonAlert } from './andon-alert.entity.js';
+import { TelemetryLog } from './telemetry.entity.js';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -15,6 +16,8 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
     private telemetryGateway: TelemetryGateway,
     @InjectRepository(AndonAlert)
     private alertRepository: Repository<AndonAlert>,
+    @InjectRepository(TelemetryLog)
+    private telemetryRepository: Repository<TelemetryLog>,
   ) {}
 
   onModuleInit() {
@@ -99,7 +102,20 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       // 1. Broadcast to Frontend via WebSockets
       this.telemetryGateway.broadcastTelemetry(telemetry);
 
-      // 2. Log Alert to Database if there's a new fault
+      // 2. Log Telemetry to Database
+      const newLog = this.telemetryRepository.create({
+        machineId: telemetry.maquinaId,
+        oee: telemetry.oee,
+        productivity: telemetry.productivity,
+        actualUnits: telemetry.actualUnits,
+        targetUnits: telemetry.targetUnits,
+        temp: telemetry.temp,
+        presion: telemetry.presion,
+        defects: scrap
+      });
+      await this.telemetryRepository.save(newLog);
+
+      // 3. Log Alert to Database if there's a new fault
       if (falla !== 0 && falla !== this.lastFalla) {
         this.logger.warn(`New Andon Alert detected! Machine: ${telemetry.maquinaId}, Fault Code: ${falla}`);
         
