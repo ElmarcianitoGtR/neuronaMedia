@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  graph-db:
+    image: memgraph/memgraph-platform:latest
+    container_name: graph-db
+    profiles: ["core", "dev", "full"]
+    ports:
+      - "7687:7687"  
+      - "2340:2340"   
+    environment:
+      - MEMGRAPH="--log-level=WARNING"
+    volumes:
+      - memgraph-data:/var/lib/memgraph
+
+  
+  pdf-renderer:
+    image: gotenberg/gotenberg:8
+    container_name: mitsubishi-pdf-headless
+    profiles: ["headless", "full"]
+    ports:
+      - "4650:4650" 
+volumes:
+  memgraph-data:
