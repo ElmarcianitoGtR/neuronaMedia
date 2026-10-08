@@ -1,0 +1,23 @@
+# Backend Agent Instructions (NeuronaMedia Hackathon)
+
+## Tech Stack
+- Framework: NestJS (using pure ESM imports, e.g., `import { AppService } from './app.service.js';`)
+- Language: TypeScript
+- Database ORM: TypeORM with SQLite3 (`database.sqlite`)
+- Real-time: WebSockets (`@nestjs/websockets`, `socket.io`)
+- Package Manager: pnpm (Monorepo)
+
+## Architecture Context
+This backend acts as the bridge (Master/Gateway) in a Master-Slave IoT architecture.
+1. It listens to OPC UA data (from MATLAB simulation).
+2. It processes and logs alerts using TypeORM (SQLite).
+3. It broadcasts data in real-time to the React Frontend via the `TelemetryGateway` (`socket.io`).
+
+## Code Style Rules
+- Use NestJS decorators (`@Controller`, `@Injectable`, `@WebSocketGateway`).
+- Always use `.js` extension in relative imports because the project is ESM.
+- Keep TypeORM entities in `*.entity.ts` files.
+
+## Commands
+- Dev Server: `pnpm --filter backend run start:dev`
+- Install deps: `pnpm install` from root.
