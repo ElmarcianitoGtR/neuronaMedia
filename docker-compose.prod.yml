@@ -47,7 +47,7 @@ services:
     restart: always
     networks:
       - default
-      - traefik-net
+      - proxy
 
   master-slave-db:
     image: postgres:15-alpine
@@ -78,7 +78,7 @@ services:
     restart: always
     networks:
       - default
-      - traefik-net
+      - proxy
 
   quality-hub:
     build:
@@ -103,7 +103,7 @@ services:
     restart: always
     networks:
       - default
-      - traefik-net
+      - proxy
 
   slides:
     build:
@@ -120,10 +120,10 @@ services:
     restart: always
     networks:
       - default
-      - traefik-net
+      - proxy
 
 networks:
-  traefik-net:
+  proxy:
     external: true
 
 volumes:
