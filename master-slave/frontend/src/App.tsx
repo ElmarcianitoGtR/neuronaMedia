@@ -77,10 +77,10 @@ function Dashboard() {
   ];
   
   const defectsData = [
-    { name: 'Labeling', value: 30.7, fill: '#0ea5e9' },
-    { name: 'Sealing', value: 21.2, fill: '#10b981' },
-    { name: 'Alignment', value: 13.9, fill: '#f59e0b' },
-    { name: 'Weight', value: 12.6, fill: '#ef4444' },
+    { name: 'Labeling', value: 30.7, fill: '#64748b' }, // slate-500
+    { name: 'Sealing', value: 21.2, fill: '#475569' }, // slate-600
+    { name: 'Alignment', value: 13.9, fill: '#334155' }, // slate-700
+    { name: 'Weight', value: 12.6, fill: '#ef4444' }, // red-500 (ALERT)
   ];
 
   const downtimeData = [
@@ -185,7 +185,12 @@ function Dashboard() {
         <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT BY LINE - CURRENT SHIFT</h3>
           <div className="flex flex-col gap-3">
-            {[ {name: 'Line 1', val: 72, col: 'bg-teal-500'}, {name: 'Line 2', val: 85, col: 'bg-green-500'}, {name: 'Line 3', val: 56, col: 'bg-yellow-500'}, {name: 'Line 4', val: 91, col: 'bg-red-500'} ].map(l => (
+            {[ 
+              {name: 'Line 1', val: 72, col: 'bg-slate-500'}, 
+              {name: 'Line 2', val: 85, col: 'bg-slate-500'}, 
+              {name: 'Line 3', val: 56, col: 'bg-red-500'}, // ALERT
+              {name: 'Line 4', val: 91, col: 'bg-slate-500'} 
+            ].map(l => (
               <div key={l.name} className="flex items-center gap-4 text-sm">
                 <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
                 <div className="flex-grow bg-[#111827] h-5 relative">
@@ -210,9 +215,9 @@ function Dashboard() {
                 <XAxis dataKey="name" stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
                 <YAxis stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151' }} cursor={{fill: '#374151', opacity: 0.4}} />
-                <Bar dataKey="mech" stackId="a" fill="#0ea5e9" />
-                <Bar dataKey="elec" stackId="a" fill="#f59e0b" />
-                <Bar dataKey="ops" stackId="a" fill="#10b981" />
+                <Bar dataKey="mech" stackId="a" fill="#475569" />
+                <Bar dataKey="elec" stackId="a" fill="#64748b" />
+                <Bar dataKey="ops" stackId="a" fill="#94a3b8" />
               </BarChart>
             </ResponsiveContainer>
           </div>

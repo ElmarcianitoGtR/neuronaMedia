@@ -58,3 +58,7 @@ When generating new components, screens, or features:
 2. Use the exact color hexes or Tailwind Slate/Teal scale as defined above.
 3. Keep margins and paddings tight (`p-4` or `gap-4` for grids).
 4. Do **NOT** use rounded corners (`rounded-xl`, `rounded-full` etc.) for large layout panels; keep them sharp or `rounded-sm` max to retain the industrial hardware feel.
+
+### Chart Data Colors (Strict Rule)
+- **Standard Data Representation:** Use muted, monotonic palettes (shades of Slate `#64748b`, `#475569`, `#334155` or muted Sky Blue).
+- **Alert Reservation:** Do **NOT** use bright colors (Red, Yellow, Green, bright Teal) for purely aesthetic differentiation in charts (e.g., coloring lines randomly). Reserve intense colors **strictly** for semantic alerting (e.g., a bar turns Red only if it falls below the OEE threshold).
