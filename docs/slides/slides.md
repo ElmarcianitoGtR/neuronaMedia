@@ -177,40 +177,9 @@ Integración continua de extremo a extremo: del sensor en máquina a la pantalla
 Diseño desacoplado y resiliente para la continuidad operativa de la planta:
 </div>
 
-```mermaid
-graph LR
-    subgraph S1["1. Esclavos (Línea)"]
-        S[Sensores: Conteo / Scrap]
-        B[Botoneras Andon / HMI]
-        MVP[Simulador OPC UA]
-    end
+<ArchitectureFlow height="255px"></ArchitectureFlow>
 
-    subgraph S2["2. Red / Comunicación"]
-        MQTT{Broker MQTT / OPC UA}
-    end
-
-    subgraph S3["3. Maestro (Servidor)"]
-        Node[Backend Node / Python API]
-        DB[(InfluxDB + PostgreSQL)]
-    end
-
-    subgraph S4["4. Control Visual"]
-        Andon[Tablero Andon Digital]
-        Dash[Dashboard de OEE]
-        Kanban[Kanban de Soporte]
-    end
-
-    S --> MQTT
-    B --> MQTT
-    MVP --> Node
-    MQTT --> Node
-    Node <--> DB
-    Node == WebSockets ==> Andon
-    Node == WebSockets ==> Dash
-    Node == WebSockets ==> Kanban
-```
-
-<div class="grid grid-cols-2 gap-4 mt-2 text-xs">
+<div class="grid grid-cols-2 gap-4 mt-1 text-xs">
   <div class="card-clean p-2.5 text-slate-300">
     <strong class="text-cyan-400">Resiliencia Local:</strong> Cada esclavo sigue operando de forma autónoma aunque exista una interrupción temporal en la red.
   </div>
@@ -483,9 +452,6 @@ class: text-center
 ---
 
 <div class="h-full flex flex-col justify-center items-center pb-12">
-  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 text-slate-300 text-xs font-mono mb-4">
-    NEURONAMEDIA • INDUSTRIA 4.0
-  </div>
 
   <h1 class="text-4xl font-extrabold text-white mb-3">
     Control Visual. Respuesta Rápida. Cero Paros Ciegos.
@@ -508,9 +474,6 @@ class: text-center
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
-</div>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -553,5 +516,85 @@ code, pre, .font-mono {
 }
 .animate-gear-spin {
   animation: spinSlow 30s linear infinite;
+}
+
+/* ============================================================ */
+/* ANIMACIÓN LÁSER EN LÍNEAS Y FLECHAS DE MERMAID               */
+/* ============================================================ */
+.mermaid svg .edgePaths path,
+.mermaid svg .edgePath path,
+.mermaid svg .flowchart-link,
+.mermaid svg path[class*="edge"] {
+  stroke: #38bdf8 !important;
+  stroke-width: 2.5px !important;
+  stroke-dasharray: 8 6 !important;
+  animation: laserFlow 0.9s linear infinite !important;
+  filter: drop-shadow(0 0 4px #06b6d4) drop-shadow(0 0 8px rgba(56, 189, 248, 0.7)) !important;
+}
+
+@keyframes laserFlow {
+  from {
+    stroke-dashoffset: 28;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Puntas de flecha brillantes estilo láser */
+.mermaid svg marker path,
+.mermaid svg .arrowMarkerPath,
+.mermaid svg .arrowheadPath {
+  fill: #38bdf8 !important;
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 0 5px #06b6d4) !important;
+}
+
+/* Etiquetas en las flechas (ej. WebSockets) */
+.mermaid svg .edgeLabel {
+  background-color: #0b0f17 !important;
+  color: #38bdf8 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+.mermaid svg .edgeLabel rect {
+  fill: #0b0f17 !important;
+  opacity: 0.9 !important;
+}
+
+/* Estilo de nodos de Mermaid */
+.mermaid svg .node rect,
+.mermaid svg .node polygon,
+.mermaid svg .node circle {
+  fill: rgba(15, 23, 42, 0.9) !important;
+  stroke: #475569 !important;
+  stroke-width: 1.5px !important;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4)) !important;
+}
+.mermaid svg .node:hover rect {
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4)) !important;
+}
+.mermaid svg .node .label {
+  color: #f1f5f9 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* Contenedores de grupos (Subgraphs) */
+.mermaid svg .cluster rect {
+  fill: rgba(15, 23, 42, 0.45) !important;
+  stroke: rgba(100, 116, 139, 0.4) !important;
+  stroke-width: 1.2px !important;
+  rx: 8px !important;
+}
+.mermaid svg .cluster .nodeLabel {
+  color: #94a3b8 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
 }
 </style>
