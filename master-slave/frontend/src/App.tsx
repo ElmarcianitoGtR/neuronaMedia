@@ -155,8 +155,8 @@ function Dashboard() {
   const [liveData, setLiveData] = useState<any>({
     oee: '69.2',
     productivity: 73,
-    targetUnits: 1284,
-    actualUnits: 937
+    targetUnidades: 1284,
+    actualUnidades: 937
   });
 
   const [dbData, setDbData] = useState<any>({
@@ -205,29 +205,29 @@ function Dashboard() {
               <div className="text-3xl font-bold text-teal-400 transition-all duration-300">{liveData.oee}%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">Live</div>
+              <div className="text-xs text-teal-500">En Vivo</div>
               <div className="text-sm font-bold text-teal-400">WebSocket</div>
             </div>
           </div>
           
           <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center">
             <div>
-              <span className="text-sm font-bold text-slate-300 uppercase">Efficiency</span>
+              <span className="text-sm font-bold text-slate-300 uppercase">Eficiencia</span>
               <div className="text-3xl font-bold text-teal-400">74.5%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-xs text-teal-500">↑ Incremento</div>
               <div className="text-sm font-bold text-teal-400">+2.66%</div>
             </div>
           </div>
 
           <div className="bg-[#064e3b] border border-[#047857] p-3 flex justify-between items-center">
             <div>
-              <span className="text-sm font-bold text-slate-300 uppercase">Availability</span>
+              <span className="text-sm font-bold text-slate-300 uppercase">Disponibilidad</span>
               <div className="text-3xl font-bold text-teal-400">92.1%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-xs text-teal-500">↑ Incremento</div>
               <div className="text-sm font-bold text-teal-400">+1.33%</div>
             </div>
           </div>
@@ -235,7 +235,7 @@ function Dashboard() {
 
         {/* Trend Panel */}
         <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT LAST 7 DAYS</h3>
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN ÚLTIMOS 7 DÍAS</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trendData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
@@ -260,7 +260,7 @@ function Dashboard() {
       <div className="col-span-1 lg:col-span-5 flex flex-col gap-4">
         {/* Main Gauge Panel */}
         <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px]">
-          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVITY SHIFT</h3>
+          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVIDAD DEL TURNO</h3>
           
           {/* Radial SVG Gauge */}
           <div className="relative w-64 h-32 mt-8 flex flex-col items-center justify-end">
@@ -295,7 +295,7 @@ function Dashboard() {
           </div>
           <div className="flex justify-center gap-4 mt-8 text-[10px] uppercase text-slate-400 font-bold tracking-wider">
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#14b8a6]"></span> Actual
+              <span className="w-2 h-2 rounded-full bg-[#14b8a6]"></span> Real
             </div>
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#eab308]"></span> Gap (85%)
@@ -306,12 +306,12 @@ function Dashboard() {
           </div>
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
-              <div className="text-xs text-slate-400 uppercase">Target</div>
-              <div className="text-xl font-mono text-slate-200">{liveData.targetUnits}</div>
+              <div className="text-xs text-slate-400 uppercase">Objetivo</div>
+              <div className="text-xl font-mono text-slate-200">{liveData.targetUnidades}</div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-slate-400 uppercase">Units</div>
-              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnits}</div>
+              <div className="text-xs text-slate-400 uppercase">Unidades</div>
+              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnidades}</div>
             </div>
           </div>
         </div>

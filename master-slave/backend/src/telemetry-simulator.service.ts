@@ -75,7 +75,8 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
       presion: parseFloat(presion.toFixed(2)),
       oee: parseFloat(oee.toFixed(1)),
       targetUnits: 1500,
-      actualUnits: this.piezasOk
+      actualUnits: this.piezasOk,
+      productivity: parseFloat(((this.piezasOk / 1500) * 100).toFixed(1))
     };
 
     // 1. Broadcast to Frontend
