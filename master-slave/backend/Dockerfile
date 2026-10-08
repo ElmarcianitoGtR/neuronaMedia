@@ -19,3 +19,22 @@ RUN pnpm install --filter backend --frozen-lockfile
 EXPOSE 3000
 
 CMD ["pnpm", "--filter", "backend", "run", "start:dev"]
+
+FROM node:22-bookworm AS build
+RUN corepack enable pnpm
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY master-slave/backend/package.json master-slave/backend/package.json
+RUN pnpm install --filter backend --frozen-lockfile
+COPY master-slave/backend master-slave/backend
+RUN pnpm --filter backend build
+
+FROM node:22-bookworm-slim AS prod
+RUN corepack enable pnpm
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY master-slave/backend/package.json master-slave/backend/package.json
+RUN pnpm install --filter backend --frozen-lockfile --prod
+COPY --from=build /app/master-slave/backend/dist ./master-slave/backend/dist
+EXPOSE 3000
+CMD ["node", "master-slave/backend/dist/main.js"]

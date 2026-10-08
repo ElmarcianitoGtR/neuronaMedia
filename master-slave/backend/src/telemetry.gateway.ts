@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: process.env.NODE_ENV === 'production' ? (process.env.FRONTEND_URL || 'http://localhost') : '*',
   },
 })
 export class TelemetryGateway implements OnGatewayInit {

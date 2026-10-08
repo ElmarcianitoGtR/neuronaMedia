@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  graph-db:
+    image: memgraph/memgraph-platform:latest
+    container_name: graph-db-prod
+    ports:
+      - "7687:7687"  
+      - "2340:2340"   
+    volumes:
+      - memgraph-data:/var/lib/memgraph
+    restart: always
+
+  pdf-renderer:
+    image: gotenberg/gotenberg:8
+    container_name: mitsubishi-pdf-headless-prod
+    restart: always
+
+  master-slave-backend:
+    build:
+      context: .
+      dockerfile: master-slave/backend/Dockerfile
+      target: prod
+    container_name: ms-backend-prod
+    environment:
+      - NODE_ENV=production
+      - SIMULATE_TELEMETRY=false
+      - DEBUG_UDP=false
+      - DB_HOST=ms-postgres-prod
+      - DB_PORT=5432
+      - DB_USER=${POSTGRES_USER:-ms_user}
+      - DB_PASS=${POSTGRES_PASSWORD:-ms_password}
+      - DB_NAME=${POSTGRES_DB:-ms_database}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - FRONTEND_URL=http://localhost:8080
+    ports:
+      - "3000:3000"
+      - "4000:4000/udp"
+    depends_on:
+      - master-slave-db
+    restart: always
+
+  master-slave-db:
+    image: postgres:15-alpine
+    container_name: ms-postgres-prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ms_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ms_password}
+      POSTGRES_DB: ${POSTGRES_DB:-ms_database}
+    volumes:
+      - ms_pgdata_prod:/var/lib/postgresql/data
+    restart: always
+
+  master-slave-frontend:
+    build:
+      context: .
+      dockerfile: master-slave/frontend/Dockerfile
+      target: prod
+      args:
+        - VITE_BACKEND_URL=http://localhost:3000
+        - VITE_REPORTS_URL=http://localhost:4321
+    container_name: ms-frontend-prod
+    ports:
+      - "8080:80"
+    restart: always
+
+  quality-hub:
+    build:
+      context: .
+      dockerfile: reports/quality-hub/Dockerfile
+      target: prod
+    container_name: quality-hub-prod
+    environment:
+      - NODE_ENV=production
+      - PDF_RENDERER_URL=http://pdf-renderer:3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GRAPH_DB_URI=bolt://graph-db:7687
+    ports:
+      - "4321:4321"
+    depends_on:
+      - graph-db
+      - pdf-renderer
+    restart: always
+
+volumes:
+  memgraph-data:
+  ms_pgdata_prod:
