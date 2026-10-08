@@ -13,12 +13,44 @@ services:
     volumes:
       - memgraph-data:/var/lib/memgraph
 
-  
   pdf-renderer:
     image: gotenberg/gotenberg:8
     container_name: mitsubishi-pdf-headless
     profiles: ["headless", "full"]
     ports:
       - "4650:4650" 
+
+  master-slave-backend:
+    build:
+      context: .
+      dockerfile: master-slave/backend/Dockerfile
+      target: dev
+    container_name: ms-backend
+    profiles: ["master-slave-dev", "full"]
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app                          # Mount source for hot-reload
+      - backend_node_modules:/app/node_modules  # Isolate container's node_modules from host
+    environment:
+      - NODE_ENV=development
+
+  master-slave-frontend:
+    build:
+      context: .
+      dockerfile: master-slave/frontend/Dockerfile
+      target: dev
+    container_name: ms-frontend
+    profiles: ["master-slave-dev", "full"]
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app                           # Mount source for hot-reload
+      - frontend_node_modules:/app/node_modules  # Isolate container's node_modules from host
+    environment:
+      - NODE_ENV=development
+
 volumes:
   memgraph-data:
+  backend_node_modules:
+  frontend_node_modules:
