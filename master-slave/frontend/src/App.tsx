@@ -14,7 +14,10 @@ function App() {
       {/* Navbar - Solid Matte */}
       <header className="bg-[#1f2937] border-b border-slate-700 p-4 flex justify-between items-center shadow-md z-50">
         <h1 className="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
-          MANUFACTURING KPI DASHBOARD
+          {import.meta.env.VITE_TENANT_LOGO && (
+            <img src={import.meta.env.VITE_TENANT_LOGO} alt="Tenant Logo" className="h-8 w-auto object-contain" />
+          )}
+          {import.meta.env.VITE_TENANT_NAME || 'MANUFACTURING KPI DASHBOARD'}
         </h1>
         <nav className="flex gap-2">
           <button 
