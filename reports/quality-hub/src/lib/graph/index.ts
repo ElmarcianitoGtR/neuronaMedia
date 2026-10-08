@@ -168,7 +168,7 @@ memoryStore.set(demoIncidente.id, demoIncidente);
 export function getDriver(): Driver | null {
   if (driverInstance) return driverInstance;
 
-  const uri = process.env.GRAPH_DB_URI || 'bolt://localhost:7687';
+  const uri = process.env.GRAPH_DB_URI;
   const user = process.env.GRAPH_DB_USER || '';
   const password = process.env.GRAPH_DB_PASSWORD || '';
 

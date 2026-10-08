@@ -20,9 +20,9 @@ export async function generateQualityPdf(incidente: Incidencia): Promise<PdfGene
   // Intentar Gotenberg en 4650 (según docker-compose.yml) o 3001 (según agent.md)
   const candidateUrls = [
     process.env.PDF_RENDERER_URL,
-    'http://localhost:4650',
-    'http://localhost:3001',
-    'http://127.0.0.1:4650'
+    
+    
+    
   ].filter(Boolean) as string[];
 
   // Quitar duplicados

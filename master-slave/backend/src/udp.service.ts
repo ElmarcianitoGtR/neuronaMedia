@@ -15,8 +15,8 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
   private lastAlertTime: Record<string, number> = {};
 
   async sendTelegramAlert(message: string) {
-    const BOT_TOKEN = '8901927878:AAEMJDt4QNO9hLvJKNmLqb1eL3gOrUIoj0U';
-    const CHAT_ID = '8304747615';
+    const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
     try {

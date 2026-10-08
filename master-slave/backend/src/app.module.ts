@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -10,13 +11,14 @@ import { TelemetrySimulatorService } from './telemetry-simulator.service.js';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'ms-postgres', // container name
-      port: 5432,
-      username: 'ms_user',
-      password: 'ms_password',
-      database: 'ms_database',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '5432', 10),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
       entities: [AndonAlert, TelemetryLog],
       synchronize: true, // auto-creates tables (only for development)
     }),

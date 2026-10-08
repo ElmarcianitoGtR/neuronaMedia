@@ -3,8 +3,11 @@ import { io } from 'socket.io-client';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import './App.css';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const REPORTS_URL = import.meta.env.VITE_REPORTS_URL;
+
 // Create a single socket instance
-const socket = io('http://localhost:3000');
+const socket = io(BACKEND_URL);
 
 function App() {
   const [activeTab, setActiveTab] = useState<'andon' | 'dashboard'>('dashboard');
@@ -81,7 +84,7 @@ function AndonBoard() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    const load = () => fetch('http://localhost:3000/api/dashboard/stats').then(r => r.json()).then(d => setLines(d.lines));
+    const load = () => fetch(`${BACKEND_URL}/api/dashboard/stats`).then(r => r.json()).then(d => setLines(d.lines));
     load();
     const int = setInterval(load, 5000);
     socket.on("telemetry_update", (data) => {
@@ -128,12 +131,12 @@ function AndonBoard() {
     setIsGenerating(true);
     try {
       // 1. Obtener datos estructurados desde NestJS (alerta real)
-      const reportRes = await fetch(`http://localhost:3000/api/dashboard/report/${lineName}`);
+      const reportRes = await fetch(`${BACKEND_URL}/api/dashboard/report/${lineName}`);
       if (!reportRes.ok) throw new Error('Error obteniendo datos del backend');
       const rawData = await reportRes.json();
 
       // 2. Autogenerar 8D con IA (Gemini) vía Quality Hub
-      const iaRes = await fetch('http://localhost:4321/api/incidentes', {
+      const iaRes = await fetch(`${REPORTS_URL}/api/incidentes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,7 +157,7 @@ function AndonBoard() {
       };
 
       // 3. Mandar datos finales a Astro/Gotenberg para armar el PDF
-      const response = await fetch('http://localhost:4321/api/generate-pdf', {
+      const response = await fetch(`${REPORTS_URL}/api/generate-pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(incidenteData)
@@ -248,7 +251,7 @@ function Dashboard() {
     });
     
     const loadDb = () => {
-      fetch('http://localhost:3000/api/dashboard/stats')
+      fetch(`${BACKEND_URL}/api/dashboard/stats`)
         .then(r => r.json())
         .then(data => {
           setDbData({
