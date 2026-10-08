@@ -12,7 +12,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
   private server: dgram.Socket;
   private lastFalla: Record<string, number> = {};
   private lastSavedUnits: Record<string, number> = {};
-
+  private lastAlertTime: Record<string, number> = {};
 
   async sendTelegramAlert(message: string) {
     const BOT_TOKEN = '8901927878:AAEMJDt4QNO9hLvJKNmLqb1eL3gOrUIoj0U';
@@ -159,30 +159,44 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
 
       }
 
-      // 3. Log Alert to Database if there's a new fault
-      const lastMachineFalla = this.lastFalla[telemetry.maquinaId] || 0;
-      if (falla !== 0 && falla !== lastMachineFalla) {
-        this.logger.warn(`New Andon Alert detected! Machine: ${telemetry.maquinaId}, Fault Code: ${falla}`);
+      // 3. Log Alert and Escalation to Telegram
+      if (falla !== 0) {
+        const now = Date.now();
+        const lastTime = this.lastAlertTime[telemetry.maquinaId] || 0;
+        const isNewFault = falla !== this.lastFalla[telemetry.maquinaId];
 
-        const newAlert = this.alertRepository.create({
-          lineName: telemetry.maquinaId,
-          status: 'OPEN',
-          message: `Código ${falla}: ${falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)'} (Temp: ${telemetry.temp}°C, Presión: ${telemetry.presion} bar)`,
-        });
+        // Send if new fault OR if 10 seconds have passed since last alert
+        if (isNewFault || (now - lastTime) >= 10000) {
 
-        const savedAlert = await this.alertRepository.save(newAlert);
-        this.telemetryGateway.broadcastAnomaly(savedAlert);
+          if (isNewFault) {
+            this.logger.warn(\New Andon Alert detected! Machine: \, Fault Code: \\);
+            const newAlert = this.alertRepository.create({
+              lineName: telemetry.maquinaId,
+              status: 'OPEN',
+              message: \Código \: \ (Temp: \°C, Presión: \ bar) \,
+            });
+          await this.alertRepository.save(newAlert);
+        }
 
         // Enviar alerta por Telegram
-        const telegramMsg = `🚨 ALERTA ANDON [${telemetry.maquinaId}]\n` +
-        `Código de falla: ${falla}\n` +
-        `Motivo: ${falla === 1 ? "Falla Térmica (Temperatura fuera de rango)" : "Falla Presión (Tiro Corto)"}\n` +
-        `Temp: ${telemetry.temp}°C | Presión: ${telemetry.presion} bar`;
+        const telegramMsg = \🚨 ALERTA ANDON [\]\\nCódigo de falla: \\\nMotivo: \\\nTemp: \°C | Presión: \ bar\\n⚠️ ESCALACIÓN DE INCIDENCIA ACTIVA\;
         this.sendTelegramAlert(telegramMsg);
+
+        this.lastAlertTime[telemetry.maquinaId] = now;
       }
-      this.lastFalla[telemetry.maquinaId] = falla;
-    } catch (err: any) {
-      this.logger.error(`Error parsing UDP payload: ${err?.message}`);
+    } else {
+      // If fault is resolved
+      if (this.lastFalla[telemetry.maquinaId] !== 0 && this.lastFalla[telemetry.maquinaId] !== undefined) {
+        this.logger.log(\Andon Alert Resolved! Machine: \\);
+        const telegramMsg = \✅ ALERTA RESUELTA [\]\\nLa máquina ha regresado a sus parámetros normales.\\nTemp: \°C | Presión: \ bar\;
+        this.sendTelegramAlert(telegramMsg);
+        delete this.lastAlertTime[telemetry.maquinaId];
+      }
     }
+
+    this.lastFalla[telemetry.maquinaId] = falla;
+  } catch(err: any) {
+    this.logger.error(`Error parsing UDP payload: ${err?.message}`);
   }
+}
 }
