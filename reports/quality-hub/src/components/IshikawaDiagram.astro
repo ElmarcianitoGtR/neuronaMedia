@@ -11,15 +11,15 @@ const { ishikawa = [], problema, causaRaiz } = Astro.props;
 
 // Categorías superiores e inferiores de las 6M
 const topCategories = [
-  { key: 'Maquinaria', label: 'MAQUINARIA', xTip: 180, xSpine: 300, labelX: 110, labelY: 35 },
-  { key: 'Método', label: 'MÉTODO', xTip: 420, xSpine: 540, labelX: 360, labelY: 35 },
-  { key: 'Mano de Obra', label: 'MANO DE OBRA', xTip: 660, xSpine: 780, labelX: 590, labelY: 35 }
+  { key: 'Maquinaria', label: 'MAQUINARIA', xTip: 250, xSpine: 400, labelX: 140, labelY: 50 },
+  { key: 'Método', label: 'MÉTODO', xTip: 550, xSpine: 700, labelX: 440, labelY: 50 },
+  { key: 'Mano de Obra', label: 'MANO DE OBRA', xTip: 850, xSpine: 1000, labelX: 740, labelY: 50 }
 ];
 
 const bottomCategories = [
-  { key: 'Materiales', label: 'MATERIALES', xTip: 180, xSpine: 300, labelX: 110, labelY: 535 },
-  { key: 'Medición', label: 'MEDICIÓN', xTip: 420, xSpine: 540, labelX: 355, labelY: 535 },
-  { key: 'Medio Ambiente', label: 'MEDIO AMBIENTE', xTip: 660, xSpine: 780, labelX: 585, labelY: 535 }
+  { key: 'Materiales', label: 'MATERIALES', xTip: 250, xSpine: 400, labelX: 140, labelY: 650 },
+  { key: 'Medición', label: 'MEDICIÓN', xTip: 550, xSpine: 700, labelX: 440, labelY: 650 },
+  { key: 'Medio Ambiente', label: 'MEDIO AMBIENTE', xTip: 850, xSpine: 1000, labelX: 740, labelY: 650 }
 ];
 
 function getFactorsForCategory(catKey: string): IshikawaFactor[] {
@@ -62,7 +62,7 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
   <div id="fishboneContainer" class="w-full overflow-x-auto bg-[#111827] border border-slate-700 p-4 rounded-sm">
     <div class="min-w-[980px]">
       <svg
-        viewBox="0 0 1140 560"
+        viewBox="0 0 1400 700"
         class="w-full h-auto select-none font-sans"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -81,9 +81,9 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
         <!-- LÍNEA CENTRAL PRINCIPAL (COLUMNA VERTEBRAL) -->
         <line
           x1="40"
-          y1="280"
-          x2="910"
-          y2="280"
+          y1="350"
+          x2="1060"
+          y2="350"
           stroke="#14b8a6"
           stroke-width="5"
           stroke-linecap="round"
@@ -91,10 +91,10 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
         />
 
         <!-- CABEZA DEL PESCADO (EFECTO / PROBLEMA) -->
-        <g transform="translate(930, 215)">
+        <g transform="translate(1080, 240)">
           <rect
-            width="190"
-            height="130"
+            width="280"
+            height="220"
             rx="3"
             ry="3"
             fill="#1f2937"
@@ -102,14 +102,14 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
             stroke-width="2"
           />
           <!-- Encabezado de la cabeza -->
-          <rect width="190" height="26" rx="2" ry="2" fill="#450a0a" />
-          <text x="95" y="17" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle" letter-spacing="1">
+          <rect width="280" height="45" rx="2" ry="2" fill="#450a0a" />
+          <text x="140" y="30" fill="#fca5a5" font-size="18" font-weight="bold" text-anchor="middle" letter-spacing="1">
             EFECTO / PROBLEMA
           </text>
           
           <!-- Descripción del problema -->
-          <foreignObject x="10" y="32" width="170" height="90">
-            <div xmlns="http://www.w3.org/1999/xhtml" class="text-[11px] text-slate-200 font-sans leading-tight pt-1">
+          <foreignObject x="10" y="55" width="260" height="150">
+            <div xmlns="http://www.w3.org/1999/xhtml" class="text-[16px] text-slate-200 font-sans leading-tight pt-1">
               <span class="font-bold text-slate-100 line-clamp-4">
                 {problema}
               </span>
@@ -125,19 +125,19 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
               <!-- Categoría Badge (Extremo Superior) -->
               <rect
                 x={cat.labelX}
-                y={cat.labelY - 20}
-                width="140"
-                height="28"
+                y={cat.labelY - 30}
+                width="220"
+                height="45"
                 rx="2"
                 fill="#1f2937"
                 stroke="#0d9488"
                 stroke-width="1.5"
               />
               <text
-                x={cat.labelX + 70}
-                y={cat.labelY - 2}
+                x={cat.labelX + 110}
+                y={cat.labelY}
                 fill="#2dd4bf"
-                font-size="11"
+                font-size="18"
                 font-weight="bold"
                 text-anchor="middle"
                 letter-spacing="1"
@@ -148,9 +148,9 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
               <!-- Costilla Diagonal Superior -->
               <line
                 x1={cat.xTip}
-                y1={cat.labelY + 8}
+                y1={cat.labelY + 15}
                 x2={cat.xSpine}
-                y2="280"
+                y2="350"
                 stroke="#334155"
                 stroke-width="3"
                 stroke-linecap="round"
@@ -160,9 +160,9 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
               {factors.map((fact, fIdx) => {
                 // Cálculo de posición sobre la costilla diagonal
                 const ratio = (fIdx + 1) / (factors.length + 1);
-                const branchY = 50 + ratio * 200;
+                const branchY = 80 + ratio * 270;
                 const branchXOnRib = cat.xTip + ratio * (cat.xSpine - cat.xTip);
-                const subLineLength = 110;
+                const subLineLength = 150;
                 const branchEndX = branchXOnRib - subLineLength;
 
                 const isRoot = fact.esCausaRaiz;
@@ -194,10 +194,10 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
 
                     <!-- Cajita de la Causa/Factor -->
                     <rect
-                      x={branchEndX - 105}
-                      y={branchY - 14}
-                      width="105"
-                      height="28"
+                      x={branchEndX - 230}
+                      y={branchY - 20}
+                      width="230"
+                      height="40"
                       rx="2"
                       fill={boxBg}
                       stroke={boxBorder}
@@ -206,21 +206,21 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
                     
                     <!-- Texto de la causa -->
                     <text
-                      x={branchEndX - 52}
-                      y={branchY + 3}
+                      x={branchEndX - 115}
+                      y={branchY + 6}
                       fill={textColor}
-                      font-size="9.5"
+                      font-size="16"
                       font-weight={isRoot ? 'bold' : 'normal'}
                       text-anchor="middle"
                     >
-                      {fact.factor.length > 15 ? fact.factor.substring(0, 14) + '…' : fact.factor}
+                      {fact.factor.length > 25 ? fact.factor.substring(0, 24) + '…' : fact.factor}
                     </text>
 
                     {/* Estrella o indicador de Causa Raíz */}
                     {isRoot && (
                       <g transform={`translate(${branchEndX - 105}, ${branchY - 24})`}>
-                        <rect width="52" height="12" rx="1" fill="#ef4444" />
-                        <text x="26" y="9" fill="#ffffff" font-size="7.5" font-weight="bold" text-anchor="middle">
+                        <rect width="90" height="18" rx="2" fill="#ef4444" />
+                        <text x="45" y="13" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">
                           ★ CAUSA RAÍZ
                         </text>
                       </g>
@@ -240,19 +240,19 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
               <!-- Categoría Badge (Extremo Inferior) -->
               <rect
                 x={cat.labelX}
-                y={cat.labelY - 10}
-                width="140"
-                height="28"
+                y={cat.labelY - 15}
+                width="220"
+                height="45"
                 rx="2"
                 fill="#1f2937"
                 stroke="#0d9488"
                 stroke-width="1.5"
               />
               <text
-                x={cat.labelX + 70}
-                y={cat.labelY + 8}
+                x={cat.labelX + 110}
+                y={cat.labelY + 15}
                 fill="#2dd4bf"
-                font-size="11"
+                font-size="18"
                 font-weight="bold"
                 text-anchor="middle"
                 letter-spacing="1"
@@ -263,9 +263,9 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
               <!-- Costilla Diagonal Inferior -->
               <line
                 x1={cat.xTip}
-                y1={cat.labelY - 10}
+                y1={cat.labelY - 15}
                 x2={cat.xSpine}
-                y2="280"
+                y2="350"
                 stroke="#334155"
                 stroke-width="3"
                 stroke-linecap="round"
@@ -274,7 +274,7 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
               <!-- Sub-espinas Horizontales con Factores -->
               {factors.map((fact, fIdx) => {
                 const ratio = (fIdx + 1) / (factors.length + 1);
-                const branchY = 510 - ratio * 200;
+                const branchY = 620 - ratio * 270;
                 const branchXOnRib = cat.xTip + ratio * (cat.xSpine - cat.xTip);
                 const subLineLength = 110;
                 const branchEndX = branchXOnRib - subLineLength;
@@ -308,10 +308,10 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
 
                     <!-- Cajita de la Causa/Factor -->
                     <rect
-                      x={branchEndX - 105}
-                      y={branchY - 14}
-                      width="105"
-                      height="28"
+                      x={branchEndX - 230}
+                      y={branchY - 20}
+                      width="230"
+                      height="40"
                       rx="2"
                       fill={boxBg}
                       stroke={boxBorder}
@@ -320,21 +320,21 @@ function getFactorsForCategory(catKey: string): IshikawaFactor[] {
                     
                     <!-- Texto de la causa -->
                     <text
-                      x={branchEndX - 52}
-                      y={branchY + 3}
+                      x={branchEndX - 115}
+                      y={branchY + 6}
                       fill={textColor}
-                      font-size="9.5"
+                      font-size="16"
                       font-weight={isRoot ? 'bold' : 'normal'}
                       text-anchor="middle"
                     >
-                      {fact.factor.length > 15 ? fact.factor.substring(0, 14) + '…' : fact.factor}
+                      {fact.factor.length > 25 ? fact.factor.substring(0, 24) + '…' : fact.factor}
                     </text>
 
                     {/* Estrella o indicador de Causa Raíz */}
                     {isRoot && (
                       <g transform={`translate(${branchEndX - 105}, ${branchY + 18})`}>
-                        <rect width="52" height="12" rx="1" fill="#ef4444" />
-                        <text x="26" y="9" fill="#ffffff" font-size="7.5" font-weight="bold" text-anchor="middle">
+                        <rect width="90" height="18" rx="2" fill="#ef4444" />
+                        <text x="45" y="13" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">
                           ★ CAUSA RAÍZ
                         </text>
                       </g>

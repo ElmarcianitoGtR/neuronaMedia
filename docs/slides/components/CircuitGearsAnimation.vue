@@ -11,6 +11,15 @@ const props = defineProps({
     type: String,
     default: '240px'
   },
+  side: {
+    type: String,
+    default: 'center',
+    validator: (value) => ['left', 'center', 'right'].includes(value)
+  },
+  scale: {
+    type: Number,
+    default: 1.25
+  },
   // Tono gris carbón por defecto
   strokeColor: {
     type: String,
@@ -134,13 +143,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div 
-    class="w-full flex items-center justify-center bg-transparent overflow-hidden select-none pointer-events-none" 
-    :style="{ height: height, width: width }"
+  <div
+    class="circuit-gear-bg"
+    :class="[`circuit-gear-bg--${side}`]"
+    :style="{
+      height: height,
+      width: width,
+      opacity: 0.42,
+      '--gear-scale': scale
+    }"
   >
-    <svg 
-      ref="svgRef" 
-      viewBox="0 0 700 240" 
+    <svg
+      ref="svgRef"
+      viewBox="0 0 700 240"
       class="w-full h-full max-h-full"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -247,3 +262,37 @@ onBeforeUnmount(() => {
     </svg>
   </div>
 </template>
+
+<style scoped>
+.circuit-gear-bg {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center bottom;
+  transform: translateY(10px) scale(var(--gear-scale, 1.25));
+  z-index: 0;
+  filter: saturate(0.9);
+}
+
+.circuit-gear-bg--left {
+  left: -8%;
+  right: auto;
+}
+
+.circuit-gear-bg--right {
+  left: auto;
+  right: -8%;
+}
+
+.circuit-gear-bg--center {
+  left: 50%;
+  transform: translateX(-50%) translateY(10px) scale(var(--gear-scale, 1.25));
+}
+</style>

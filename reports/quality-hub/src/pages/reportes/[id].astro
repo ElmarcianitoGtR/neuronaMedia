@@ -73,16 +73,18 @@ const evidencias = analisis?.evidencias || [];
       <a
         href={`/api/generate-pdf?id=${incidente.id}`}
         target="_blank"
-        class="px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm bg-teal-600 text-white hover:bg-teal-500"
+        class="px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm bg-teal-600 text-white hover:bg-teal-500 shadow-sm"
+        title="Descargar Reporte en PDF tamaño Carta (8.5 × 11 pulgadas)"
       >
-        Descargar PDF Gotenberg
+        ⬇ Descargar PDF Carta
       </a>
       <a
         href={`/api/generate-pdf?id=${incidente.id}&format=html`}
         target="_blank"
         class="px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm bg-[#374151] text-slate-300 hover:bg-[#4b5563]"
+        title="Vista preliminar en tamaño Carta para impresión directa"
       >
-        Impresión Directa
+        🖨 Vista Impresión Carta
       </a>
     </div>
   </header>

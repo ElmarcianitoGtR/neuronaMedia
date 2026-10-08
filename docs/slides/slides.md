@@ -23,16 +23,13 @@ mdc: true
       <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
       ARQUITECTURA MASTER-SLAVE • IOT
     </div>
-    <h1 class="text-4xl font-extrabold text-white leading-tight mb-2">
-      Neurona<span class="text-cyan-400">Media</span>
-    </h1>
     <h2 class="text-lg font-medium text-slate-300 mb-6">
       Sistema de Control Visual y Monitoreo de Producción en Tiempo Real
     </h2>
     <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 mb-6">
-      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60">⚙️ Sensores IoT</span>
-      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60">⚡ Protocolo MQTT</span>
-      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60">📊 Andon Digital</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Sensores IoT</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Protocolo MQTT</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Andon Digital</span>
     </div>
     <div class="text-xs text-slate-400 border-t border-slate-800 pt-3">
       Presentado por: <strong class="text-slate-200">Equipo de Desarrollo NeuronaMedia</strong>
@@ -47,7 +44,7 @@ mdc: true
       </svg>
       <div class="relative w-40 h-40 rounded-full p-1 bg-gradient-to-tr from-slate-700 via-slate-600 to-slate-800 shadow-2xl">
         <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 border-2 border-slate-800 flex items-center justify-center">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto del Presentador" class="w-full h-full object-cover">
+          <img src="/Propuesta_.jpg" alt="Logo" class="w-full h-full object-cover">
         </div>
         <div class="absolute bottom-1 right-2 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center shadow-lg" title="En línea">
           <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
@@ -61,8 +58,8 @@ mdc: true
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-40">
-  <CircuitGearsAnimation height="55px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -71,59 +68,52 @@ transition: fade-out
 
 # El Problema: Ceguera Operativa en Planta
 
-<div class="text-slate-400 text-sm mb-4">
-Las líneas de producción sufren demoras críticas por falta de información instantánea:
-</div>
+<p class="text-slate-400 text-sm mb-3">Las líneas de producción sufren demoras críticas por falta de información instantánea:</p>
 
-<div class="grid grid-cols-2 gap-4">
-  <div class="card-clean p-4 border-l-4 border-l-rose-500/80">
-    <div class="flex items-center gap-2 mb-2">
-      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300">01</span>
-      <h3 class="text-sm font-bold text-white">Paros No Detectados a Tiempo</h3>
+<div class="grid grid-cols-5 gap-3.5 items-start">
+  <div class="col-span-3 space-y-2">
+    <div class="grid grid-cols-2 gap-2">
+      <div class="card-clean p-2.5 border-l-4 border-l-rose-500/80">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-rose-500/10 text-rose-300">01</span>
+          <h3 class="text-xs font-bold text-white">Paros No Detectados</h3>
+        </div>
+        <p class="text-[11px] text-slate-300 leading-tight">Fallas mecánicas o atascos en molde pasan inadvertidos hasta aviso manual.</p>
+      </div>
+      <div class="card-clean p-2.5 border-l-4 border-l-amber-500/80">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-amber-500/10 text-amber-300">02</span>
+          <h3 class="text-xs font-bold text-white">Scrap Silencioso</h3>
+        </div>
+        <p class="text-[11px] text-slate-300 leading-tight">Piezas defectuosas se acumulan en merma sin registro oportuno por lote.</p>
+      </div>
+      <div class="card-clean p-2.5 border-l-4 border-l-slate-400">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-slate-700 text-slate-300">03</span>
+          <h3 class="text-xs font-bold text-white">Bitácoras Manuales</h3>
+        </div>
+        <p class="text-[11px] text-slate-300 leading-tight">Datos en papel propensos a error humano y sin trazabilidad en tiempo real.</p>
+      </div>
+      <div class="card-clean p-2.5 border-l-4 border-l-cyan-500/80">
+        <div class="flex items-center gap-1.5 mb-1">
+          <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-cyan-500/10 text-cyan-300">04</span>
+          <h3 class="text-xs font-bold text-white">Respuesta Lenta</h3>
+        </div>
+        <p class="text-[11px] text-slate-300 leading-tight">Sin canal centralizado, soporte no tiene prioridad ni métricas de atención.</p>
+      </div>
     </div>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      Fallas mecánicas o atascos pasan inadvertidos por minutos hasta que el operador busca físicamente al personal de mantenimiento.
-    </p>
+    <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/60 text-[11px] text-slate-300 flex items-center justify-between">
+      <span class="font-semibold text-rose-400">Consecuencia:</span>
+      <span>Baja disponibilidad • Scrap oculto • Caída en OEE</span>
+    </div>
   </div>
-
-  <div class="card-clean p-4 border-l-4 border-l-amber-500/80">
-    <div class="flex items-center gap-2 mb-2">
-      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300">02</span>
-      <h3 class="text-sm font-bold text-white">Scrap Silencioso</h3>
-    </div>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      Piezas defectuosas se acumulan sin registro oportuno. Las mermas se descubren al final del turno, impidiendo correcciones inmediatas.
-    </p>
-  </div>
-
-  <div class="card-clean p-4 border-l-4 border-l-slate-400">
-    <div class="flex items-center gap-2 mb-2">
-      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-slate-700 text-slate-300">03</span>
-      <h3 class="text-sm font-bold text-white">Bitácoras Manuales y Papel</h3>
-    </div>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      Datos capturados a mano propensos a errores, información desfasada y nula trazabilidad histórica de causa raíz.
-    </p>
-  </div>
-
-  <div class="card-clean p-4 border-l-4 border-l-cyan-500/80">
-    <div class="flex items-center gap-2 mb-2">
-      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300">04</span>
-      <h3 class="text-sm font-bold text-white">Respuesta Descoordinada</h3>
-    </div>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      Sin un canal visual centralizado, mantenimiento y control de calidad no tienen orden de prioridad ni métricas de tiempo de atención.
-    </p>
+  <div class="col-span-2">
+    <InjectionMachine3D></InjectionMachine3D>
   </div>
 </div>
 
-<div class="mt-3 p-2.5 rounded-lg bg-slate-900/90 border border-slate-700/60 text-xs text-slate-300 flex items-center justify-between">
-  <span class="font-semibold text-rose-400">Consecuencia:</span>
-  <span>Baja disponibilidad de maquinaria • Costos por merma • Incumplimiento de metas OEE</span>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7"></CircuitGearsAnimation>
 </div>
 
 ---
@@ -175,8 +165,8 @@ Integración continua de extremo a extremo: del sensor en máquina a la pantalla
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-35">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -187,40 +177,9 @@ Integración continua de extremo a extremo: del sensor en máquina a la pantalla
 Diseño desacoplado y resiliente para la continuidad operativa de la planta:
 </div>
 
-```mermaid
-graph LR
-    subgraph S1["1. Esclavos (Línea)"]
-        S[Sensores: Conteo / Scrap]
-        B[Botoneras Andon / HMI]
-        MVP[Simulador OPC UA]
-    end
+<ArchitectureFlow height="255px"></ArchitectureFlow>
 
-    subgraph S2["2. Red / Comunicación"]
-        MQTT{Broker MQTT / OPC UA}
-    end
-
-    subgraph S3["3. Maestro (Servidor)"]
-        Node[Backend Node / Python API]
-        DB[(InfluxDB + PostgreSQL)]
-    end
-
-    subgraph S4["4. Control Visual"]
-        Andon[Tablero Andon Digital]
-        Dash[Dashboard de OEE]
-        Kanban[Kanban de Soporte]
-    end
-
-    S --> MQTT
-    B --> MQTT
-    MVP --> Node
-    MQTT --> Node
-    Node <--> DB
-    Node == WebSockets ==> Andon
-    Node == WebSockets ==> Dash
-    Node == WebSockets ==> Kanban
-```
-
-<div class="grid grid-cols-2 gap-4 mt-2 text-xs">
+<div class="grid grid-cols-2 gap-4 mt-1 text-xs">
   <div class="card-clean p-2.5 text-slate-300">
     <strong class="text-cyan-400">Resiliencia Local:</strong> Cada esclavo sigue operando de forma autónoma aunque exista una interrupción temporal en la red.
   </div>
@@ -229,8 +188,8 @@ graph LR
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
-  <CircuitGearsAnimation height="45px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -281,8 +240,8 @@ graph LR
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-35">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -341,8 +300,8 @@ Tres interfaces diseñadas para cada nivel operativo de la empresa:
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -386,8 +345,8 @@ Tres interfaces diseñadas para cada nivel operativo de la empresa:
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -435,8 +394,8 @@ Secuencia cronometrada de respuesta ante una contingencia en planta:
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -483,8 +442,8 @@ Mejoras cuantificables proyectadas en piso de producción:
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
-  <CircuitGearsAnimation height="50px" />
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
+  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
 </div>
 
 ---
@@ -493,9 +452,6 @@ class: text-center
 ---
 
 <div class="h-full flex flex-col justify-center items-center pb-12">
-  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 text-slate-300 text-xs font-mono mb-4">
-    NEURONAMEDIA • INDUSTRIA 4.0
-  </div>
 
   <h1 class="text-4xl font-extrabold text-white mb-3">
     Control Visual. Respuesta Rápida. Cero Paros Ciegos.
@@ -518,9 +474,6 @@ class: text-center
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-40">
-  <CircuitGearsAnimation height="55px" />
-</div>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -563,5 +516,85 @@ code, pre, .font-mono {
 }
 .animate-gear-spin {
   animation: spinSlow 30s linear infinite;
+}
+
+/* ============================================================ */
+/* ANIMACIÓN LÁSER EN LÍNEAS Y FLECHAS DE MERMAID               */
+/* ============================================================ */
+.mermaid svg .edgePaths path,
+.mermaid svg .edgePath path,
+.mermaid svg .flowchart-link,
+.mermaid svg path[class*="edge"] {
+  stroke: #38bdf8 !important;
+  stroke-width: 2.5px !important;
+  stroke-dasharray: 8 6 !important;
+  animation: laserFlow 0.9s linear infinite !important;
+  filter: drop-shadow(0 0 4px #06b6d4) drop-shadow(0 0 8px rgba(56, 189, 248, 0.7)) !important;
+}
+
+@keyframes laserFlow {
+  from {
+    stroke-dashoffset: 28;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Puntas de flecha brillantes estilo láser */
+.mermaid svg marker path,
+.mermaid svg .arrowMarkerPath,
+.mermaid svg .arrowheadPath {
+  fill: #38bdf8 !important;
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 0 5px #06b6d4) !important;
+}
+
+/* Etiquetas en las flechas (ej. WebSockets) */
+.mermaid svg .edgeLabel {
+  background-color: #0b0f17 !important;
+  color: #38bdf8 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+.mermaid svg .edgeLabel rect {
+  fill: #0b0f17 !important;
+  opacity: 0.9 !important;
+}
+
+/* Estilo de nodos de Mermaid */
+.mermaid svg .node rect,
+.mermaid svg .node polygon,
+.mermaid svg .node circle {
+  fill: rgba(15, 23, 42, 0.9) !important;
+  stroke: #475569 !important;
+  stroke-width: 1.5px !important;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4)) !important;
+}
+.mermaid svg .node:hover rect {
+  stroke: #38bdf8 !important;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4)) !important;
+}
+.mermaid svg .node .label {
+  color: #f1f5f9 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* Contenedores de grupos (Subgraphs) */
+.mermaid svg .cluster rect {
+  fill: rgba(15, 23, 42, 0.45) !important;
+  stroke: rgba(100, 116, 139, 0.4) !important;
+  stroke-width: 1.2px !important;
+  rx: 8px !important;
+}
+.mermaid svg .cluster .nodeLabel {
+  color: #94a3b8 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
 }
 </style>
