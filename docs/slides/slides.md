@@ -40,7 +40,7 @@ mdc: true
       </svg>
       <div class="relative w-40 h-40 rounded-full p-1 bg-gradient-to-tr from-slate-700 via-slate-600 to-slate-800 shadow-2xl">
         <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 border-2 border-slate-800 flex items-center justify-center">
-          <img src="/Propuesta_.jpg" alt="Logo" class="w-full h-full object-cover">
+          <img src="/logo_color.jpg" alt="Logo" class="w-full h-full object-cover">
         </div>
       </div>
     </div>
@@ -177,60 +177,6 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
   </div>
 </div>
 
-
----
-transition: slide-left
----
-
-# Capa de Adquisición: Esclavos y Contingencia
-
-<div class="grid grid-cols-2 gap-5 h-[75%] items-start">
-  <div class="card-clean p-4">
-    <div class="flex items-center gap-2 mb-3">
-      <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block animate-pulse"></span>
-      <h3 class="text-xs font-bold text-white tracking-wide uppercase font-mono">Telemetría Automática</h3>
-    </div>
-    <ul class="text-xs text-slate-300 space-y-3">
-      <li class="flex items-start gap-2">
-        <span class="text-cyan-400 font-bold">●</span>
-        <span><strong>Sensores de Conteo:</strong> Sensores fotoeléctricos o inductivos registrando piezas producidas en tiempo real.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-cyan-400 font-bold">●</span>
-        <span><strong>Monitoreo de Estado:</strong> Detección de paros mediante lectura de señales eléctricas de maquinaria.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-cyan-400 font-bold">●</span>
-        <span><strong>Básculas de Scrap:</strong> Sensores de pesaje dedicados en contenedores de rechazo para cuantificar merma.</span>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card-clean p-4">
-    <div class="flex items-center gap-2 mb-3">
-      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block animate-pulse"></span>
-      <h3 class="text-xs font-bold text-white tracking-wide uppercase font-mono">Reporte Ágil & Contingencia</h3>
-    </div>
-    <ul class="text-xs text-slate-300 space-y-3">
-      <li class="flex items-start gap-2">
-        <span class="text-amber-400 font-bold">●</span>
-        <span><strong>Botonera Andon Física:</strong> 3 botones de acceso directo: <span class="text-rose-400 font-semibold">Falla</span>, <span class="text-amber-400 font-semibold">Calidad</span>, <span class="text-cyan-400 font-semibold">Materiales</span>.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-amber-400 font-bold">●</span>
-        <span><strong>HMI Simplificada:</strong> Pantallas táctiles de dos toques para operadores en estaciones críticas.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-amber-400 font-bold">●</span>
-        <span><strong>Escaneo QR Móvil (Respaldo):</strong> Contingencia manual inmediata desde celular en caso de daño en sensores físicos.</span>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
-</div>
 
 ---
 transition: slide-left
