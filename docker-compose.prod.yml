@@ -33,7 +33,7 @@ services:
       - DB_NAME=${POSTGRES_DB:-ms_database}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
-      - FRONTEND_URL=https://${DOMAIN_NAME}
+      - FRONTEND_URL=https://neuronaymedia.${DOMAIN_NAME}
     ports:
       - "4000:4000/udp"
     labels:
@@ -73,7 +73,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.ms-frontend.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.ms-frontend.rule=Host(`neuronaymedia.${DOMAIN_NAME}`)"
       - "traefik.http.routers.ms-frontend.entrypoints=websecure"
       - "traefik.http.routers.ms-frontend.tls.certresolver=cloudflare"
       - "traefik.http.services.ms-frontend.loadbalancer.server.port=80"
