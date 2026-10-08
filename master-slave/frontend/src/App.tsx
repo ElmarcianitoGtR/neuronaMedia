@@ -96,7 +96,7 @@ function AndonBoard() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = isHtmlFallback ? \`Reporte-\${lineName}.html\` : \`Reporte-\${lineName}.pdf\`;
+      a.download = isHtmlFallback ? `Reporte-${lineName}.html` : `Reporte-${lineName}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
