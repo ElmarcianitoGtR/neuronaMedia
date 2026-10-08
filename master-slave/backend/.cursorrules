@@ -19,5 +19,6 @@ This backend acts as the bridge (Master/Gateway) in a Master-Slave IoT architect
 - Keep TypeORM entities in `*.entity.ts` files.
 
 ## Commands
-- Dev Server: `pnpm --filter backend run start:dev`
+- Docker Dev: `docker-compose --profile master-slave-dev up` (Starts both Backend and Frontend)
+- Local Dev Server: `pnpm --filter backend run start:dev`
 - Install deps: `pnpm install` from root.

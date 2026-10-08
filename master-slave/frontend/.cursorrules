@@ -18,5 +18,6 @@ This frontend connects via Socket.io to the NestJS backend to receive real-time 
 - **CRITICAL:** Reserve intense colors (Red, Yellow, Green) STRICTLY for semantic alerts (e.g. Danger, Warning).
 
 ## Commands
-- Dev Server: `pnpm --filter frontend run dev`
+- Docker Dev: `docker-compose --profile master-slave-dev up` (Starts both Frontend and Backend)
+- Local Dev Server: `pnpm --filter frontend run dev`
 - Install deps: `pnpm install` from root.

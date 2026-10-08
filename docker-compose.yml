@@ -13,12 +13,34 @@ services:
     volumes:
       - memgraph-data:/var/lib/memgraph
 
-  
   pdf-renderer:
     image: gotenberg/gotenberg:8
     container_name: mitsubishi-pdf-headless
     profiles: ["headless", "full"]
     ports:
       - "4650:4650" 
+
+  master-slave-backend:
+    image: node:22-bookworm
+    container_name: ms-backend
+    profiles: ["master-slave-dev", "full"]
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: bash -c "corepack enable pnpm && pnpm install && pnpm --filter backend run start:dev"
+
+  master-slave-frontend:
+    image: node:22-bookworm
+    container_name: ms-frontend
+    profiles: ["master-slave-dev", "full"]
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+    command: bash -c "corepack enable pnpm && pnpm install && pnpm --filter frontend run dev --host 0.0.0.0"
+
 volumes:
   memgraph-data:
