@@ -1,677 +1,567 @@
 ---
-# try also 'default' to start simple
-theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
+theme: default
+title: NeuronaMedia - Control Visual y Monitoreo de Producción
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply UnoCSS classes to the current slide
-class: text-center
-# https://sli.dev/features/drawing
+  ## NeuronaMedia
+  Sistema de Control Visual y Monitoreo de Producción en Tiempo Real
+  Arquitectura Master-Slave e Industria 4.0
+class: text-slate-100
+highlighter: shiki
 drawings:
   persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
-# enable Comark Syntax: https://comark.dev/syntax/markdown
-comark: true
-# duration of the presentation
-duration: 35min
+mdc: true
 ---
 
-# Welcome to Slidev
+<!-- ========================================== -->
+<!-- SLIDE 1: PORTADA CON MARCO CIRCULAR PARA FOTO -->
+<!-- ========================================== -->
 
-Presentation slides for developers
+<div class="h-full flex items-center justify-between px-6 pb-12">
+  <div class="flex-1 pr-6 text-left">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-600/50 text-slate-300 text-xs font-mono tracking-wider mb-4">
+      <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+      ARQUITECTURA MASTER-SLAVE • IOT
+    </div>
+    <h1 class="text-4xl font-extrabold text-white leading-tight mb-2">
+      Neurona<span class="text-cyan-400">Media</span>
+    </h1>
+    <h2 class="text-lg font-medium text-slate-300 mb-6">
+      Sistema de Control Visual y Monitoreo de Producción en Tiempo Real
+    </h2>
+    <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 mb-6">
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60">⚙️ Sensores IoT</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60">⚡ Protocolo MQTT</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60">📊 Andon Digital</span>
+    </div>
+    <div class="text-xs text-slate-400 border-t border-slate-800 pt-3">
+      Presentado por: <strong class="text-slate-200">Equipo de Desarrollo NeuronaMedia</strong>
+    </div>
+  </div>
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
+  <div class="flex flex-col items-center justify-center pl-4">
+    <div class="relative flex items-center justify-center">
+      <svg class="absolute w-48 h-48 text-slate-600/40 animate-gear-spin pointer-events-none" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"></circle>
+        <circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="1 8"></circle>
+      </svg>
+      <div class="relative w-40 h-40 rounded-full p-1 bg-gradient-to-tr from-slate-700 via-slate-600 to-slate-800 shadow-2xl">
+        <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 border-2 border-slate-800 flex items-center justify-center">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto del Presentador" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute bottom-1 right-2 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center shadow-lg" title="En línea">
+          <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 text-center">
+      <div class="text-xs font-semibold text-white">Ponente / Equipo</div>
+      <div class="text-[11px] text-slate-400 font-mono">Líder de Proyecto</div>
+    </div>
+  </div>
 </div>
 
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
-  </a>
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-40">
+  <CircuitGearsAnimation height="55px" />
 </div>
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
 
 ---
 transition: fade-out
 ---
 
-# What is Slidev?
+# El Problema: Ceguera Operativa en Planta
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
-
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
-
-<!--
-Here is another comment.
--->
-
----
-transition: slide-up
-level: 2
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                     |                             |
-| --------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                 | next animation or slide     |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                       | previous slide              |
-| <kbd>down</kbd>                                     | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: two-cols
-layoutClass: gap-16
----
-
-# Table of contents
-
-You can use the `Toc` component to generate a table of contents for your slides:
-
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
-
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
-
-::right::
-
-<Toc text-sm minDepth="1" maxDepth="2" />
-
----
-layout: image-right
-image: https://cover.sli.dev
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
-```
-
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
-
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
-<!--
-Notes can also sync with clicks
-
-[click] This will be highlighted after the first click
-
-[click] Highlighted with `count = ref(0)`
-
-[click:3] Last click (skip two clicks)
--->
-
----
-level: 2
----
-
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
-````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
-```
-
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
-```
-
-Non-code blocks are ignored.
-
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-}
-</script>
-```
-````
-
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>`, `<BlueSky/>`, and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
+<div class="text-slate-400 text-sm mb-4">
+Las líneas de producción sufren demoras críticas por falta de información instantánea:
 </div>
 
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
--->
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
-
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you press <kbd>space</kbd> or <kbd>right</kbd>, or click outside the slide on the right.
-
-```html
-<div v-click>This shows up when you trigger a click animation.</div>
-```
-
-</div>
-
-<p v-click>
-You can also add modifiers to change the animation:
-</p>
-
-<div class="grid gap-3 mt-4 text-sm" style="grid-template-columns: repeat(3, 1fr) 1.5fr 1fr">
-  <div v-after.up class="p-3 rounded border border-primary/20 bg-primary/10">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.up</div>
-    <div>Slide from bottom</div>
+<div class="grid grid-cols-2 gap-4">
+  <div class="card-clean p-4 border-l-4 border-l-rose-500/80">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300">01</span>
+      <h3 class="text-sm font-bold text-white">Paros No Detectados a Tiempo</h3>
+    </div>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Fallas mecánicas o atascos pasan inadvertidos por minutos hasta que el operador busca físicamente al personal de mantenimiento.
+    </p>
   </div>
-  <div v-click.fade-in class="p-3 rounded border border-primary/30 bg-primary/15">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade-in</div>
-    <div>Fade in</div>
+
+  <div class="card-clean p-4 border-l-4 border-l-amber-500/80">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300">02</span>
+      <h3 class="text-sm font-bold text-white">Scrap Silencioso</h3>
+    </div>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Piezas defectuosas se acumulan sin registro oportuno. Las mermas se descubren al final del turno, impidiendo correcciones inmediatas.
+    </p>
   </div>
-  <div v-click.fade class="p-3 rounded border border-primary/40 bg-primary/20">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade</div>
-    <div>Dim (0.5 opacity)</div>
+
+  <div class="card-clean p-4 border-l-4 border-l-slate-400">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-slate-700 text-slate-300">03</span>
+      <h3 class="text-sm font-bold text-white">Bitácoras Manuales y Papel</h3>
+    </div>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Datos capturados a mano propensos a errores, información desfasada y nula trazabilidad histórica de causa raíz.
+    </p>
   </div>
-  <div v-click.fade.right.scale class="p-3 rounded border border-primary/50 bg-primary/25">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade.right.scale</div>
-    <div>Composed</div>
-  </div>
-  <div v-click.none class="p-3 rounded border border-primary/60 bg-primary/30">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.none</div>
-    <div>No transition</div>
+
+  <div class="card-clean p-4 border-l-4 border-l-cyan-500/80">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300">04</span>
+      <h3 class="text-sm font-bold text-white">Respuesta Descoordinada</h3>
+    </div>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Sin un canal visual centralizado, mantenimiento y control de calidad no tienen orden de prioridad ni métricas de tiempo de atención.
+    </p>
   </div>
 </div>
 
-<v-click>
+<div class="mt-3 p-2.5 rounded-lg bg-slate-900/90 border border-slate-700/60 text-xs text-slate-300 flex items-center justify-between">
+  <span class="font-semibold text-rose-400">Consecuencia:</span>
+  <span>Baja disponibilidad de maquinaria • Costos por merma • Incumplimiento de metas OEE</span>
+</div>
 
-The <span v-mark.red="7"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="8">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
-
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
-
-</v-click>
-
-<div v-click mt-12>
-
-[Learn more](https://sli.dev/guide/animations#click-animation)
-
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
+  <CircuitGearsAnimation height="50px" />
 </div>
 
 ---
 
-# Motions
+# La Solución: Ecosistema 360° en Tiempo Real
 
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
+<div class="text-slate-400 text-sm mb-4">
+Integración continua de extremo a extremo: del sensor en máquina a la pantalla del supervisor.
 </div>
-```
 
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
+<div class="grid grid-cols-3 gap-4">
+  <div class="card-clean p-4 flex flex-col justify-between">
+    <div>
+      <div class="w-7 h-7 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs mb-3 font-mono">01</div>
+      <h3 class="text-sm font-bold text-white mb-2">Captura en Piso (Esclavos)</h3>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Hardware en cada estación: sensores de conteo, detección de paro y botoneras Andon manuales para reporte ágil.
+      </p>
+    </div>
+    <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-cyan-300">
+      ESP32 • Sensores I/O • HMI
+    </div>
   </div>
 
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
+  <div class="card-clean p-4 flex flex-col justify-between">
+    <div>
+      <div class="w-7 h-7 rounded-md bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs mb-3 font-mono">02</div>
+      <h3 class="text-sm font-bold text-white mb-2">Canalización Inmediata</h3>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Protocolos industriales ultraligeros de suscripción/publicación que transfieren telemetría con latencia inferior a 100 ms.
+      </p>
+    </div>
+    <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-300">
+      Broker MQTT • WebSockets
+    </div>
+  </div>
+
+  <div class="card-clean p-4 flex flex-col justify-between">
+    <div>
+      <div class="w-7 h-7 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs mb-3 font-mono">03</div>
+      <h3 class="text-sm font-bold text-white mb-2">Control Visual Activo</h3>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Tableros Andon digitales proyectados en planta, dashboards de OEE y panel Kanban para resolución cronometrada de tickets.
+      </p>
+    </div>
+    <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-amber-300">
+      Andon Digital • Kanban • OEE
+    </div>
   </div>
 </div>
 
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
-
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-35">
+  <CircuitGearsAnimation height="50px" />
 </div>
 
 ---
 
-# $\LaTeX$
+# Arquitectura General: Master-Slave
 
-$\LaTeX$ is supported out-of-box. Powered by [$\KaTeX$](https://katex.org/).
-
-<div h-3 />
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
-$$
-
-[Learn more](https://sli.dev/features/latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
+<div class="text-slate-400 text-sm mb-2">
+Diseño desacoplado y resiliente para la continuidad operativa de la planta:
+</div>
 
 ```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
+graph LR
+    subgraph S1["1. Esclavos (Línea)"]
+        S[Sensores: Conteo / Scrap]
+        B[Botoneras Andon / HMI]
+        MVP[Simulador OPC UA]
+    end
+
+    subgraph S2["2. Red / Comunicación"]
+        MQTT{Broker MQTT / OPC UA}
+    end
+
+    subgraph S3["3. Maestro (Servidor)"]
+        Node[Backend Node / Python API]
+        DB[(InfluxDB + PostgreSQL)]
+    end
+
+    subgraph S4["4. Control Visual"]
+        Andon[Tablero Andon Digital]
+        Dash[Dashboard de OEE]
+        Kanban[Kanban de Soporte]
+    end
+
+    S --> MQTT
+    B --> MQTT
+    MVP --> Node
+    MQTT --> Node
+    Node <--> DB
+    Node == WebSockets ==> Andon
+    Node == WebSockets ==> Dash
+    Node == WebSockets ==> Kanban
 ```
 
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
+<div class="grid grid-cols-2 gap-4 mt-2 text-xs">
+  <div class="card-clean p-2.5 text-slate-300">
+    <strong class="text-cyan-400">Resiliencia Local:</strong> Cada esclavo sigue operando de forma autónoma aunque exista una interrupción temporal en la red.
+  </div>
+  <div class="card-clean p-2.5 text-slate-300">
+    <strong class="text-emerald-400">Actualización en Vivo:</strong> WebSockets distribuyen el estado de las máquinas a todas las pantallas de planta simultáneamente.
+  </div>
 </div>
 
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
+  <CircuitGearsAnimation height="45px" />
+</div>
 
 ---
-foo: bar
-dragPos:
-  square: 691,32,167,_,-16
----
 
-# Draggable Elements
+# Capa de Adquisición: Esclavos y Contingencia
 
-Double-click on the draggable elements to edit their positions.
-
-<br>
-
-###### Directive Usage
-
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
-
-<br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="274,211,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
+<div class="grid grid-cols-2 gap-5 h-[75%] items-start">
+  <div class="card-clean p-4">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+      <h3 class="text-xs font-bold text-white tracking-wide uppercase font-mono">Telemetría Automática</h3>
+    </div>
+    <ul class="text-xs text-slate-300 space-y-3">
+      <li class="flex items-start gap-2">
+        <span class="text-cyan-400 font-bold">✔</span>
+        <span><strong>Sensores de Conteo:</strong> Sensores fotoeléctricos o inductivos registrando piezas producidas en tiempo real.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-cyan-400 font-bold">✔</span>
+        <span><strong>Monitoreo de Estado:</strong> Detección de paros mediante lectura de señales eléctricas de maquinaria.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-cyan-400 font-bold">✔</span>
+        <span><strong>Básculas de Scrap:</strong> Sensores de pesaje dedicados en contenedores de rechazo para cuantificar merma.</span>
+      </li>
+    </ul>
   </div>
-</v-drag>
 
-<img v-drag="'square'" src="https://sli.dev/logo.png">
+  <div class="card-clean p-4">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+      <h3 class="text-xs font-bold text-white tracking-wide uppercase font-mono">Reporte Ágil & Contingencia</h3>
+    </div>
+    <ul class="text-xs text-slate-300 space-y-3">
+      <li class="flex items-start gap-2">
+        <span class="text-amber-400 font-bold">●</span>
+        <span><strong>Botonera Andon Física:</strong> 3 botones de acceso directo: <span class="text-rose-400 font-semibold">Falla</span>, <span class="text-amber-400 font-semibold">Calidad</span>, <span class="text-cyan-400 font-semibold">Materiales</span>.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-amber-400 font-bold">●</span>
+        <span><strong>HMI Simplificada:</strong> Pantallas táctiles de dos toques para operadores en estaciones críticas.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-amber-400 font-bold">●</span>
+        <span><strong>Escaneo QR Móvil (Respaldo):</strong> Contingencia manual inmediata desde celular en caso de daño en sensores físicos.</span>
+      </li>
+    </ul>
+  </div>
+</div>
 
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
-
----
-src: ./pages/imported-slides.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Monaco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import { emptyArray } from './external'
-
-const arr = ref(emptyArray(10))
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from 'vue'
-import { emptyArray, sayHello } from './external'
-
-sayHello()
-console.log(`vue ${version}`)
-console.log(emptyArray<number>(10).reduce(fib => [...fib, fib.at(-1)! + fib.at(-2)!], [1, 1]))
-```
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-35">
+  <CircuitGearsAnimation height="50px" />
+</div>
 
 ---
-layout: center
+
+# Plataforma Web: Control Visual Integral
+
+<div class="text-slate-400 text-sm mb-3">
+Tres interfaces diseñadas para cada nivel operativo de la empresa:
+</div>
+
+<div class="grid grid-cols-3 gap-4">
+  <div class="card-clean p-4">
+    <div class="text-[11px] font-mono text-rose-400 font-semibold mb-1">PISO DE PLANTA</div>
+    <h3 class="text-sm font-bold text-white mb-2">Tablero Andon Digital</h3>
+    <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
+      Proyectado en Smart TVs sobre las líneas con codificación universal de colores:
+    </p>
+    <div class="space-y-1.5 text-[10px] font-mono">
+      <div class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 flex justify-between">
+        <span>VERDE</span><span>Producción Normal</span>
+      </div>
+      <div class="px-2 py-1 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 flex justify-between">
+        <span>AMARILLO</span><span>Alerta / Calidad</span>
+      </div>
+      <div class="px-2 py-1 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20 flex justify-between">
+        <span>ROJO</span><span>Paro de Línea</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-clean p-4">
+    <div class="text-[11px] font-mono text-cyan-400 font-semibold mb-1">SUPERVISIÓN</div>
+    <h3 class="text-sm font-bold text-white mb-2">Dashboard de OEE</h3>
+    <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
+      Métricas consolidadas para líderes de turno y control de operaciones:
+    </p>
+    <ul class="text-[11px] text-slate-300 space-y-1.5">
+      <li>• <strong>OEE Calculado en Vivo</strong> (Disponibilidad / Calidad).</li>
+      <li>• <strong>Piezas Meta vs. Real</strong> con indicador de avance.</li>
+      <li>• <strong>Tasa de Scrap</strong> en tiempo real por lote.</li>
+      <li>• <strong>Historial de Tiempos Muertos</strong> auditables.</li>
+    </ul>
+  </div>
+
+  <div class="card-clean p-4">
+    <div class="text-[11px] font-mono text-slate-300 font-semibold mb-1">MANTENIMIENTO</div>
+    <h3 class="text-sm font-bold text-white mb-2">Kanban de Soporte</h3>
+    <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
+      Gestión rápida de incidencias para reducir los tiempos medios de reparación:
+    </p>
+    <ul class="text-[11px] text-slate-300 space-y-1.5">
+      <li>• <strong>Alertas Nuevas:</strong> Disparadas por sensor o botón.</li>
+      <li>• <strong>En Atención:</strong> Técnico asignado con temporizador.</li>
+      <li>• <strong>Resueltas:</strong> Registro de solución y refacciones.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
+  <CircuitGearsAnimation height="50px" />
+</div>
+
+---
+
+# Stack Tecnológico y Comunicaciones
+
+<div class="grid grid-cols-2 gap-4 mt-2">
+  <div class="card-clean p-4">
+    <div class="text-cyan-400 text-xs font-mono font-semibold mb-1">COMUNICACIÓN INDUSTRIAL</div>
+    <h3 class="text-sm font-bold text-white mb-2">MQTT + OPC UA + WebSockets</h3>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      • <strong>MQTT (Eclipse Mosquitto):</strong> Transmisión pub/sub de bajo consumo de ancho de banda.<br>
+      • <strong>OPC UA:</strong> Enlace nativo con PLCs industriales y simulación MVP en MATLAB.<br>
+      • <strong>WebSockets:</strong> Difusión inmediata hacia los navegadores web.
+    </p>
+  </div>
+
+  <div class="card-clean p-4">
+    <div class="text-emerald-400 text-xs font-mono font-semibold mb-1">ALMACENAMIENTO DE DATOS</div>
+    <h3 class="text-sm font-bold text-white mb-2">InfluxDB + PostgreSQL</h3>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      • <strong>InfluxDB (Time-Series):</strong> Almacena millones de lecturas de sensores por segundo con compresión avanzada.<br>
+      • <strong>PostgreSQL (Relacional):</strong> Gestión de usuarios, turnos, catálogo de fallas y trazabilidad.
+    </p>
+  </div>
+
+  <div class="card-clean p-4">
+    <div class="text-amber-400 text-xs font-mono font-semibold mb-1">PROCESAMIENTO CENTRAL</div>
+    <h3 class="text-sm font-bold text-white mb-2">Servidor Maestro (API)</h3>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Motor de cálculo en Node.js / Python para métricas en vivo (OEE, MTTR, scrap) y distribución de eventos a los clientes web.
+    </p>
+  </div>
+
+  <div class="card-clean p-4">
+    <div class="text-slate-300 text-xs font-mono font-semibold mb-1">FRONTEND & PRESENTACIÓN</div>
+    <h3 class="text-sm font-bold text-white mb-2">Vue 3 + Slidev + UnoCSS</h3>
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Interfaces reactivas fluidas, paneles modulares y presentación técnica con tipografía minimalista y soporte de animaciones.
+    </p>
+  </div>
+</div>
+
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
+  <CircuitGearsAnimation height="50px" />
+</div>
+
+---
+
+# Flujo Operativo: De la Falla a la Solución
+
+<div class="text-slate-400 text-sm mb-4">
+Secuencia cronometrada de respuesta ante una contingencia en planta:
+</div>
+
+<div class="space-y-2.5">
+  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-rose-500">
+    <span class="font-mono text-rose-400 font-bold text-xs w-16">0.0 seg</span>
+    <div class="text-xs">
+      <strong class="text-white">Detección de Incidencia:</strong> Sensor detecta paro o el operador presiona la <span class="text-rose-400 font-semibold">Botonera Andon</span>.
+    </div>
+  </div>
+
+  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-amber-500">
+    <span class="font-mono text-amber-400 font-bold text-xs w-16">0.2 seg</span>
+    <div class="text-xs">
+      <strong class="text-white">Publicación MQTT:</strong> El esclavo envía el payload JSON al broker local maestro (<code class="text-cyan-300">planta/linea-1/alerta</code>).
+    </div>
+  </div>
+
+  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-cyan-500">
+    <span class="font-mono text-cyan-400 font-bold text-xs w-16">0.5 seg</span>
+    <div class="text-xs">
+      <strong class="text-white">Alerta en Pantalla Andon:</strong> El backend emite vía WebSockets. La TV de la nave parpadea en rojo y se crea ticket en Kanban.
+    </div>
+  </div>
+
+  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-slate-400">
+    <span class="font-mono text-slate-300 font-bold text-xs w-16">1.5 seg</span>
+    <div class="text-xs">
+      <strong class="text-white">Asignación de Técnico:</strong> Mantenimiento toma el ticket desde su dispositivo; el estado cambia a "En Atención".
+    </div>
+  </div>
+
+  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-emerald-500">
+    <span class="font-mono text-emerald-400 font-bold text-xs w-16">Cierre</span>
+    <div class="text-xs">
+      <strong class="text-white">Reanudación y Auditoría:</strong> Línea reanuda en <span class="text-emerald-400 font-semibold">Verde</span> y el tiempo de paro queda registrado para el OEE.
+    </div>
+  </div>
+</div>
+
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
+  <CircuitGearsAnimation height="50px" />
+</div>
+
+---
+
+# Impacto y Resultados de Negocio (ROI)
+
+<div class="text-slate-400 text-sm mb-4">
+Mejoras cuantificables proyectadas en piso de producción:
+</div>
+
+<div class="grid grid-cols-4 gap-4">
+  <div class="card-clean p-4 text-center">
+    <div class="text-3xl font-extrabold text-rose-400 mb-1">-40%</div>
+    <div class="text-xs font-bold text-white mb-1">Tiempo de Respuesta</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Reducción del MTTR al eliminar demoras en aviso de mantenimiento</div>
+  </div>
+
+  <div class="card-clean p-4 text-center">
+    <div class="text-3xl font-extrabold text-emerald-400 mb-1">+15%</div>
+    <div class="text-xs font-bold text-white mb-1">Incremento en OEE</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Mayor disponibilidad de máquinas al resolver micro-paros</div>
+  </div>
+
+  <div class="card-clean p-4 text-center">
+    <div class="text-3xl font-extrabold text-amber-400 mb-1">-25%</div>
+    <div class="text-xs font-bold text-white mb-1">Reducción de Scrap</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Detección temprana de piezas defectuosas antes de lotes mayores</div>
+  </div>
+
+  <div class="card-clean p-4 text-center">
+    <div class="text-3xl font-extrabold text-cyan-400 mb-1">100%</div>
+    <div class="text-xs font-bold text-white mb-1">Trazabilidad Digital</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Auditoría continua de turnos sin depender de bitácoras manuales</div>
+  </div>
+</div>
+
+<div class="mt-5 card-clean p-3.5 flex items-center justify-between">
+  <div>
+    <div class="text-xs font-bold text-white">Retorno de Inversión (ROI) Estimado</div>
+    <div class="text-[11px] text-slate-400">Implementación modular progresiva sin frenar la línea de manufactura activa.</div>
+  </div>
+  <div class="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-cyan-300 font-mono text-xs font-bold">
+    Amortización &lt; 3 meses
+  </div>
+</div>
+
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-30">
+  <CircuitGearsAnimation height="50px" />
+</div>
+
+---
+layout: end
 class: text-center
 ---
 
-# Learn More
-
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
-
-<PoweredBySlidev mt-10 />
-
----
-
-# Animations Demo
-
-<div class="grid grid-cols-2 gap-4">
-  <div>
-    <h3>GSAP Animation</h3>
-    <GsapDemo />
+<div class="h-full flex flex-col justify-center items-center pb-12">
+  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 text-slate-300 text-xs font-mono mb-4">
+    NEURONAMEDIA • INDUSTRIA 4.0
   </div>
-  <div>
-    <h3>Three.js Canvas</h3>
-    <ThreeDemo />
+
+  <h1 class="text-4xl font-extrabold text-white mb-3">
+    Control Visual. Respuesta Rápida. Cero Paros Ciegos.
+  </h1>
+
+  <p class="text-slate-300 text-sm max-w-lg mb-8">
+    Conectando la telemetría en piso con la toma de decisiones inmediata.
+  </p>
+
+  <div class="card-clean p-4 max-w-md w-full text-left">
+    <div class="text-xs font-mono text-cyan-400 mb-1">ESTADO DEL MVP:</div>
+    <div class="text-xs text-slate-300 mb-3 space-y-1">
+      <div>✔ Arquitectura Master-Slave funcional</div>
+      <div>✔ Integración MQTT, OPC UA y WebSockets</div>
+      <div>✔ Tableros Andon y telemetría en tiempo real</div>
+    </div>
+    <div class="text-center font-bold text-sm text-white pt-2 border-t border-slate-800">
+      ¿Preguntas o comentarios?
+    </div>
   </div>
 </div>
+
+<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none opacity-40">
+  <CircuitGearsAnimation height="55px" />
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+.slidev-layout {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  color: #e2e8f0;
+  background-color: #0b0f17 !important;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(100, 116, 139, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(100, 116, 139, 0.08) 0%, transparent 40%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg stroke='%2364748b' stroke-width='0.8' fill='none' stroke-linecap='round' stroke-linejoin='round' opacity='0.22'%3E%3Cpath d='M0 30 h35 l15 15 h30 l10 -10 h30'/%3E%3Ccircle cx='50' cy='45' r='2' fill='%2364748b'/%3E%3Ccircle cx='90' cy='35' r='2' fill='%2364748b'/%3E%3Cpath d='M30 120 v-30 l15 -15 v-25'/%3E%3Ccircle cx='45' cy='75' r='2' fill='%2364748b'/%3E%3Cpath d='M120 90 h-30 l-15 -15 h-20'/%3E%3Ccircle cx='75' cy='75' r='2' fill='%2364748b'/%3E%3Cpath d='M80 0 v20 l-10 10'/%3E%3Cpath d='M10 90 h20'/%3E%3Ccircle cx='30' cy='90' r='1.8' fill='%2364748b'/%3E%3C/g%3E%3Cg fill='%2364748b' opacity='0.16'%3E%3Cpath d='M105 102 a8 8 0 1 0 0.01 0 m-1.5 2.5 a5.5 5.5 0 1 1 -0.01 0'/%3E%3Cpath d='M104 93 h2 v3 h-2 z M104 108 h2 v3 h-2 z M96 101 v2 h3 v-2 z M111 101 v2 h3 v-2 z M98 96 l1.5 1.5 l2 -2 l-1.5 -1.5 z M108 106 l1.5 1.5 l2 -2 l-1.5 -1.5 z M98 108 l1.5 -1.5 l2 2 l-1.5 1.5 z M108 98 l1.5 -1.5 l2 2 l-1.5 1.5 z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: auto, auto, 120px 120px;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Inter', sans-serif !important;
+  letter-spacing: -0.025em;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.card-clean {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+}
+
+.card-clean:hover {
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-gear-spin {
+  animation: spinSlow 30s linear infinite;
+}
+</style>

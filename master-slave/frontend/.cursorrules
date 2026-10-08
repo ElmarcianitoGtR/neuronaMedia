@@ -1,0 +1,23 @@
+# Frontend Agent Instructions (NeuronaMedia Hackathon)
+
+## Tech Stack
+- Framework: React 19 + TypeScript
+- Bundler: Vite
+- Styling: Tailwind CSS v4
+- Charts: Recharts
+- Package Manager: pnpm (Monorepo)
+
+## Architecture Context
+This frontend connects via Socket.io to the NestJS backend to receive real-time telemetry and Andon alerts from the factory floor (simulated via MATLAB OPC UA).
+
+## Design Rules (STRICT)
+- **Industrial Matte UI**: Read `../DESIGN_LANGUAGE.md` before making any UI changes.
+- Do not use glassmorphism, heavy shadows, or bright colors for standard components.
+- Backgrounds should be `bg-[#111827]` and panels `bg-[#1f2937]`.
+- Chart colors must be muted (slates, muted blues).
+- **CRITICAL:** Reserve intense colors (Red, Yellow, Green) STRICTLY for semantic alerts (e.g. Danger, Warning).
+
+## Commands
+- Docker Dev: `docker-compose --profile master-slave-dev up` (Starts both Frontend and Backend)
+- Local Dev Server: `pnpm --filter frontend run dev`
+- Install deps: `pnpm install` from root.

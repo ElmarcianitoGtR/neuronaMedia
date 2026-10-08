@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import './App.css';
+
+// Create a single socket instance
+const socket = io('http://localhost:3000');
 
 function App() {
   const [activeTab, setActiveTab] = useState<'andon' | 'dashboard'>('dashboard');
@@ -68,6 +72,22 @@ function AndonBoard() {
 }
 
 function Dashboard() {
+  const [liveData, setLiveData] = useState({
+    oee: '69.2',
+    productivity: 73,
+    targetUnits: 1284,
+    actualUnits: 937
+  });
+
+  useEffect(() => {
+    socket.on('telemetry_update', (data) => {
+      setLiveData(data);
+    });
+    return () => {
+      socket.off('telemetry_update');
+    };
+  }, []);
+
   // Recharts Data matching the dense industrial look
   const trendData = [
     { time: 'Lun', produccion: 5200 }, { time: 'Mar', produccion: 6100 },
@@ -97,14 +117,14 @@ function Dashboard() {
       <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
         {/* KPI Panel */}
         <div className="bg-[#1f2937] border border-slate-700 p-4">
-          <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center">
+          <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center transition-colors duration-500">
             <div>
               <span className="text-sm font-bold text-slate-300 uppercase">OEE</span>
-              <div className="text-3xl font-bold text-teal-400">69.2%</div>
+              <div className="text-3xl font-bold text-teal-400 transition-all duration-300">{liveData.oee}%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">↑ Increase</div>
-              <div className="text-sm font-bold text-teal-400">+3.22%</div>
+              <div className="text-xs text-teal-500">Live</div>
+              <div className="text-sm font-bold text-teal-400">WebSocket</div>
             </div>
           </div>
           
@@ -161,22 +181,22 @@ function Dashboard() {
           <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVITY SHIFT</h3>
           
           {/* Simulated Gauge with SVG */}
-          <div className="relative w-48 h-24 overflow-hidden mt-8">
+          <div className="relative w-48 h-24 overflow-hidden mt-8 transition-all duration-500">
             <div className="absolute inset-0 border-[16px] border-[#374151] rounded-t-full border-b-0"></div>
-            <div className="absolute inset-0 border-[16px] border-teal-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(0 0, 73% 0, 73% 100%, 0 100%)' }}></div>
-            <div className="absolute inset-0 border-[16px] border-yellow-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(73% 0, 85% 0, 85% 100%, 73% 100%)' }}></div>
+            <div className="absolute inset-0 border-[16px] border-teal-500 rounded-t-full border-b-0 transition-all duration-700" style={{ clipPath: `polygon(0 0, ${liveData.productivity}% 0, ${liveData.productivity}% 100%, 0 100%)` }}></div>
+            <div className="absolute inset-0 border-[16px] border-yellow-500 rounded-t-full border-b-0 transition-all duration-700" style={{ clipPath: `polygon(${liveData.productivity}% 0, 85% 0, 85% 100%, ${liveData.productivity}% 100%)` }}></div>
             <div className="absolute inset-0 border-[16px] border-red-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(85% 0, 100% 0, 100% 100%, 85% 100%)' }}></div>
           </div>
-          <div className="text-5xl font-bold text-white mt-2">73<span className="text-2xl text-slate-400">%</span></div>
+          <div className="text-5xl font-bold text-white mt-2 transition-all duration-300">{liveData.productivity}<span className="text-2xl text-slate-400">%</span></div>
           
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
               <div className="text-xs text-slate-400 uppercase">Target</div>
-              <div className="text-xl font-mono text-slate-200">1,284</div>
+              <div className="text-xl font-mono text-slate-200">{liveData.targetUnits}</div>
             </div>
             <div className="text-center">
               <div className="text-xs text-slate-400 uppercase">Units</div>
-              <div className="text-xl font-mono text-slate-200">937</div>
+              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnits}</div>
             </div>
           </div>
         </div>
