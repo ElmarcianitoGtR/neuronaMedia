@@ -24,7 +24,8 @@ El endpoint espera un objeto de tipo `Incidencia` con el siguiente formato JSON.
   "causaRaiz": "Descripción de la causa raíz determinada",
   "creadoEn": "2023-10-01T10:00:00Z", // Timestamp (ISO 8601)
   "actualizadoEn": "2023-10-02T10:00:00Z", // Opcional
-  "validadoPor": "Ing. Juan Pérez", // Opcional
+  "nombreAuditor": "Juan", // Opcional
+  "apellidoAuditor": "Pérez", // Opcional
   "fechaValidacion": "2023-10-03T10:00:00Z", // Opcional
   "notasAuditor": "Notas del auditor sobre la validación", // Opcional
   "analisis": {

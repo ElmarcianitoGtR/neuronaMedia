@@ -111,7 +111,8 @@ export const IncidenciaSchema = z.object({
   creadoEn: z.string(),
   actualizadoEn: z.string().optional(),
   analisis: AnalisisCalidadSchema.optional(),
-  validadoPor: z.string().optional(),
+  nombreAuditor: z.string().optional(),
+  apellidoAuditor: z.string().optional(),
   fechaValidacion: z.string().optional(),
   notasAuditor: z.string().optional()
 });

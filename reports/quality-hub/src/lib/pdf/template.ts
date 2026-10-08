@@ -606,7 +606,7 @@ export function renderQualityReportHtml(
         </div>
         <div class="meta-item">
           <div class="meta-label">Auditor Responsable</div>
-          <div class="meta-value">${censorName(incidente.validadoPor) || 'Equipo de Calidad en Planta'}</div>
+          <div class="meta-value">${censorName(incidente.nombreAuditor, incidente.apellidoAuditor) || 'Equipo de Calidad en Planta'}</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Código de Trazabilidad</div>
@@ -794,7 +794,7 @@ export function renderQualityReportHtml(
         <div class="cert-grid">
           <div class="cert-col">
             <div class="sig-line">
-              ${censorName(incidente.validadoPor) || 'ING. AUDITOR DE CALIDAD RESPONSABLE'}
+              ${censorName(incidente.nombreAuditor, incidente.apellidoAuditor) || 'ING. AUDITOR DE CALIDAD RESPONSABLE'}
             </div>
             <div class="sig-meta">Auditor de Calidad en Planta // Neurona y Media</div>
             <div class="sig-meta">Fecha de Validación: ${incidente.fechaValidacion ? new Date(incidente.fechaValidacion).toLocaleDateString('es-MX') : new Date().toLocaleDateString('es-MX')}</div>

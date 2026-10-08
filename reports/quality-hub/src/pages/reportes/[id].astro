@@ -131,14 +131,27 @@ const evidencias = analisis?.evidencias || [];
           </h3>
 
           <div class="space-y-4 text-sm flex-grow">
-            <div>
-              <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Auditor Responsable</label>
-              <input
-                type="text"
-                id="auditorInput"
-                value={incidente.validadoPor || 'Ing. Auditor de Planta Neurona y Media'}
-                class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
-              />
+            <div class="flex gap-2">
+              <div class="w-1/2">
+                <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Nombre</label>
+                <input
+                  type="text"
+                  id="nombreInput"
+                  value={incidente.nombreAuditor || ''}
+                  class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+                  placeholder="Ej. Juan"
+                />
+              </div>
+              <div class="w-1/2">
+                <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Apellido</label>
+                <input
+                  type="text"
+                  id="apellidoInput"
+                  value={incidente.apellidoAuditor || ''}
+                  class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+                  placeholder="Ej. Pérez"
+                />
+              </div>
             </div>
 
             <div>
@@ -362,7 +375,8 @@ const evidencias = analisis?.evidencias || [];
 
     if (btnValidar) {
       btnValidar.addEventListener('click', async () => {
-        const auditor = (document.getElementById('auditorInput') as HTMLInputElement).value;
+        const nombre = (document.getElementById('nombreInput') as HTMLInputElement).value;
+        const apellido = (document.getElementById('apellidoInput') as HTMLInputElement).value;
         const estado = (document.getElementById('estadoSelect') as HTMLSelectElement).value;
         const notas = (document.getElementById('notasInput') as HTMLTextAreaElement).value;
 
@@ -378,7 +392,8 @@ const evidencias = analisis?.evidencias || [];
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              validadoPor: auditor,
+              nombreAuditor: nombre,
+              apellidoAuditor: apellido,
               estado,
               notasAuditor: notas
             })
