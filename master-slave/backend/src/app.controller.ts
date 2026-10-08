@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AndonAlert } from './andon-alert.entity.js';
@@ -65,6 +65,51 @@ export class AppController {
       ],
       lines,
       downtimeData
+    };
+  }
+
+  @Get('dashboard/report/:lineName')
+  async getReport(@Param('lineName') lineName: string) {
+    const alerts = await this.alertRepository.find({ order: { createdAt: 'DESC' }, take: 5 });
+    const isDanger = alerts.length > 0;
+    const msg = isDanger ? alerts[0].message : 'Operación nominal detectada.';
+
+    return {
+      id: `INC-${Math.floor(Math.random() * 9000) + 1000}`,
+      descripcion: `Desviación en ${lineName}: ${msg}`,
+      area: lineName,
+      severidad: isDanger ? "Alta" : "Baja",
+      estado: isDanger ? "Pendiente" : "Cerrada",
+      causaRaiz: isDanger ? "Deriva detectada en parámetros de telemetría." : "N/A",
+      creadoEn: new Date().toISOString(),
+      analisis: {
+        titulo: `Reporte 8D Dinámico - ${lineName}`,
+        resumen: `Generado desde el backend NestJS con datos vivos. Última alerta: ${msg}`,
+        severidad: isDanger ? "Alta" : "Baja",
+        disciplinas8d: {
+          d1_equipo: ["Líder Mantenimiento", "Calidad"],
+          d2_descripcion: `La línea experimentó: ${msg}`,
+          d3_contencion: isDanger ? "Cuarentena de lote y ajuste de velocidad." : "N/A",
+          d4_causaRaiz: "Fluctuación térmica detectada por sensores IoT.",
+          d5_accionesCorrectivas: "Calibración de servomotores.",
+          d6_implementacion: "Monitoreo continuo.",
+          d7_prevencion: "Mantenimiento predictivo actualizado.",
+          d8_cierre: isDanger ? "Pendiente" : "Cerrado"
+        },
+        ishikawa: [
+          { categoria: "MAQUINARIA", causa: "Desgaste de rodamiento" },
+          { categoria: "MEDIO AMBIENTE", causa: "Exceso de temperatura ambiental" }
+        ],
+        cincoPorques: [
+          { id: "why-1", nivel: 1, pregunta: "¿Por qué falló?", respuesta: "Sobrecalentamiento." },
+          { id: "why-2", nivel: 2, pregunta: "¿Por qué se sobrecalentó?", respuesta: "Fricción excesiva." },
+          { id: "why-3", nivel: 3, pregunta: "¿Por qué hubo fricción?", respuesta: "Falta de lubricación." },
+          { id: "why-4", nivel: 4, pregunta: "¿Por qué no se lubricó?", respuesta: "Bomba obstruida." },
+          { id: "why-5", nivel: 5, pregunta: "¿Por qué se obstruyó?", respuesta: "Filtro no reemplazado en plan PM." }
+        ],
+        acciones: [],
+        evidencias: []
+      }
     };
   }
 }
