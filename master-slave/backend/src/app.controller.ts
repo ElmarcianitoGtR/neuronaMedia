@@ -21,9 +21,9 @@ export class AppController {
     // Calculate top defects
     const defectCounts: Record<string, number> = {};
     alerts.forEach((a: any) => {
-      if (a.message.includes('Térmica')) defectCounts['Termal'] = (defectCounts['Termal'] || 0) + 1;
-      else if (a.message.includes('Presión')) defectCounts['Presión'] = (defectCounts['Presión'] || 0) + 1;
-      else defectCounts['Mecánica'] = (defectCounts['Mecánica'] || 0) + 1;
+      if (a.message.includes('Térmica')) defectCounts['Temperatura'] = (defectCounts['Temperatura'] || 0) + 1;
+      else if (a.message.includes('Presión')) defectCounts['Presión Alta'] = (defectCounts['Presión Alta'] || 0) + 1;
+      else defectCounts['Mecánico'] = (defectCounts['Mecánico'] || 0) + 1;
     });
     const defectsData = Object.keys(defectCounts).map((k, i) => ({
       name: k, 
@@ -115,8 +115,8 @@ export class AppController {
       latestTelemetry: todayLog || { oee: 0, productivity: 0, actualUnits: 0, targetUnits: 0 },
       trendData,
       defectsData: defectsData.length ? defectsData : [
-        { name: 'Termal', value: 30.7, fill: '#64748b' },
-        { name: 'Presión', value: 21.2, fill: '#475569' },
+        { name: 'Temperatura', value: 30.7, fill: '#64748b' },
+        { name: 'Presión Alta', value: 21.2, fill: '#475569' },
       ],
       lines,
       downtimeData
@@ -128,6 +128,8 @@ export class AppController {
     const alerts = await this.alertRepository.find({ order: { createdAt: 'DESC' }, take: 5 });
     const isDanger = alerts.length > 0;
     const msg = isDanger ? alerts[0].message : 'Operación nominal detectada.';
+
+    const isPressure = isDanger && msg.includes('Presión');
 
     return {
       latestAlert: alerts.length > 0 ? alerts[0] : null,
@@ -146,17 +148,23 @@ export class AppController {
           d1_equipo: ["Líder Mantenimiento", "Calidad"],
           d2_descripcion: `La línea experimentó: ${msg}`,
           d3_contencion: isDanger ? "Cuarentena de lote y ajuste de velocidad." : "N/A",
-          d4_causaRaiz: "Fluctuación térmica detectada por sensores IoT.",
-          d5_accionesCorrectivas: "Calibración de servomotores.",
+          d4_causaRaiz: isPressure ? "Fluctuación de presión (Tiro Corto) detectada por sensores." : "Fluctuación térmica detectada por sensores IoT.",
+          d5_accionesCorrectivas: isPressure ? "Ajuste de válvulas neumáticas." : "Calibración de servomotores.",
           d6_implementacion: "Monitoreo continuo.",
           d7_prevencion: "Mantenimiento predictivo actualizado.",
           d8_cierre: isDanger ? "Pendiente" : "Cerrado"
         },
         ishikawa: [
-          { categoria: "MAQUINARIA", causa: "Desgaste de rodamiento" },
-          { categoria: "MEDIO AMBIENTE", causa: "Exceso de temperatura ambiental" }
+          { categoria: "MAQUINARIA", causa: isPressure ? "Válvula defectuosa" : "Desgaste de rodamiento" },
+          { categoria: "MEDIO AMBIENTE", causa: isPressure ? "Variación de presión en línea principal" : "Exceso de temperatura ambiental" }
         ],
-        cincoPorques: [
+        cincoPorques: isPressure ? [
+          { id: "why-1", nivel: 1, pregunta: "¿Por qué falló?", respuesta: "Falta de presión (Tiro Corto)." },
+          { id: "why-2", nivel: 2, pregunta: "¿Por qué faltó presión?", respuesta: "Pérdida en la línea neumática." },
+          { id: "why-3", nivel: 3, pregunta: "¿Por qué hubo pérdida?", respuesta: "Fuga en empalme." },
+          { id: "why-4", nivel: 4, pregunta: "¿Por qué fugó el empalme?", respuesta: "Desgaste del sello." },
+          { id: "why-5", nivel: 5, pregunta: "¿Por qué se desgastó?", respuesta: "Material incorrecto para el fluido." }
+        ] : [
           { id: "why-1", nivel: 1, pregunta: "¿Por qué falló?", respuesta: "Sobrecalentamiento." },
           { id: "why-2", nivel: 2, pregunta: "¿Por qué se sobrecalentó?", respuesta: "Fricción excesiva." },
           { id: "why-3", nivel: 3, pregunta: "¿Por qué hubo fricción?", respuesta: "Falta de lubricación." },

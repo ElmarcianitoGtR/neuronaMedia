@@ -439,9 +439,9 @@ function Dashboard() {
                 <XAxis dataKey="name" stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
                 <YAxis stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151' }} cursor={{fill: '#374151', opacity: 0.4}} />
-                <Bar dataKey="mech" stackId="a" fill="#475569" />
-                <Bar dataKey="elec" stackId="a" fill="#64748b" />
-                <Bar dataKey="ops" stackId="a" fill="#94a3b8" />
+                <Bar dataKey="mech" name="Mecánico" stackId="a" fill="#475569" />
+                <Bar dataKey="elec" name="Temperatura" stackId="a" fill="#64748b" />
+                <Bar dataKey="ops" name="Presión Alta" stackId="a" fill="#94a3b8" />
               </BarChart>
             </ResponsiveContainer>
           </div>
