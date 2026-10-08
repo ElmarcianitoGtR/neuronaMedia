@@ -165,6 +165,7 @@ function Dashboard() {
     downtimeData: []
   });
 
+  const [isDbLoaded, setIsDbLoaded] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -176,11 +177,14 @@ function Dashboard() {
     const loadDb = () => {
       fetch('http://localhost:3000/api/dashboard/stats')
         .then(r => r.json())
-        .then(data => setDbData({
-          trendData: data.trendData,
-          defectsData: data.defectsData,
-          downtimeData: data.downtimeData
-        }))
+        .then(data => {
+          setDbData({
+            trendData: data.trendData,
+            defectsData: data.defectsData,
+            downtimeData: data.downtimeData
+          });
+          setIsDbLoaded(true);
+        })
         .catch(err => console.error("Error loading dashboard stats", err));
     };
     
@@ -203,15 +207,19 @@ function Dashboard() {
     };
   }
 
-  if (!isConnected) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[500px]">
-        <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mb-6"></div>
-        <h2 className="text-xl font-bold text-slate-200 tracking-widest uppercase animate-pulse">Esperando Telemetría...</h2>
-        <p className="text-slate-400 mt-2 text-sm">Estableciendo enlace de datos con Controlador / MATLAB Simulink</p>
-      </div>
-    );
-  }
+  const SocketOverlay = () => !isConnected && (
+    <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
+      <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+      <span className="text-xs font-bold text-slate-300 uppercase animate-pulse text-center px-4">Esperando<br/>Stream UDP...</span>
+    </div>
+  );
+
+  const DbOverlay = () => !isDbLoaded && (
+    <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
+      <div className="w-8 h-8 border-2 border-slate-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+      <span className="text-xs font-bold text-slate-400 uppercase animate-pulse text-center px-4">Consultando<br/>PostgreSQL...</span>
+    </div>
+  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
@@ -219,7 +227,8 @@ function Dashboard() {
       {/* Left Column: KPIs & Trend */}
       <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
         {/* KPI Panel */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4">
+        <div className="bg-[#1f2937] border border-slate-700 p-4 relative overflow-hidden">
+          <SocketOverlay />
           <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center transition-colors duration-500">
             <div>
               <span className="text-sm font-bold text-slate-300 uppercase">OEE</span>
@@ -255,7 +264,8 @@ function Dashboard() {
         </div>
 
         {/* Trend Panel */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow relative overflow-hidden">
+          <DbOverlay />
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN ÚLTIMOS 7 DÍAS</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
@@ -280,7 +290,8 @@ function Dashboard() {
       {/* Middle Column: Main Gauge & Output By Line */}
       <div className="col-span-1 lg:col-span-5 flex flex-col gap-4">
         {/* Main Gauge Panel */}
-        <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px]">
+        <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px] overflow-hidden">
+          <SocketOverlay />
           <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVIDAD DEL TURNO</h3>
           
           {/* Radial SVG Gauge */}
@@ -338,7 +349,8 @@ function Dashboard() {
         </div>
 
         {/* Output By Line Horizontal Bars */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow relative overflow-hidden">
+          <SocketOverlay />
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN POR LÍNEA - TURNO ACTUAL</h3>
           <div className="flex flex-col gap-3">
             {[ 
@@ -362,7 +374,8 @@ function Dashboard() {
       {/* Right Column: Downtime & Defects */}
       <div className="col-span-1 lg:col-span-3 flex flex-col gap-4">
         {/* Downtime Bar Chart */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4">
+        <div className="bg-[#1f2937] border border-slate-700 p-4 relative overflow-hidden">
+          <DbOverlay />
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">RESUMEN DE PAROS</h3>
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
@@ -380,8 +393,9 @@ function Dashboard() {
         </div>
 
         {/* Defects Pie Chart */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow flex flex-col">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">TOP DEFECTS</h3>
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow flex flex-col relative overflow-hidden">
+          <DbOverlay />
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">TOP DEFECTOS</h3>
           <div className="flex-grow flex items-center">
             <div className="w-1/2 h-32">
               <ResponsiveContainer width="100%" height="100%">
