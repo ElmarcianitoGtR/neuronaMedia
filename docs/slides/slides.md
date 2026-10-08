@@ -95,18 +95,10 @@ transition: fade-out
         <p class="text-[11px] text-slate-300 leading-tight">Los formatos 8D, Ishikawa y 5 Porqués se llenan días después con datos incompletos.</p>
       </div>
     </div>
-    <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/60 text-[11px] text-slate-300 flex items-center justify-between">
-      <span class="font-semibold text-rose-400">Consecuencia:</span>
-      <span>Evidencias perdidas • Días de retraso en reportes 8D • Recaptura manual</span>
-    </div>
   </div>
   <div class="col-span-2">
     <InjectionMachine3D></InjectionMachine3D>
   </div>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7"></CircuitGearsAnimation>
 </div>
 
 ---
@@ -197,15 +189,15 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
     </div>
     <ul class="text-xs text-slate-300 space-y-3">
       <li class="flex items-start gap-2">
-        <span class="text-cyan-400 font-bold">✔</span>
+        <span class="text-cyan-400 font-bold">●</span>
         <span><strong>Sensores de Conteo:</strong> Sensores fotoeléctricos o inductivos registrando piezas producidas en tiempo real.</span>
       </li>
       <li class="flex items-start gap-2">
-        <span class="text-cyan-400 font-bold">✔</span>
+        <span class="text-cyan-400 font-bold">●</span>
         <span><strong>Monitoreo de Estado:</strong> Detección de paros mediante lectura de señales eléctricas de maquinaria.</span>
       </li>
       <li class="flex items-start gap-2">
-        <span class="text-cyan-400 font-bold">✔</span>
+        <span class="text-cyan-400 font-bold">●</span>
         <span><strong>Básculas de Scrap:</strong> Sensores de pesaje dedicados en contenedores de rechazo para cuantificar merma.</span>
       </li>
     </ul>
@@ -344,55 +336,6 @@ Tres interfaces diseñadas para cada nivel operativo de la empresa:
 
 ---
 
-# Flujo Operativo: Del Gatillo al Formato 8D
-
-<div class="text-slate-400 text-sm mb-4">
-Secuencia integrada: el gatillo en piso inicia la captura única y genera los reportes de calidad:
-</div>
-
-<div class="space-y-2.5">
-  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-rose-500">
-    <span class="font-mono text-rose-400 font-bold text-xs w-16">0.0 seg</span>
-    <div class="text-xs">
-      <strong class="text-white">Gatillo de Incidencia:</strong> Sensor detecta paro en molde o scrap y dispara la alerta operativa en piso.
-    </div>
-  </div>
-
-  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-amber-500">
-    <span class="font-mono text-amber-400 font-bold text-xs w-16">0.2 seg</span>
-    <div class="text-xs">
-      <strong class="text-white">Apertura de Captura Digital:</strong> La terminal en estación abre la interfaz guiada de ingreso de evidencia.
-    </div>
-  </div>
-
-  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-cyan-500">
-    <span class="font-mono text-cyan-400 font-bold text-xs w-16">0.5 seg</span>
-    <div class="text-xs">
-      <strong class="text-white">Captura Única en Piso:</strong> Operador adjunta fotos, causa preliminar y variables una sola vez en el sistema.
-    </div>
-  </div>
-
-  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-slate-400">
-    <span class="font-mono text-slate-300 font-bold text-xs w-16">1.5 seg</span>
-    <div class="text-xs">
-      <strong class="text-white">Alimentación Automática 8D:</strong> El motor estructura el evento al instante en formatos 8D, Ishikawa y 5 Porqués.
-    </div>
-  </div>
-
-  <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-emerald-500">
-    <span class="font-mono text-emerald-400 font-bold text-xs w-16">Cierre</span>
-    <div class="text-xs">
-      <strong class="text-white">Control Derivado y OEE:</strong> El tablero Andon reanuda en verde y el OEE se recalcula sin recaptura manual.
-    </div>
-  </div>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
-</div>
-
----
-
 # Impacto y Resultados de Negocio (ROI)
 
 <div class="text-slate-400 text-sm mb-4">
@@ -447,7 +390,7 @@ class: text-center
 <div class="h-full flex flex-col justify-center items-center pb-12">
 
   <h1 class="text-4xl font-extrabold text-white mb-3">
-    Captura Única. Calidad Inmediata. Cero Recapturas.
+    Captura única, calidad inmediata, cero recapturas.
   </h1>
 
   <p class="text-slate-300 text-sm max-w-lg mb-8">
@@ -457,9 +400,9 @@ class: text-center
   <div class="card-clean p-4 max-w-md w-full text-left">
     <div class="text-xs font-mono text-cyan-400 mb-1">ESTADO DEL MVP:</div>
     <div class="text-xs text-slate-300 mb-3 space-y-1">
-      <div>✔ Captura digital única de evidencias y contexto de falla</div>
-      <div>✔ Alimentación automática de formatos 8D, Ishikawa y 5 Porqués</div>
-      <div>✔ Gatillos IoT en máquina/molde y dashboards OEE derivados</div>
+      <div>Captura digital única y contexto de falla</div>
+      <div>Alineación de formatos 8D, Ishikawa y 5 Porqués</div>
+      <div>Gatillos IoT en máquina/molde y dashboards OEE derivados</div>
     </div>
     <div class="text-center font-bold text-sm text-white pt-2 border-t border-slate-800">
       ¿Preguntas o comentarios?

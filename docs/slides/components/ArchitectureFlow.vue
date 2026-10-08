@@ -141,7 +141,7 @@ const props = defineProps({
       <!-- GRUPO 1: ESCLAVOS -->
       <g>
         <rect x="15" y="15" width="185" height="235" rx="10" fill="url(#card-grad)" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" />
-        <text x="107" y="34" class="t-title" style="font-size: 10px !important;">1. ESCLAVOS (PLANTA)</text>
+        <text x="107" y="34" class="t-title" style="font-size: 10px !important;">1. ESCLAVOS</text>
 
         <!-- Sensores -->
         <rect x="25" y="40" width="165" height="32" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.2" />
