@@ -443,7 +443,7 @@ function Dashboard() {
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.fill }}></div>
                     <span className="text-slate-300">{d.name}</span>
                   </div>
-                  <span className="text-slate-400">{d.value}%</span>
+                  <span className="text-slate-400">{d.value} incid.</span>
                 </div>
               ))}
             </div>

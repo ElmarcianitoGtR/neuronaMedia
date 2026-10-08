@@ -27,7 +27,7 @@ export class AppController {
     });
     const defectsData = Object.keys(defectCounts).map((k, i) => ({
       name: k, 
-      value: defectCounts[k] * 10, // multiplied for visibility if few
+      value: defectCounts[k], // multiplied for visibility if few
       fill: ['#64748b', '#475569', '#334155'][i % 3]
     }));
 
