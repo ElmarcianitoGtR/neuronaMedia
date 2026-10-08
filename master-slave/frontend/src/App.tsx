@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import './App.css';
@@ -8,6 +8,7 @@ const socket = io('http://localhost:3000');
 
 function App() {
   const [activeTab, setActiveTab] = useState<'andon' | 'dashboard'>('dashboard');
+  const notificationHistory = useRef<{time: number, message: string, line: string}[]>([]);
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -15,6 +16,18 @@ function App() {
     }
 
     const handleAnomaly = (alert: any) => {
+      const now = Date.now();
+      const fiveMins = 5 * 60 * 1000;
+      
+      notificationHistory.current = notificationHistory.current.filter(h => now - h.time < fiveMins);
+      
+      if (notificationHistory.current.length >= 3) return;
+      
+      const isDuplicate = notificationHistory.current.find(h => h.line === alert.lineName && h.message === alert.message);
+      if (isDuplicate) return;
+
+      notificationHistory.current.push({ time: now, message: alert.message, line: alert.lineName });
+
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('¡Anomalía Detectada!', {
           body: `Línea: ${alert.lineName} - ${alert.message}`,
