@@ -117,7 +117,7 @@ function AndonBoard() {
         <div className="absolute inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm rounded-lg">
           <div className="text-center p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl">
             <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="text-white font-bold text-lg mb-2">Generando Análisis 8D</h3>
+            <h3 className="text-white font-bold text-lg mb-2">Generando Reporte Carta</h3>
             <p className="text-slate-400 text-sm">La Inteligencia Artificial está diagnosticando la falla...</p>
           </div>
         </div>
@@ -138,7 +138,7 @@ function AndonBoard() {
               onClick={() => generarDescargarPDF(line.name)}
               className="px-3 py-1 bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold uppercase rounded-sm"
             >
-              Descargar 8D (PDF)
+              Generar PDF Carta
             </button>
           </div>
           <div className="mt-auto pt-4 border-t border-slate-700 flex justify-between">
