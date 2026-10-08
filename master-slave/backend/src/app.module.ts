@@ -4,7 +4,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AndonAlert } from './andon-alert.entity.js';
 import { TelemetryGateway } from './telemetry.gateway.js';
-import { ModbusService } from './modbus.service.js';
+import { UdpService } from './udp.service.js';
 
 @Module({
   imports: [
@@ -17,6 +17,6 @@ import { ModbusService } from './modbus.service.js';
     TypeOrmModule.forFeature([AndonAlert]),
   ],
   controllers: [AppController],
-  providers: [AppService, TelemetryGateway, ModbusService],
+  providers: [AppService, TelemetryGateway, UdpService],
 })
 export class AppModule {}
