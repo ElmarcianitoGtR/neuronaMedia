@@ -25,3 +25,7 @@ Para evitar errores de permisos (`EACCES`) y bloqueos de sistema de archivos (`E
 - **Estilo Industrial Matte**: Todo el frontend utiliza colores oscuros y planos (`#111827`, `#1f2937`, `#374151`). Está prohibido el uso de *glassmorphism* o sombras difuminadas que resten seriedad al entorno industrial.
 - **Colores Semánticos**: El rojo, amarillo y verde/teal están estrictamente reservados para indicar estados y alertas operativas, no como elementos puramente decorativos.
 - **Componentes SVG Avanzados**: Para indicadores complejos (ej. el Productivity Shift gauge), se emplean arcos radiales matemáticos usando SVG (`strokeDasharray` y `strokeDashoffset`). Si los segmentos requieren cortes perfectamente rectos hacia el centro (radiales), se debe usar obligatoriamente `strokeLinecap="butt"`.
+
+## Modo Cavernícola (Ahorro Extremo de Tokens)
+- **Activo permanente**: Seguir estrictamente el skill `cavernicola` (`~/.gemini/config/skills/cavernicola/SKILL.md`).
+- **Razonamiento (Thinking) y Respuestas**: Telegráfico, conciso, alta densidad de información. Cero saludos, cero cortesías, cero frases de relleno. Directo a la solución técnica.
