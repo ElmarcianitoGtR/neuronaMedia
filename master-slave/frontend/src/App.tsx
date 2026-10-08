@@ -41,12 +41,14 @@ function App() {
 }
 
 function AndonBoard() {
-  const lines = [
-    { id: 1, name: 'Línea 1', status: 'success', message: 'Operando', speed: '1,940 u/h' },
-    { id: 2, name: 'Línea 2', status: 'danger', message: 'Falla Mecánica', speed: '0 u/h' },
-    { id: 3, name: 'Línea 3', status: 'warning', message: 'Alerta Calidad', speed: '1,200 u/h' },
-    { id: 4, name: 'Línea 4', status: 'success', message: 'Operando', speed: '1,850 u/h' },
-  ];
+  const [lines, setLines] = useState<any[]>([]);
+
+  useEffect(() => {
+    const load = () => fetch('http://localhost:3000/api/dashboard/stats').then(r => r.json()).then(d => setLines(d.lines));
+    load();
+    const int = setInterval(load, 5000);
+    return () => clearInterval(int);
+  }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,43 +74,45 @@ function AndonBoard() {
 }
 
 function Dashboard() {
-  const [liveData, setLiveData] = useState({
+  const [liveData, setLiveData] = useState<any>({
     oee: '69.2',
     productivity: 73,
     targetUnits: 1284,
     actualUnits: 937
   });
 
+  const [dbData, setDbData] = useState<any>({
+    trendData: [],
+    defectsData: [],
+    downtimeData: []
+  });
+
   useEffect(() => {
     socket.on('telemetry_update', (data) => {
       setLiveData(data);
     });
+    
+    const loadDb = () => {
+      fetch('http://localhost:3000/api/dashboard/stats')
+        .then(r => r.json())
+        .then(data => setDbData({
+          trendData: data.trendData,
+          defectsData: data.defectsData,
+          downtimeData: data.downtimeData
+        }))
+        .catch(err => console.error("Error loading dashboard stats", err));
+    };
+    
+    loadDb();
+    const interval = setInterval(loadDb, 5000);
+
     return () => {
       socket.off('telemetry_update');
+      clearInterval(interval);
     };
   }, []);
 
-  // Recharts Data matching the dense industrial look
-  const trendData = [
-    { time: 'Lun', produccion: 5200 }, { time: 'Mar', produccion: 6100 },
-    { time: 'Mie', produccion: 5800 }, { time: 'Jue', produccion: 7400 },
-    { time: 'Vie', produccion: 7100 }, { time: 'Sab', produccion: 8500 },
-    { time: 'Dom', produccion: 8200 },
-  ];
-  
-  const defectsData = [
-    { name: 'Labeling', value: 30.7, fill: '#64748b' }, // slate-500
-    { name: 'Sealing', value: 21.2, fill: '#475569' }, // slate-600
-    { name: 'Alignment', value: 13.9, fill: '#334155' }, // slate-700
-    { name: 'Weight', value: 12.6, fill: '#ef4444' }, // red-500 (ALERT)
-  ];
-
-  const downtimeData = [
-    { name: 'L1', mech: 20, elec: 10, ops: 5 },
-    { name: 'L2', mech: 15, elec: 25, ops: 10 },
-    { name: 'L3', mech: 30, elec: 5, ops: 15 },
-    { name: 'L4', mech: 10, elec: 15, ops: 20 },
-  ];
+  const { trendData, defectsData, downtimeData } = dbData;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
@@ -284,14 +288,14 @@ function Dashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={defectsData} innerRadius={30} outerRadius={50} paddingAngle={2} dataKey="value" stroke="none">
-                    {defectsData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                    {defectsData.map((entry: any, index: number) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                   </Pie>
                   <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="w-1/2 flex flex-col gap-2 justify-center pl-2">
-              {defectsData.map(d => (
+              {defectsData.map((d: any) => (
                 <div key={d.name} className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.fill }}></div>
