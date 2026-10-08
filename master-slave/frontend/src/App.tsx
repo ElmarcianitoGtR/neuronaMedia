@@ -180,14 +180,37 @@ function Dashboard() {
         <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px]">
           <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVITY SHIFT</h3>
           
-          {/* Simulated Gauge with SVG */}
-          <div className="relative w-48 h-24 overflow-hidden mt-8 transition-all duration-500">
-            <div className="absolute inset-0 border-[16px] border-[#374151] rounded-t-full border-b-0"></div>
-            <div className="absolute inset-0 border-[16px] border-teal-500 rounded-t-full border-b-0 transition-all duration-700" style={{ clipPath: `polygon(0 0, ${liveData.productivity}% 0, ${liveData.productivity}% 100%, 0 100%)` }}></div>
-            <div className="absolute inset-0 border-[16px] border-yellow-500 rounded-t-full border-b-0 transition-all duration-700" style={{ clipPath: `polygon(${liveData.productivity}% 0, 85% 0, 85% 100%, ${liveData.productivity}% 100%)` }}></div>
-            <div className="absolute inset-0 border-[16px] border-red-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(85% 0, 100% 0, 100% 100%, 85% 100%)' }}></div>
+          {/* Radial SVG Gauge */}
+          <div className="relative w-64 h-32 mt-8 flex flex-col items-center justify-end">
+            <svg viewBox="0 0 200 100" className="absolute top-0 left-0 w-full h-full overflow-visible">
+              {/* Background Red (85% - 100%) */}
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" strokeWidth="20" strokeLinecap="round" />
+              
+              {/* Yellow Zone (Prod% - 85%) */}
+              <path 
+                d="M 20 100 A 80 80 0 0 1 180 100" 
+                fill="none" 
+                stroke="#eab308" 
+                strokeWidth="20" 
+                strokeLinecap="round"
+                strokeDasharray={251.2} 
+                strokeDashoffset={251.2 - 0.85 * 251.2}
+              />
+
+              {/* Teal Productivity Fill (0% - Prod%) */}
+              <path 
+                d="M 20 100 A 80 80 0 0 1 180 100" 
+                fill="none" 
+                stroke="#14b8a6" 
+                strokeWidth="20" 
+                strokeLinecap="round"
+                strokeDasharray={251.2} 
+                strokeDashoffset={251.2 - (Math.min(liveData.productivity || 0, 100) / 100) * 251.2}
+                className="transition-all duration-700 ease-out"
+              />
+            </svg>
+            <div className="text-5xl font-bold text-white z-10 mb-[-10px]">{liveData.productivity || 0}<span className="text-2xl text-slate-400">%</span></div>
           </div>
-          <div className="text-5xl font-bold text-white mt-2 transition-all duration-300">{liveData.productivity}<span className="text-2xl text-slate-400">%</span></div>
           
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
