@@ -1,0 +1,5 @@
+packages:
+  - 'master-slave/*'
+  - 'reports/*'
+  - 'docs/slides'
+  - 'packages/*'
