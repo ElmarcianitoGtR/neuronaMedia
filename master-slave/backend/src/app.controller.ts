@@ -32,7 +32,7 @@ export class AppController {
     }));
 
     // Generate trend data dynamically (since we just started DB, mock the last 6 days + today from DB)
-    const todayLog = await this.telemetryRepository.findOne({ order: { id: 'DESC' } });
+    const [todayLog] = await this.telemetryRepository.find({ order: { id: 'DESC' }, take: 1 });
     const todayProd = todayLog ? todayLog.actualUnits : 0;
     
     const trendData = [
