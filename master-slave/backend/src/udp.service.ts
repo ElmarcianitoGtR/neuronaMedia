@@ -79,6 +79,9 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       const totalPiezas = piezasOk + scrap;
       const oee = totalPiezas > 0 ? (piezasOk / totalPiezas) * 100 : 0;
       
+      const targetUnits = 1500;
+      const productivity = parseFloat(((piezasOk / targetUnits) * 100).toFixed(1));
+
       const telemetry = {
         maquinaId: `M-${maquinaId.toString().padStart(2, '0')}`,
         etapa,
@@ -88,7 +91,8 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
         temp: parseFloat(temp.toFixed(2)),
         presion: parseFloat(presion.toFixed(2)),
         oee: parseFloat(oee.toFixed(1)),
-        targetUnits: 1500,
+        productivity,
+        targetUnits,
         actualUnits: piezasOk
       };
 

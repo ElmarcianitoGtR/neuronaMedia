@@ -65,6 +65,9 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
     const totalPiezas = this.piezasOk + this.scrap;
     const oee = totalPiezas > 0 ? (this.piezasOk / totalPiezas) * 100 : 0;
     
+    const targetUnits = 1500;
+    const productivity = parseFloat(((this.piezasOk / targetUnits) * 100).toFixed(1));
+
     const telemetry = {
       maquinaId: 'M-01',
       etapa: this.etapa,
@@ -74,7 +77,8 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
       temp: parseFloat(temp.toFixed(2)),
       presion: parseFloat(presion.toFixed(2)),
       oee: parseFloat(oee.toFixed(1)),
-      targetUnits: 1500,
+      productivity,
+      targetUnits,
       actualUnits: this.piezasOk
     };
 
