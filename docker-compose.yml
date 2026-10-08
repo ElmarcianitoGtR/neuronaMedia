@@ -65,8 +65,25 @@ services:
       - .:/app                           # Mount source for hot-reload
       - frontend_node_modules:/app/node_modules  # Isolate container's node_modules from host
 
+  quality-hub:
+    build:
+      context: .
+      dockerfile: reports/quality-hub/Dockerfile
+      target: dev
+    container_name: quality-hub
+    profiles: ["master-slave-dev", "full"]
+    environment:
+      - NODE_ENV=development
+      - PDF_RENDERER_URL=http://pdf-renderer:4650
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/app
+      - reports_node_modules:/app/node_modules
+
 volumes:
   memgraph-data:
   backend_node_modules:
   frontend_node_modules:
+  reports_node_modules:
   ms_pgdata:

@@ -53,6 +53,59 @@ function AndonBoard() {
     return () => clearInterval(int);
   }, []);
 
+  const generarDescargarPDF = async (lineName: string, message: string) => {
+    const isDanger = message !== 'Operando';
+    const mockIncidencia = {
+      id: `INC-${Math.floor(Math.random() * 1000)}`,
+      descripcion: message,
+      area: lineName,
+      severidad: isDanger ? "Alta" : "Baja",
+      estado: isDanger ? "Pendiente" : "Cerrada",
+      causaRaiz: isDanger ? "Bajo investigación" : "Operación normal",
+      creadoEn: new Date().toISOString(),
+      analisis: {
+        titulo: `Reporte 8D - ${lineName}`,
+        resumen: isDanger ? `Falla detectada: ${message}` : "Reporte de estado de línea operando correctamente.",
+        severidad: isDanger ? "Alta" : "Baja",
+        disciplinas8d: {
+          d1_equipo: ["Operador", "Calidad"],
+          d2_descripcion: message,
+          d3_contencion: isDanger ? "Paro de línea y revisión" : "N/A",
+          d4_causaRaiz: "Pendiente",
+          d5_accionesCorrectivas: "Pendiente",
+          d6_implementacion: "Pendiente",
+          d7_prevencion: "Pendiente",
+          d8_cierre: "Pendiente"
+        },
+        ishikawa: [],
+        cincoPorques: Array(5).fill(0).map((_, i) => ({ id: `why-${i}`, nivel: i+1, pregunta: "¿Por qué?", respuesta: "TBD" })),
+        acciones: [],
+        evidencias: []
+      }
+    };
+
+    try {
+      const response = await fetch('http://localhost:4321/api/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mockIncidencia)
+      });
+      if (!response.ok) throw new Error('API Error');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Reporte-${lineName}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      alert('Error al generar PDF. Verifica que quality-hub esté corriendo.');
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {lines.map((line) => (
@@ -66,6 +119,14 @@ function AndonBoard() {
             }`}>{line.status}</span>
           </div>
           <p className="text-slate-400 text-sm mb-4">{line.message}</p>
+          <div className="flex gap-2 mb-4">
+            <button 
+              onClick={() => generarDescargarPDF(line.name, line.message)}
+              className="px-3 py-1 bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold uppercase rounded-sm"
+            >
+              Descargar 8D (PDF)
+            </button>
+          </div>
           <div className="mt-auto pt-4 border-t border-slate-700 flex justify-between">
             <span className="text-xs text-slate-500 uppercase">Velocidad</span>
             <span className="font-mono text-slate-200">{line.speed}</span>
