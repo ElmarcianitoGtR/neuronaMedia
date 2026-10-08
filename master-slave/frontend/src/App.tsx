@@ -256,7 +256,7 @@ function Dashboard() {
     };
   }, []);
 
-  const { trendData, defectsData, downtimeData, latestAlert } = dbData;
+  const { trendData, defectsData, downtimeData, latestAlert, lines = [] } = dbData;
 
   const displayTrendData = [...trendData];
   if (displayTrendData.length > 0) {
@@ -411,17 +411,27 @@ function Dashboard() {
         <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow relative overflow-hidden">
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN POR LÍNEA - TURNO ACTUAL</h3>
           <div className="flex flex-col gap-3">
-            {[ 
-              {name: (liveData.maquinaId || 'Línea 1'), val: Math.round(liveData.productivity || 0), col: (liveData.productivity || 0) >= 85 ? 'bg-teal-500' : ((liveData.productivity || 0) < 60 ? 'bg-red-500' : 'bg-slate-500')}, 
-            ].map(l => (
+            {lines.length > 0 ? lines.map((l: any) => (
               <div key={l.name} className="flex items-center gap-4 text-sm">
                 <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
                 <div className="flex-grow bg-[#111827] h-5 relative">
-                  <div className={`absolute top-0 left-0 h-full ${l.col}`} style={{ width: `${Math.min(l.val, 100)}%` }}></div>
-                  <span className="absolute inset-0 flex items-center justify-end pr-2 text-xs text-white font-bold drop-shadow-md">{l.val}%</span>
+                  <div className={`absolute top-0 left-0 h-full ${l.productivity >= 85 ? 'bg-teal-500' : (l.productivity < 60 ? 'bg-red-500' : 'bg-slate-500')}`} style={{ width: `${Math.min(Math.round(l.productivity), 100)}%` }}></div>
+                  <span className="absolute inset-0 flex items-center justify-end pr-2 text-xs text-white font-bold drop-shadow-md">{Math.round(l.productivity)}%</span>
                 </div>
               </div>
-            ))}
+            )) : (
+              [ 
+                {name: (liveData.maquinaId || 'Línea 1'), val: Math.round(liveData.productivity || 0), col: (liveData.productivity || 0) >= 85 ? 'bg-teal-500' : ((liveData.productivity || 0) < 60 ? 'bg-red-500' : 'bg-slate-500')}, 
+              ].map(l => (
+                <div key={l.name} className="flex items-center gap-4 text-sm">
+                  <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
+                  <div className="flex-grow bg-[#111827] h-5 relative">
+                    <div className={`absolute top-0 left-0 h-full ${l.col}`} style={{ width: `${Math.min(l.val, 100)}%` }}></div>
+                    <span className="absolute inset-0 flex items-center justify-end pr-2 text-xs text-white font-bold drop-shadow-md">{l.val}%</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
