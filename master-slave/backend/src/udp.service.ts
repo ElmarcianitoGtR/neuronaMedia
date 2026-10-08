@@ -28,10 +28,15 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       this.server.close();
     });
 
-    this.server.on('message', (msg) => {
+    this.server.on('message', (msg, rinfo) => {
       // Expected payload: 9 uint16 elements = 18 bytes
+      if (process.env.DEBUG_UDP === 'true') {
+        this.logger.log(`UDP Msg from ${rinfo.address}:${rinfo.port} - Size: ${msg.length} bytes`);
+      }
       if (msg.length >= 18) {
         this.processNewData(msg);
+      } else if (process.env.DEBUG_UDP === 'true') {
+        this.logger.warn(`Ignored packet: Expected 18 bytes, got ${msg.length}`);
       }
     });
 
