@@ -155,8 +155,8 @@ function Dashboard() {
   const [liveData, setLiveData] = useState<any>({
     oee: '69.2',
     productivity: 73,
-    targetUnidades: 1284,
-    actualUnidades: 937
+    targetUnits: 1284,
+    actualUnits: 937
   });
 
   const [dbData, setDbData] = useState<any>({
@@ -307,11 +307,11 @@ function Dashboard() {
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
               <div className="text-xs text-slate-400 uppercase">Objetivo</div>
-              <div className="text-xl font-mono text-slate-200">{liveData.targetUnidades}</div>
+              <div className="text-xl font-mono text-slate-200">{liveData.targetUnits}</div>
             </div>
             <div className="text-center">
               <div className="text-xs text-slate-400 uppercase">Unidades</div>
-              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnidades}</div>
+              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnits}</div>
             </div>
           </div>
         </div>
