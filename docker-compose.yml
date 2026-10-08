@@ -75,6 +75,7 @@ services:
     environment:
       - NODE_ENV=development
       - PDF_RENDERER_URL=http://pdf-renderer:3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     ports:
       - "4321:4321"
     volumes:

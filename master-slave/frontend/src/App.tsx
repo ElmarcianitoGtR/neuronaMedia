@@ -55,12 +55,33 @@ function AndonBoard() {
 
   const generarDescargarPDF = async (lineName: string) => {
     try {
-      // 1. Obtener datos estructurados 8D desde NestJS
+      // 1. Obtener datos estructurados desde NestJS (alerta real)
       const reportRes = await fetch(`http://localhost:3000/api/dashboard/report/${lineName}`);
-      if (!reportRes.ok) throw new Error('Error obteniendo datos del 8D del backend');
-      const incidenteData = await reportRes.json();
+      if (!reportRes.ok) throw new Error('Error obteniendo datos del backend');
+      const rawData = await reportRes.json();
 
-      // 2. Mandar datos a Astro/Gotenberg
+      // 2. Autogenerar 8D con IA (Gemini) vía Quality Hub
+      const iaRes = await fetch('http://localhost:4321/api/incidentes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: rawData.id,
+          descripcion: rawData.descripcion,
+          area: rawData.area,
+          severidad: rawData.severidad,
+          evidencia: "Lectura anómala de telemetría IoT detectada"
+        })
+      });
+      if (!iaRes.ok) throw new Error('Error generando análisis con IA');
+      const aiResponse = await iaRes.json();
+
+      // Mezclar datos originales con el análisis IA
+      const incidenteData = {
+        ...rawData,
+        analisis: aiResponse.analisis
+      };
+
+      // 3. Mandar datos finales a Astro/Gotenberg para armar el PDF
       const response = await fetch('http://localhost:4321/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
