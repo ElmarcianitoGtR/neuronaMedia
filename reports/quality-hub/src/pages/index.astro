@@ -1,34 +1,333 @@
 ---
 import { getIncidentes } from '../lib/memgraph';
+import '../styles/global.css';
 
-// Código que corre en el servidor Node de Astro antes de renderizar
 const incidentes = await getIncidentes();
+
+// Cálculos de KPIs industriales en planta
+const totalIncidencias = incidentes.length;
+const criticas = incidentes.filter(i => i.severidad === 'Crítica' || i.severidad === 'Alta').length;
+const enAuditoria = incidentes.filter(i => i.estado === 'En Auditoría' || i.estado === 'Pendiente').length;
+const resueltas = incidentes.filter(i => i.estado === 'Validada' || i.estado === 'Mitigada' || i.estado === 'Cerrada').length;
 ---
 
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Quality Hub - Control de Calidad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quality Hub // Mitsubishi Quality Challenge</title>
 </head>
-<body class="p-8 font-sans bg-slate-50 text-slate-900">
-  <h1 class="text-3xl font-bold">Consola de Incidencias de Calidad</h1>
-  <p class="text-slate-600 mb-6">Auditoría 8D, Ishikawa y 5 Porqués (Humano en el Bucle)</p>
+<body class="min-h-screen flex flex-col bg-[#111827] text-slate-200 font-sans selection:bg-teal-600 selection:text-white">
 
-  <div class="grid gap-4">
-    {incidentes.map((inc: any) => (
-      <div class="border p-4 rounded-lg bg-white shadow-sm">
-        <h2 class="font-bold text-lg">{inc.id} - {inc.descripcion}</h2>
-        <p class="text-sm text-slate-500">Causa Raíz Propuesta: {inc.causaRaiz}</p>
-        <div class="mt-3 flex gap-2">
-          <a href={`/reportes/${inc.id}`} class="bg-blue-600 text-white px-3 py-1 rounded text-sm">
-            Revisar y Validar
-          </a>
-          <a href={`/api/generate-pdf?id=${inc.id}`} target="_blank" class="bg-slate-700 text-white px-3 py-1 rounded text-sm">
-            Descargar PDF Oficial
-          </a>
+  <!-- NAVBAR - SOLID INDUSTRIAL MATTE (1:1 master-slave) -->
+  <header class="bg-[#1f2937] border-b border-slate-700 p-4 flex flex-wrap justify-between items-center shadow-md z-50 gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-3.5 h-3.5 bg-teal-500 rounded-sm"></div>
+      <div>
+        <h1 class="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-2">
+          QUALITY ASSURANCE // 8D AUDIT CONSOLE
+        </h1>
+        <p class="text-xs text-slate-400">Mitsubishi Motors Quality Hub • Control y Resolución de No Conformidades</p>
+      </div>
+    </div>
+
+    <!-- ESTADO DE NODOS & SERVICIOS -->
+    <div class="flex items-center gap-2">
+      <div class="hidden sm:flex items-center gap-3 bg-[#111827] border border-slate-700 px-3 py-1.5 rounded-sm text-xs text-slate-400 mr-2">
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Memgraph</span>
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-400"></span>Gemini 8D</span>
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span>Gotenberg PDF</span>
+      </div>
+      <button
+        id="btnNuevaIncidencia"
+        class="px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm bg-teal-600 text-white hover:bg-teal-500"
+      >
+        + Registrar Incidencia
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-grow p-4 md:p-6 w-full max-w-7xl mx-auto space-y-6">
+
+    <!-- KPI HIGHLIGHT PANEL (1:1 PATTERN DE MASTER-SLAVE) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- KPI 1: TOTAL -->
+      <div class="bg-[#064e3b] border border-[#047857] p-3 flex justify-between items-center rounded-sm">
+        <div>
+          <span class="text-sm font-bold text-slate-300 uppercase">Total Incidencias</span>
+          <div class="text-3xl font-bold text-teal-400 font-mono mt-0.5">{totalIncidencias}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-teal-500 uppercase tracking-wider">Grafo</div>
+          <div class="text-sm font-bold text-teal-400">Activas</div>
         </div>
       </div>
-    ))}
-  </div>
+
+      <!-- KPI 2: CRÍTICAS -->
+      <div class="bg-[#450a0a] border border-[#991b1b] p-3 flex justify-between items-center rounded-sm">
+        <div>
+          <span class="text-sm font-bold text-slate-300 uppercase">Críticas / Severas</span>
+          <div class="text-3xl font-bold text-red-400 font-mono mt-0.5">{criticas}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-red-400 uppercase tracking-wider">Alerta</div>
+          <div class="text-sm font-bold text-red-400">Paro Línea</div>
+        </div>
+      </div>
+
+      <!-- KPI 3: EN AUDITORÍA -->
+      <div class="bg-[#451a03] border border-[#b45309] p-3 flex justify-between items-center rounded-sm">
+        <div>
+          <span class="text-sm font-bold text-slate-300 uppercase">En Auditoría</span>
+          <div class="text-3xl font-bold text-yellow-400 font-mono mt-0.5">{enAuditoria}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-yellow-400 uppercase tracking-wider">Humano</div>
+          <div class="text-sm font-bold text-yellow-400">Revisión</div>
+        </div>
+      </div>
+
+      <!-- KPI 4: MITIGADAS / VALIDADAS -->
+      <div class="bg-[#064e3b] border border-[#047857] p-3 flex justify-between items-center rounded-sm">
+        <div>
+          <span class="text-sm font-bold text-slate-300 uppercase">Resueltas / Validadas</span>
+          <div class="text-3xl font-bold text-teal-400 font-mono mt-0.5">{resueltas}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-teal-500 uppercase tracking-wider">Eficacia</div>
+          <div class="text-sm font-bold text-teal-400">100% OK</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- FORMULARIO DE INGESTA RÁPIDA (COLLAPSIBLE INDUSTRIAL PANEL) -->
+    <section id="formContainer" class="hidden bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
+        <div>
+          <h2 class="text-xs font-bold uppercase text-slate-400 tracking-wider">
+            Ingesta Automatizada de Defecto • Diagnóstico Gemini 8D + Ishikawa + 5W
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Dispara el análisis estructurado de IA y persiste el subgrafo con nodos Incidencia, IshikawaFactor, CausaPorQue y Accion.
+          </p>
+        </div>
+        <button id="btnCerrarForm" class="text-slate-400 hover:text-slate-200 text-xs uppercase font-bold px-2 py-1 bg-[#374151] rounded-sm">
+          Cerrar ×
+        </button>
+      </div>
+
+      <form id="formIncidencia" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Línea / Estación de Ensamble</label>
+            <input
+              type="text"
+              id="inputArea"
+              required
+              value="Línea 2 - Estación 04 (Chasis y Frenos)"
+              class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Severidad Inicial</label>
+            <select
+              id="inputSeveridad"
+              class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+            >
+              <option value="Crítica">Crítica (Riesgo Inmediato de Seguridad)</option>
+              <option value="Alta" selected>Alta (Alerta de Calidad / Retrabajo)</option>
+              <option value="Media">Media (Desviación Dimensional Leve)</option>
+              <option value="Baja">Baja (Observación Operativa)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Descripción del Defecto / Falla</label>
+            <textarea
+              id="inputDescripcion"
+              rows="3"
+              required
+              class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+            >Variación de torque detectada en perno de cáliper delantero izquierdo. El transductor reportó corte antes del umbral JIS de 110 Nm.</textarea>
+          </div>
+
+          <div class="flex flex-wrap justify-between items-center gap-3">
+            <span id="formFeedback" class="text-xs font-semibold text-teal-400"></span>
+            <button
+              type="submit"
+              id="btnEnviarForm"
+              class="bg-teal-600 hover:bg-teal-500 text-white font-semibold uppercase tracking-wider text-xs px-5 py-2.5 rounded-sm transition-none"
+            >
+              Ejecutar Diagnóstico y Guardar en Memgraph
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- LISTA DE INCIDENCIAS (TABLA INDUSTRIAL SEGÚN DESIGN_LANGUAGE.md) -->
+    <section class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h2 class="text-xs font-bold uppercase text-slate-400 tracking-wider">
+            REGISTRO DE INCIDENCIAS Y NO CONFORMIDADES (PLANT LEVEL)
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Auditoría con Humano en el Bucle y Exportación Oficial Gotenberg</p>
+        </div>
+        <span class="text-xs font-mono text-slate-400 bg-[#111827] px-2.5 py-1 border border-slate-700 rounded-sm">
+          {incidentes.length} REGISTROS
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#111827] border-b border-slate-700 text-xs font-bold uppercase text-slate-400 tracking-wider">
+              <th class="py-3 px-4">Folio ID</th>
+              <th class="py-3 px-4">Estación / Línea</th>
+              <th class="py-3 px-4">Descripción de la Anomalía</th>
+              <th class="py-3 px-4">Causa Raíz Propuesta</th>
+              <th class="py-3 px-4 text-center">Severidad</th>
+              <th class="py-3 px-4 text-center">Estado</th>
+              <th class="py-3 px-4 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700/60 text-sm">
+            {incidentes.map((inc) => (
+              <tr class="hover:bg-[#283548] transition-none">
+                <td class="py-3 px-4 font-mono font-bold text-teal-400 whitespace-nowrap">
+                  {inc.id}
+                </td>
+                <td class="py-3 px-4 text-slate-300 whitespace-nowrap">
+                  {inc.area}
+                </td>
+                <td class="py-3 px-4 text-slate-300 max-w-sm truncate" title={inc.descripcion}>
+                  {inc.descripcion}
+                </td>
+                <td class="py-3 px-4 text-slate-400 max-w-xs truncate text-xs" title={inc.causaRaiz}>
+                  {inc.causaRaiz}
+                </td>
+                <td class="py-3 px-4 text-center whitespace-nowrap">
+                  <span class={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
+                    inc.severidad === 'Crítica'
+                      ? 'bg-red-900 text-red-400'
+                      : inc.severidad === 'Alta'
+                      ? 'bg-yellow-900 text-yellow-400'
+                      : inc.severidad === 'Media'
+                      ? 'bg-yellow-900/60 text-yellow-300'
+                      : 'bg-teal-900 text-teal-400'
+                  }`}>
+                    {inc.severidad}
+                  </span>
+                </td>
+                <td class="py-3 px-4 text-center whitespace-nowrap">
+                  <span class={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
+                    inc.estado === 'Validada' || inc.estado === 'Mitigada' || inc.estado === 'Cerrada'
+                      ? 'bg-teal-900 text-teal-400'
+                      : 'bg-[#374151] text-slate-300'
+                  }`}>
+                    {inc.estado}
+                  </span>
+                </td>
+                <td class="py-3 px-4 text-right whitespace-nowrap space-x-2">
+                  <a
+                    href={`/reportes/${inc.id}`}
+                    class="inline-block bg-teal-600 hover:bg-teal-500 text-white font-semibold uppercase tracking-wider text-xs px-3 py-1.5 rounded-sm transition-none"
+                  >
+                    Auditar 8D
+                  </a>
+                  <a
+                    href={`/api/generate-pdf?id=${inc.id}`}
+                    target="_blank"
+                    class="inline-block bg-[#374151] hover:bg-[#4b5563] text-slate-300 font-semibold uppercase tracking-wider text-xs px-3 py-1.5 rounded-sm transition-none"
+                    title="Exportar PDF Oficial con Gotenberg"
+                  >
+                    PDF
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SOLID FOOTER -->
+  <footer class="bg-[#1f2937] border-t border-slate-700 p-4 text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <span class="uppercase font-semibold tracking-wider">NeuronaMedia • Mitsubishi Quality Challenge 2026</span>
+      <span>ARQUITECTURA MASTER-SLAVE INTEGRADA // ASTRO • MEMGRAPH • GEMINI • GOTENBERG</span>
+    </div>
+  </footer>
+
+  <script>
+    const btnNueva = document.getElementById('btnNuevaIncidencia');
+    const formContainer = document.getElementById('formContainer');
+    const btnCerrar = document.getElementById('btnCerrarForm');
+    const form = document.getElementById('formIncidencia') as HTMLFormElement;
+    const btnEnviar = document.getElementById('btnEnviarForm');
+    const feedback = document.getElementById('formFeedback');
+
+    if (btnNueva && formContainer) {
+      btnNueva.addEventListener('click', () => {
+        formContainer.classList.toggle('hidden');
+      });
+    }
+
+    if (btnCerrar && formContainer) {
+      btnCerrar.addEventListener('click', () => {
+        formContainer.classList.add('hidden');
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const area = (document.getElementById('inputArea') as HTMLInputElement).value;
+        const severidad = (document.getElementById('inputSeveridad') as HTMLSelectElement).value;
+        const descripcion = (document.getElementById('inputDescripcion') as HTMLTextAreaElement).value;
+
+        if (btnEnviar) btnEnviar.setAttribute('disabled', 'true');
+        if (feedback) {
+          feedback.className = 'text-xs font-semibold text-teal-400';
+          feedback.textContent = 'Procesando metodologías 8D, Ishikawa y 5W en Gemini y Memgraph...';
+        }
+
+        try {
+          const res = await fetch('/api/incidentes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ area, severidad, descripcion })
+          });
+
+          const data = await res.json();
+          if (data.ok) {
+            if (feedback) {
+              feedback.className = 'text-xs font-semibold text-teal-300';
+              feedback.textContent = `Incidencia ${data.id} generada y persistida. Redirigiendo a auditoría...`;
+            }
+            setTimeout(() => {
+              window.location.href = `/reportes/${data.id}`;
+            }, 600);
+          } else {
+            throw new Error(data.error || 'Error al registrar incidencia');
+          }
+        } catch (err: any) {
+          if (feedback) {
+            feedback.className = 'text-xs font-semibold text-red-400';
+            feedback.textContent = `Error: ${err.message}`;
+          }
+          if (btnEnviar) btnEnviar.removeAttribute('disabled');
+        }
+      });
+    }
+  </script>
 </body>
 </html>

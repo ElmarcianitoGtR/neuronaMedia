@@ -1,0 +1,406 @@
+---
+import { getIncidenteById } from '../../lib/memgraph';
+import IshikawaDiagram from '../../components/IshikawaDiagram.astro';
+import '../../styles/global.css';
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect('/');
+}
+
+const incidente = await getIncidenteById(id);
+
+if (!incidente) {
+  return new Response('Incidencia no encontrada', { status: 404 });
+}
+
+const analisis = incidente.analisis;
+const d = analisis?.disciplinas8d;
+const ishikawa = analisis?.ishikawa || [];
+const whys = analisis?.cincoPorques || [];
+const acciones = analisis?.acciones || [];
+const evidencias = analisis?.evidencias || [];
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auditoría 8D - {incidente.id} // Mitsubishi Quality Hub</title>
+</head>
+<body class="min-h-screen flex flex-col bg-[#111827] text-slate-200 font-sans selection:bg-teal-600 selection:text-white">
+
+  <!-- NAVBAR - SOLID INDUSTRIAL MATTE (1:1 master-slave) -->
+  <header class="bg-[#1f2937] border-b border-slate-700 p-4 flex flex-wrap justify-between items-center shadow-md z-50 gap-4">
+    <div class="flex items-center gap-3">
+      <a
+        href="/"
+        class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-none rounded-sm bg-[#374151] text-slate-300 hover:bg-[#4b5563]"
+      >
+        ← Volver a Consola
+      </a>
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl font-bold tracking-wider text-slate-100 font-mono">
+            {incidente.id}
+          </h1>
+          <span class={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
+            incidente.severidad === 'Crítica'
+              ? 'bg-red-900 text-red-400'
+              : incidente.severidad === 'Alta'
+              ? 'bg-yellow-900 text-yellow-400'
+              : 'bg-teal-900 text-teal-400'
+          }`}>
+            {incidente.severidad}
+          </span>
+          <span class={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
+            incidente.estado === 'Validada' || incidente.estado === 'Mitigada' || incidente.estado === 'Cerrada'
+              ? 'bg-teal-900 text-teal-400'
+              : 'bg-[#374151] text-slate-300'
+          }`}>
+            {incidente.estado}
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-0.5">
+          {incidente.area} • Registro: <span class="font-mono text-slate-300">{new Date(incidente.creadoEn).toLocaleString('es-MX')}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- BOTONES DE EXPORTACIÓN Y ACCIONES -->
+    <div class="flex items-center gap-2">
+      <a
+        href={`/api/generate-pdf?id=${incidente.id}`}
+        target="_blank"
+        class="px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm bg-teal-600 text-white hover:bg-teal-500"
+      >
+        Descargar PDF Gotenberg
+      </a>
+      <a
+        href={`/api/generate-pdf?id=${incidente.id}&format=html`}
+        target="_blank"
+        class="px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm bg-[#374151] text-slate-300 hover:bg-[#4b5563]"
+      >
+        Impresión Directa
+      </a>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-grow p-4 md:p-6 w-full max-w-7xl mx-auto space-y-6">
+
+    <!-- FILA SUPERIOR: RESUMEN TÉCNICO & PANEL HUMANO EN EL BUCLE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      
+      <!-- RESUMEN EJECUTIVO & CAUSA RAÍZ (8 COLS) -->
+      <div class="col-span-1 lg:col-span-8 flex flex-col gap-4">
+        <div class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+          <h3 class="text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">
+            DESCRIPCIÓN DE LA NO CONFORMIDAD
+          </h3>
+          <h2 class="text-lg font-bold text-slate-100">
+            {analisis?.titulo || incidente.descripcion}
+          </h2>
+          <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+            {analisis?.resumen || incidente.descripcion}
+          </p>
+
+          <!-- HIGHLIGHT PANEL DE CAUSA RAÍZ -->
+          <div class="mt-4 bg-[#450a0a] border border-[#991b1b] p-4 rounded-sm">
+            <span class="text-xs font-bold uppercase text-red-400 tracking-wider">
+              Causa Raíz Diagnosticada (Memgraph + Gemini)
+            </span>
+            <div class="text-base font-bold text-red-200 mt-1">
+              {incidente.causaRaiz}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL HUMANO EN EL BUCLE (4 COLS) -->
+      <div class="col-span-1 lg:col-span-4">
+        <div class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm flex flex-col h-full">
+          <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider flex items-center justify-between">
+            <span>HUMANO EN EL BUCLE</span>
+            <span class="text-teal-400">AUDITORÍA</span>
+          </h3>
+
+          <div class="space-y-4 text-sm flex-grow">
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Auditor Responsable</label>
+              <input
+                type="text"
+                id="auditorInput"
+                value={incidente.validadoPor || 'Ing. Auditor de Planta Mitsubishi'}
+                class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Estado de Aprobación</label>
+              <select
+                id="estadoSelect"
+                class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+              >
+                <option value="Validada" selected={incidente.estado === 'Validada'}>Validada (Conforme)</option>
+                <option value="Mitigada" selected={incidente.estado === 'Mitigada'}>Mitigada (En Seguimiento)</option>
+                <option value="En Auditoría" selected={incidente.estado === 'En Auditoría'}>En Auditoría</option>
+                <option value="Cerrada" selected={incidente.estado === 'Cerrada'}>Cerrada (8D Completo)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-400 mb-1 tracking-wider">Dictamen / Observaciones</label>
+              <textarea
+                id="notasInput"
+                rows="2"
+                class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
+              >{incidente.notasAuditor || 'Causa raíz verificada con telemetría de torque. Plan de contingencia D3 verificado en celda.'}</textarea>
+            </div>
+
+            <button
+              id="btnValidar"
+              class="w-full bg-teal-600 hover:bg-teal-500 text-white font-semibold uppercase tracking-wider text-xs px-4 py-2.5 rounded-sm transition-none mt-2"
+            >
+              Firmar y Persistir en Grafo
+            </button>
+            <div id="validarMsg" class="text-xs text-center font-semibold mt-1"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- METODOLOGÍA 8D (8 DISCIPLINAS) -->
+    <section class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+      <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">
+        METODOLOGÍA 8D (EIGHT DISCIPLINES) • RESOLUCIÓN SISTÉMICA
+      </h3>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- D1 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-teal-400 tracking-wider">D1. Equipo de Trabajo</div>
+          <div class="text-xs text-slate-300 mt-2 space-y-1">
+            {d?.d1_equipo?.map((m: string) => <div class="truncate">• {m}</div>) || 'Equipo Multidisciplinario'}
+          </div>
+        </div>
+
+        <!-- D2 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-teal-400 tracking-wider">D2. Definición 5W2H</div>
+          <div class="text-xs text-slate-300 mt-2 leading-relaxed">{d?.d2_descripcion || incidente.descripcion}</div>
+        </div>
+
+        <!-- D3 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-teal-400 tracking-wider">D3. Contención Inmediata</div>
+          <div class="text-xs text-slate-300 mt-2 leading-relaxed">{d?.d3_contencion || 'Acciones de contención aplicadas'}</div>
+        </div>
+
+        <!-- D4 -->
+        <div class="bg-[#450a0a] border border-[#991b1b] p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-red-400 tracking-wider">D4. Causa Raíz</div>
+          <div class="text-xs text-red-200 font-semibold mt-2 leading-relaxed">{d?.d4_causaRaiz || incidente.causaRaiz}</div>
+        </div>
+
+        <!-- D5 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-slate-400 tracking-wider">D5. Acciones Correctivas</div>
+          <div class="text-xs text-slate-300 mt-2 leading-relaxed">{d?.d5_accionesCorrectivas || 'Plan correctivo permanente'}</div>
+        </div>
+
+        <!-- D6 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-slate-400 tracking-wider">D6. Implementación y Validación</div>
+          <div class="text-xs text-slate-300 mt-2 leading-relaxed">{d?.d6_implementacion || 'Validación en lote piloto'}</div>
+        </div>
+
+        <!-- D7 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-slate-400 tracking-wider">D7. Prevención de Recurrencia</div>
+          <div class="text-xs text-slate-300 mt-2 leading-relaxed">{d?.d7_prevencion || 'Actualización de Poka-Yoke'}</div>
+        </div>
+
+        <!-- D8 -->
+        <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm">
+          <div class="text-xs font-bold uppercase text-slate-400 tracking-wider">D8. Reconocimiento y Cierre</div>
+          <div class="text-xs text-slate-300 mt-2 leading-relaxed">{d?.d8_cierre || 'Lección aprendida compartida'}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAGRAMA VISUAL DE ISHIKAWA (ESPINA DE PESCADO 6M) -->
+    <section>
+      <IshikawaDiagram
+        ishikawa={ishikawa}
+        problema={incidente.descripcion}
+        causaRaiz={incidente.causaRaiz}
+      />
+    </section>
+
+    <!-- CADENA DE LOS 5 PORQUÉS -->
+    <section class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+      <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">
+        CADENA SECUENCIAL DE LOS 5 PORQUÉS • RELACIONES CONDUCE_A (MEMGRAPH)
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        {whys.map((why) => (
+          <div class={`p-3 rounded-sm border flex flex-col justify-between ${
+            why.nivel === 5
+              ? 'bg-[#450a0a] border-[#991b1b]'
+              : 'bg-[#111827] border-slate-700'
+          }`}>
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class={`text-xs font-bold uppercase font-mono ${
+                  why.nivel === 5 ? 'text-red-400' : 'text-teal-400'
+                }`}>
+                  Por Qué #{why.nivel}
+                </span>
+                {why.nivel === 5 && (
+                  <span class="px-1.5 py-0.2 text-[9px] font-bold uppercase bg-red-900 text-red-300 rounded-sm">
+                    Raíz
+                  </span>
+                )}
+              </div>
+              <div class="text-xs font-semibold text-slate-200 mt-1">
+                {why.pregunta}
+              </div>
+            </div>
+            <div class="text-xs text-slate-400 mt-2 border-t border-slate-700/60 pt-2 leading-relaxed">
+              → {why.respuesta}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- PLAN DE ACCIONES MITIGADORAS (D3, D5, D7) -->
+    <section class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+      <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">
+        PLAN DE MITIGACIÓN Y ASIGNACIÓN DE ACCIONES (D3, D5, D7)
+      </h3>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#111827] border-b border-slate-700 text-xs font-bold uppercase text-slate-400 tracking-wider">
+              <th class="py-3 px-4">Fase</th>
+              <th class="py-3 px-4">Tipo</th>
+              <th class="py-3 px-4">Descripción de la Medida</th>
+              <th class="py-3 px-4">Responsable</th>
+              <th class="py-3 px-4 text-center">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700/60 text-sm">
+            {acciones.map((act) => (
+              <tr class="hover:bg-[#283548] transition-none">
+                <td class="py-3 px-4 font-mono font-bold text-teal-400">{act.disciplina}</td>
+                <td class="py-3 px-4 text-slate-300">{act.tipo}</td>
+                <td class="py-3 px-4 text-slate-300">{act.descripcion}</td>
+                <td class="py-3 px-4 text-slate-400">{act.responsable}</td>
+                <td class="py-3 px-4 text-center">
+                  <span class={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
+                    act.estado === 'Completada'
+                      ? 'bg-teal-900 text-teal-400'
+                      : act.estado === 'En Proceso'
+                      ? 'bg-yellow-900 text-yellow-400'
+                      : 'bg-[#374151] text-slate-300'
+                  }`}>
+                    {act.estado}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- EVIDENCIAS Y TELEMETRÍA ASOCIADAS -->
+    {evidencias.length > 0 && (
+      <section class="bg-[#1f2937] border border-slate-700 p-4 md:p-6 rounded-sm">
+        <h3 class="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">
+          EVIDENCIA FÍSICA Y TELEMETRÍA IOT (RESPALDADA_POR)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {evidencias.map((e) => (
+            <div class="bg-[#111827] border border-slate-700 p-3 rounded-sm flex justify-between items-center">
+              <div>
+                <span class="text-xs font-bold uppercase text-slate-400">{e.tipo}</span>
+                <p class="text-sm text-slate-200 mt-0.5">{e.descripcion}</p>
+              </div>
+              <span class="font-mono text-xs bg-[#1f2937] border border-slate-700 px-2.5 py-1 text-teal-400 rounded-sm">
+                {e.valor || 'OK'}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+  </main>
+
+  <!-- SOLID INDUSTRIAL FOOTER -->
+  <footer class="bg-[#1f2937] border-t border-slate-700 p-4 text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <span class="uppercase font-semibold tracking-wider">Mitsubishi Motors Quality Hub • 8D Assurance System</span>
+      <span>VALIDACIÓN DE AUDITOR • NODOS EN MEMGRAPH • GOTENBERG EXPORT</span>
+    </div>
+  </footer>
+
+  <script>
+    const btnValidar = document.getElementById('btnValidar');
+    const msg = document.getElementById('validarMsg');
+
+    if (btnValidar) {
+      btnValidar.addEventListener('click', async () => {
+        const auditor = (document.getElementById('auditorInput') as HTMLInputElement).value;
+        const estado = (document.getElementById('estadoSelect') as HTMLSelectElement).value;
+        const notas = (document.getElementById('notasInput') as HTMLTextAreaElement).value;
+
+        btnValidar.setAttribute('disabled', 'true');
+        if (msg) {
+          msg.className = 'text-xs text-teal-400 font-semibold';
+          msg.textContent = 'Actualizando validación en Memgraph...';
+        }
+
+        try {
+          const id = window.location.pathname.split('/').filter(Boolean).pop();
+          const res = await fetch(`/api/incidentes/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              validadoPor: auditor,
+              estado,
+              notasAuditor: notas
+            })
+          });
+
+          const data = await res.json();
+          if (data.ok) {
+            if (msg) {
+              msg.className = 'text-xs text-teal-300 font-bold';
+              msg.textContent = '¡Auditoría validada y persistida en el grafo!';
+            }
+            setTimeout(() => {
+              window.location.reload();
+            }, 500);
+          } else {
+            throw new Error(data.error || 'Error al validar auditoría');
+          }
+        } catch (err: any) {
+          if (msg) {
+            msg.className = 'text-xs text-red-400 font-semibold';
+            msg.textContent = `Error: ${err.message}`;
+          }
+          btnValidar.removeAttribute('disabled');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

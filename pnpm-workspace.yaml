@@ -11,5 +11,8 @@ allowBuilds:
   sharp: true
   sqlite3: true
 
+minimumReleaseAgeExclude:
+  - astro@7.3.7
+
 overrides:
   markdown-it: "14.3.2"

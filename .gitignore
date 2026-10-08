@@ -4,3 +4,8 @@ node_modules
 slprj/
 *.slxc
 *.asv
+.astro
+dist
+.env
+.env.*
+!.env.example
