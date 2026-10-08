@@ -79,7 +79,7 @@ export class AppController {
       descripcion: `Desviación en ${lineName}: ${msg}`,
       area: lineName,
       severidad: isDanger ? "Alta" : "Baja",
-      estado: isDanger ? "Pendiente" : "Cerrada",
+      estado: isDanger ? "En Auditoría" : "Cerrada",
       causaRaiz: isDanger ? "Deriva detectada en parámetros de telemetría." : "N/A",
       creadoEn: new Date().toISOString(),
       analisis: {
