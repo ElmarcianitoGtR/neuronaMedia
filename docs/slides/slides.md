@@ -56,7 +56,7 @@ mdc: true
 </div>
 
 ---
-transition: fade-out
+transition: slide-left
 ---
 
 # El Problema: Captura Redundante y Retraso en Análisis 8D
@@ -101,6 +101,8 @@ transition: fade-out
   </div>
 </div>
 
+---
+transition: slide-left
 ---
 
 # La Solución: Captura Única y Ecosistema Integrado
@@ -155,6 +157,8 @@ Plataforma integral donde cada incidente se registra una sola vez para nutrir la
 </div>
 
 ---
+transition: slide-left
+---
 
 # Arquitectura General: Captura Única y Alimentación Automática
 
@@ -173,10 +177,9 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
   </div>
 </div>
 
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
-</div>
 
+---
+transition: slide-left
 ---
 
 # Capa de Adquisición: Esclavos y Contingencia
@@ -184,7 +187,7 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
 <div class="grid grid-cols-2 gap-5 h-[75%] items-start">
   <div class="card-clean p-4">
     <div class="flex items-center gap-2 mb-3">
-      <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block animate-pulse"></span>
       <h3 class="text-xs font-bold text-white tracking-wide uppercase font-mono">Telemetría Automática</h3>
     </div>
     <ul class="text-xs text-slate-300 space-y-3">
@@ -205,7 +208,7 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
 
   <div class="card-clean p-4">
     <div class="flex items-center gap-2 mb-3">
-      <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block animate-pulse"></span>
       <h3 class="text-xs font-bold text-white tracking-wide uppercase font-mono">Reporte Ágil & Contingencia</h3>
     </div>
     <ul class="text-xs text-slate-300 space-y-3">
@@ -230,159 +233,7 @@ Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8
 </div>
 
 ---
-
-# Plataforma Web: Control Visual Integral
-
-<div class="text-slate-400 text-sm mb-3">
-Tres interfaces diseñadas para cada nivel operativo de la empresa:
-</div>
-
-<div class="grid grid-cols-3 gap-4">
-  <div class="card-clean p-4">
-    <div class="text-[11px] font-mono text-rose-400 font-semibold mb-1">PISO DE PLANTA</div>
-    <h3 class="text-sm font-bold text-white mb-2">Tablero Andon Digital</h3>
-    <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
-      Proyectado en Smart TVs sobre las líneas con codificación universal de colores:
-    </p>
-    <div class="space-y-1.5 text-[10px] font-mono">
-      <div class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 flex justify-between">
-        <span>VERDE</span><span>Producción Normal</span>
-      </div>
-      <div class="px-2 py-1 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 flex justify-between">
-        <span>AMARILLO</span><span>Alerta / Calidad</span>
-      </div>
-      <div class="px-2 py-1 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20 flex justify-between">
-        <span>ROJO</span><span>Paro de Línea</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="card-clean p-4">
-    <div class="text-[11px] font-mono text-cyan-400 font-semibold mb-1">SUPERVISIÓN</div>
-    <h3 class="text-sm font-bold text-white mb-2">Dashboard de OEE</h3>
-    <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
-      Métricas consolidadas para líderes de turno y control de operaciones:
-    </p>
-    <ul class="text-[11px] text-slate-300 space-y-1.5">
-      <li>• <strong>OEE Calculado en Vivo</strong> (Disponibilidad / Calidad).</li>
-      <li>• <strong>Piezas Meta vs. Real</strong> con indicador de avance.</li>
-      <li>• <strong>Tasa de Scrap</strong> en tiempo real por lote.</li>
-      <li>• <strong>Historial de Tiempos Muertos</strong> auditables.</li>
-    </ul>
-  </div>
-
-  <div class="card-clean p-4">
-    <div class="text-[11px] font-mono text-slate-300 font-semibold mb-1">MANTENIMIENTO</div>
-    <h3 class="text-sm font-bold text-white mb-2">Kanban de Soporte</h3>
-    <p class="text-[11px] text-slate-300 mb-3 leading-relaxed">
-      Gestión rápida de incidencias para reducir los tiempos medios de reparación:
-    </p>
-    <ul class="text-[11px] text-slate-300 space-y-1.5">
-      <li>• <strong>Alertas Nuevas:</strong> Disparadas por sensor o botón.</li>
-      <li>• <strong>En Atención:</strong> Técnico asignado con temporizador.</li>
-      <li>• <strong>Resueltas:</strong> Registro de solución y refacciones.</li>
-    </ul>
-  </div>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="left" width="58%" height="160px" scale="1.7" />
-</div>
-
----
-
-# Stack Tecnológico y Comunicaciones
-
-<div class="grid grid-cols-2 gap-4 mt-2">
-  <div class="card-clean p-4">
-    <div class="text-cyan-400 text-xs font-mono font-semibold mb-1">COMUNICACIÓN INDUSTRIAL</div>
-    <h3 class="text-sm font-bold text-white mb-2">MQTT + OPC UA + WebSockets</h3>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      • <strong>MQTT (Eclipse Mosquitto):</strong> Transmisión pub/sub de bajo consumo de ancho de banda.<br>
-      • <strong>OPC UA:</strong> Enlace nativo con PLCs industriales y simulación MVP en MATLAB.<br>
-      • <strong>WebSockets:</strong> Difusión inmediata hacia los navegadores web.
-    </p>
-  </div>
-
-  <div class="card-clean p-4">
-    <div class="text-emerald-400 text-xs font-mono font-semibold mb-1">ALMACENAMIENTO DE DATOS</div>
-    <h3 class="text-sm font-bold text-white mb-2">InfluxDB + PostgreSQL</h3>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      • <strong>InfluxDB (Time-Series):</strong> Almacena millones de lecturas de sensores por segundo con compresión avanzada.<br>
-      • <strong>PostgreSQL (Relacional):</strong> Gestión de usuarios, turnos, catálogo de fallas y trazabilidad.
-    </p>
-  </div>
-
-  <div class="card-clean p-4">
-    <div class="text-amber-400 text-xs font-mono font-semibold mb-1">PROCESAMIENTO CENTRAL</div>
-    <h3 class="text-sm font-bold text-white mb-2">Servidor Maestro (API)</h3>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      Motor de cálculo en Node.js / Python para métricas en vivo (OEE, MTTR, scrap) y distribución de eventos a los clientes web.
-    </p>
-  </div>
-
-  <div class="card-clean p-4">
-    <div class="text-slate-300 text-xs font-mono font-semibold mb-1">FRONTEND & PRESENTACIÓN</div>
-    <h3 class="text-sm font-bold text-white mb-2">Vue 3 + Slidev + UnoCSS</h3>
-    <p class="text-xs text-slate-300 leading-relaxed">
-      Interfaces reactivas fluidas, paneles modulares y presentación técnica con tipografía minimalista y soporte de animaciones.
-    </p>
-  </div>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
-</div>
-
----
-
-# Impacto y Resultados de Negocio (ROI)
-
-<div class="text-slate-400 text-sm mb-4">
-Mejoras cuantificables proyectadas en piso de producción:
-</div>
-
-<div class="grid grid-cols-4 gap-4">
-  <div class="card-clean p-4 text-center">
-    <div class="text-3xl font-extrabold text-rose-400 mb-1">-75%</div>
-    <div class="text-xs font-bold text-white mb-1">Tiempo en Reportes 8D</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Generación instantánea de 8D e Ishikawa eliminando papeleo manual</div>
-  </div>
-
-  <div class="card-clean p-4 text-center">
-    <div class="text-3xl font-extrabold text-emerald-400 mb-1">+15%</div>
-    <div class="text-xs font-bold text-white mb-1">Incremento en OEE</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Resolución acelerada de paros de máquina con acciones correctivas inmediatas</div>
-  </div>
-
-  <div class="card-clean p-4 text-center">
-    <div class="text-3xl font-extrabold text-amber-400 mb-1">-25%</div>
-    <div class="text-xs font-bold text-white mb-1">Reducción de Scrap</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Identificación de causa raíz con 5 Porqués antes de producir merma en lote</div>
-  </div>
-
-  <div class="card-clean p-4 text-center">
-    <div class="text-3xl font-extrabold text-cyan-400 mb-1">100%</div>
-    <div class="text-xs font-bold text-white mb-1">Captura Única Digital</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Cero recapturas de información y trazabilidad auditable de punta a punta</div>
-  </div>
-</div>
-
-<div class="mt-5 card-clean p-3.5 flex items-center justify-between">
-  <div>
-    <div class="text-xs font-bold text-white">Retorno de Inversión (ROI) Estimado</div>
-    <div class="text-[11px] text-slate-400">Implementación modular progresiva sin frenar la línea de manufactura activa.</div>
-  </div>
-  <div class="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-cyan-300 font-mono text-xs font-bold">
-    Amortización &lt; 3 meses
-  </div>
-</div>
-
-<div class="absolute bottom-0 left-0 right-0 px-4 pointer-events-none">
-  <CircuitGearsAnimation side="right" width="58%" height="160px" scale="1.7" />
-</div>
-
----
+transition: slide-left
 layout: end
 class: text-center
 ---
@@ -440,10 +291,105 @@ code, pre, .font-mono {
   border: 1px solid rgba(100, 116, 139, 0.35);
   border-radius: 0.75rem;
   backdrop-filter: blur(10px);
+  animation: slideContentEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.22s ease, 
+              box-shadow 0.22s ease;
+  will-change: transform;
 }
 
 .card-clean:hover {
-  border-color: rgba(148, 163, 184, 0.6);
+  transform: translateY(-2.5px);
+  border-color: rgba(56, 189, 248, 0.55);
+  box-shadow: 0 8px 22px -3px rgba(2, 132, 199, 0.15);
+}
+
+/* Micro-animación suave en números de métricas */
+.card-clean .text-3xl {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+}
+
+.card-clean:hover .text-3xl {
+  transform: scale(1.05);
+}
+
+/* ============================================================ */
+/* ANIMACIONES INTERNAS SIMPLES (SIN SATURAR)                   */
+/* ============================================================ */
+@keyframes slideContentEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slidev-layout h1,
+.slidev-layout h2 {
+  animation: slideContentEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.slidev-layout p,
+.slidev-layout > div.text-slate-400 {
+  animation: slideContentEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.04s both;
+}
+
+/* Escalonamiento sutil (Stagger de milisegundos) */
+.grid > .card-clean:nth-child(1) { animation-delay: 0.04s; }
+.grid > .card-clean:nth-child(2) { animation-delay: 0.08s; }
+.grid > .card-clean:nth-child(3) { animation-delay: 0.12s; }
+.grid > .card-clean:nth-child(4) { animation-delay: 0.16s; }
+
+.space-y-2\.5 > .card-clean:nth-child(1) { animation-delay: 0.04s; }
+.space-y-2\.5 > .card-clean:nth-child(2) { animation-delay: 0.08s; }
+.space-y-2\.5 > .card-clean:nth-child(3) { animation-delay: 0.12s; }
+.space-y-2\.5 > .card-clean:nth-child(4) { animation-delay: 0.16s; }
+.space-y-2\.5 > .card-clean:nth-child(5) { animation-delay: 0.20s; }
+
+/* ============================================================ */
+/* TRANSICIONES ENTRE PANTALLAS (SUAVES Y MINIMALISTAS)         */
+/* ============================================================ */
+.slidev-page-enter-active,
+.slidev-page-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+}
+
+.slide-left-enter-from {
+  opacity: 0 !important;
+  transform: translateX(32px) !important;
+}
+
+.slide-left-leave-to {
+  opacity: 0 !important;
+  transform: translateX(-32px) !important;
+}
+
+.slide-right-enter-from {
+  opacity: 0 !important;
+  transform: translateX(-32px) !important;
+}
+
+.slide-right-leave-to {
+  opacity: 0 !important;
+  transform: translateX(32px) !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.35s ease !important;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0 !important;
 }
 
 @keyframes spinSlow {
@@ -455,7 +401,7 @@ code, pre, .font-mono {
 }
 
 /* ============================================================ */
-/* ANIMACIÓN LÁSER EN LÍNEAS Y FLECHAS DE MERMAID               */
+/* ANIMACIÓN LÁSER EN LÍNEAS                                    */
 /* ============================================================ */
 .mermaid svg .edgePaths path,
 .mermaid svg .edgePath path,
