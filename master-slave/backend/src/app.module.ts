@@ -10,8 +10,12 @@ import { TelemetrySimulatorService } from './telemetry-simulator.service.js';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'better-sqlite3',
-      database: 'database.sqlite',
+      type: 'postgres',
+      host: 'ms-postgres', // container name
+      port: 5432,
+      username: 'ms_user',
+      password: 'ms_password',
+      database: 'ms_database',
       entities: [AndonAlert],
       synchronize: true, // auto-creates tables (only for development)
     }),

@@ -9,5 +9,5 @@ Para evitar errores de permisos (`EACCES`) y bloqueos de sistema de archivos (`E
    - Aísla la carpeta de dependencias del contenedor de la del host usando volúmenes anónimos nombrados: `- backend_node_modules:/app/node_modules`
    - **NUNCA** montes volúmenes nombrados sobre directorios que el framework necesita borrar/recrear durante el hot-reload (ej. la carpeta `dist/` de NestJS), ya que Linux bloqueará la operación con `EBUSY`.
 
-## TypeORM SQLite Driver
-- Cuando configures bases de datos SQLite en NestJS/TypeORM, utiliza **SIEMPRE** el driver moderno `better-sqlite3` (`type: 'better-sqlite3'`) y asegúrate de instalar sus dependencias de desarrollo (`@types/better-sqlite3`). El paquete `sqlite3` clásico está deprecado en TypeORM v1.1+.
+## TypeORM Database Driver
+- El sistema utiliza **PostgreSQL** (`type: 'postgres'`) en lugar de SQLite. Asegúrate de instalar el paquete `pg` y de apuntar al contenedor `ms-postgres` configurado en el `docker-compose.yml`.
