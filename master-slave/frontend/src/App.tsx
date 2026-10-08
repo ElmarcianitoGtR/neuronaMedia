@@ -90,13 +90,16 @@ function AndonBoard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mockIncidencia)
       });
-      if (!response.ok) throw new Error('API Error');
-      const isHtmlFallback = response.headers.get('content-type')?.includes('text/html');
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        throw new Error(errJson.error || 'Gotenberg API Error');
+      }
+      
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = isHtmlFallback ? `Reporte-${lineName}.html` : `Reporte-${lineName}.pdf`;
+      a.download = `Reporte-${lineName}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
