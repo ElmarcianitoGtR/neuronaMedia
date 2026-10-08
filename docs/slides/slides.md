@@ -660,3 +660,18 @@ class: text-center
 [Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
 
 <PoweredBySlidev mt-10 />
+
+---
+
+# Animations Demo
+
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <h3>GSAP Animation</h3>
+    <GsapDemo />
+  </div>
+  <div>
+    <h3>Three.js Canvas</h3>
+    <ThreeDemo />
+  </div>
+</div>

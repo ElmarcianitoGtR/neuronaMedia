@@ -11,6 +11,11 @@
     "@slidev/cli": "^53.0.0",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
+    "gsap": "^3.15.0",
+    "three": "^0.186.1",
     "vue": "^3.5.33"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0"
   }
 }

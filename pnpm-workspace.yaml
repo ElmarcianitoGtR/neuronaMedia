@@ -3,3 +3,6 @@ packages:
   - 'reports/*'
   - 'docs/slides'
   - 'packages/*'
+
+overrides:
+  markdown-it: "14.3.2"
