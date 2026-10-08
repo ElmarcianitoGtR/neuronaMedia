@@ -10,8 +10,26 @@ import { Repository } from 'typeorm';
 export class UdpService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(UdpService.name);
   private server: dgram.Socket;
-  private lastFalla: number = 0;
+  private lastFalla: Record<string, number> = {};
   private lastSavedUnits: Record<string, number> = {};
+
+
+  async sendTelegramAlert(message: string) {
+    const BOT_TOKEN = '8901927878:AAEMJDt4QNO9hLvJKNmLqb1eL3gOrUIoj0U';
+    const CHAT_ID = '8304747615';
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: message }),
+      });
+      this.logger.log(`Alerta de Telegram enviada exitosamente.`);
+    } catch (error) {
+      this.logger.error(`Error enviando alerta de Telegram: ${error}`);
+    }
+  }
 
   constructor(
     private telemetryGateway: TelemetryGateway,
@@ -19,7 +37,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
     private alertRepository: Repository<AndonAlert>,
     @InjectRepository(TelemetryLog)
     private telemetryRepository: Repository<TelemetryLog>,
-  ) {}
+  ) { }
 
   onModuleInit() {
     this.server = dgram.createSocket('udp4');
@@ -73,7 +91,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       const falla = msg.readUInt16LE(4);
       const piezasOk = msg.readUInt16LE(6);
       const scrap = msg.readUInt16LE(8);
-      
+
       // Reconstruct IEEE 754 Float32 (Little Endian)
       const tempBuf = Buffer.alloc(4);
       tempBuf.writeUInt16LE(msg.readUInt16LE(10), 0);
@@ -87,7 +105,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
 
       const totalPiezas = piezasOk + scrap;
       const oee = totalPiezas > 0 ? (piezasOk / totalPiezas) * 100 : 0;
-      
+
       const targetUnits = 1500;
       const productivity = parseFloat(((piezasOk / targetUnits) * 100).toFixed(1));
 
@@ -142,18 +160,25 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       }
 
       // 3. Log Alert to Database if there's a new fault
-      if (falla !== 0 && falla !== this.lastFalla) {
+      if (falla !== 0 && falla !== this.lastFalla[telemetry.maquinaId]) {
         this.logger.warn(`New Andon Alert detected! Machine: ${telemetry.maquinaId}, Fault Code: ${falla}`);
-        
+
         const newAlert = this.alertRepository.create({
           lineName: telemetry.maquinaId,
           status: 'OPEN',
           message: `Código ${falla}: ${falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)'} (Temp: ${telemetry.temp}°C, Presión: ${telemetry.presion} bar)`,
         });
-        
+
         await this.alertRepository.save(newAlert);
+
+        // Enviar alerta por Telegram
+        const telegramMsg = `?? ALERTA ANDON []
+C�digo de falla: 
+Motivo: 
+Temp: �C | Presi�n:  bar`;
+        this.sendTelegramAlert(telegramMsg);
       }
-      this.lastFalla = falla;
+      this.lastFalla[telemetry.maquinaId] = falla;
     } catch (err: any) {
       this.logger.error(`Error parsing UDP payload: ${err?.message}`);
     }
