@@ -137,7 +137,8 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
           message: \Código \: \ (Temp: \°C, Presión: \ bar)\,
         });
 
-        await this.alertRepository.save(newAlert);
+        const savedAlert = await this.alertRepository.save(newAlert);
+        this.telemetryGateway.broadcastAnomaly(savedAlert);
 
         // Enviar alerta por Telegram
         const telegramMsg = \🚨 ALERTA ANDON [\]\\nCódigo de falla: \\\nMotivo: \\\nTemp: \°C | Presión: \ bar\;
