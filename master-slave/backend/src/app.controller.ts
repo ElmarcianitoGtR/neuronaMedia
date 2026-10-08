@@ -43,11 +43,49 @@ export class AppController {
     ];
 
     // Andon Lines
-    const lines = [
-      { id: 1, name: 'Línea 1', status: (todayLog?.productivity || 0) > 80 ? 'success' : 'warning', message: 'Operando', speed: `${todayLog?.actualUnits || 0} u/h` },
-      { id: 2, name: 'Línea 2', status: 'danger', message: alerts[0]?.message || 'Falla', speed: '0 u/h' },
-      { id: 3, name: 'Línea 3', status: 'warning', message: 'Alerta Calidad', speed: '1,200 u/h' },
-    ];
+    // Andon Lines from Database
+
+    const distinctMachines = await this.telemetryRepository
+
+      .createQueryBuilder("t")
+
+      .select("t.machineId", "machineId")
+
+      .addSelect("MAX(t.id)", "maxId")
+
+      .groupBy("t.machineId")
+
+      .getRawMany();
+
+
+
+    const lines = [];
+
+    for (const m of distinctMachines) {
+
+      const log = await this.telemetryRepository.findOne({ where: { id: m.maxId } });
+
+      const machineAlerts = alerts.filter(a => a.lineName === m.machineId && a.status === "OPEN");
+
+      const isDanger = machineAlerts.length > 0;
+
+      lines.push({
+
+        id: m.machineId,
+
+        name: m.machineId,
+
+        status: isDanger ? "danger" : ((log?.productivity || 0) > 80 ? "success" : "warning"),
+
+        message: isDanger ? machineAlerts[0].message : "Operando Nominal",
+
+        speed: `${log?.actualUnits || 0} u/h`
+
+      });
+
+    }
+
+
 
     // Downtime summary (stacked bar: mech, elec, ops)
     const downtimeData = [

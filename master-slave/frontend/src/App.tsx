@@ -51,7 +51,44 @@ function AndonBoard() {
     const load = () => fetch('http://localhost:3000/api/dashboard/stats').then(r => r.json()).then(d => setLines(d.lines));
     load();
     const int = setInterval(load, 5000);
-    return () => clearInterval(int);
+    socket.on("telemetry_update", (data) => {
+
+      setLines(prev => {
+
+        const arr = [...prev];
+
+        const idx = arr.findIndex(l => l.name === data.maquinaId);
+
+        if (idx !== -1) {
+
+          arr[idx].speed = `${data.actualUnits} u/h`;
+
+          if (data.falla !== 0) {
+
+            arr[idx].status = "danger";
+
+            arr[idx].message = data.falla === 1 ? "Falla Térmica" : "Falla Presión";
+
+          } else {
+
+            arr[idx].status = data.productivity > 80 ? "success" : "warning";
+
+            arr[idx].message = "Operando Nominal";
+
+          }
+
+        }
+
+        return arr;
+
+      });
+
+    });
+
+    return () => {
+      clearInterval(int);
+      socket.off("telemetry_update");
+    };
   }, []);
 
   const generarDescargarPDF = async (lineName: string) => {
