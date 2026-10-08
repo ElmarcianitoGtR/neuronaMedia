@@ -96,6 +96,7 @@ export class AppController {
     ];
 
     return {
+      latestTelemetry: todayLog || { oee: 0, productivity: 0, actualUnits: 0, targetUnits: 0 },
       trendData,
       defectsData: defectsData.length ? defectsData : [
         { name: 'Termal', value: 30.7, fill: '#64748b' },
@@ -113,6 +114,7 @@ export class AppController {
     const msg = isDanger ? alerts[0].message : 'Operación nominal detectada.';
 
     return {
+      latestTelemetry: todayLog || { oee: 0, productivity: 0, actualUnits: 0, targetUnits: 0 },
       id: `INC-${Math.floor(Math.random() * 9000) + 1000}`,
       descripcion: `Desviación en ${lineName}: ${msg}`,
       area: lineName,

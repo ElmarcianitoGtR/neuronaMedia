@@ -220,6 +220,7 @@ function Dashboard() {
             defectsData: data.defectsData,
             downtimeData: data.downtimeData
           });
+          if (!isConnected && data.latestTelemetry) setLiveData(data.latestTelemetry);
           setIsDbLoaded(true);
         })
         .catch(err => console.error("Error loading dashboard stats", err));
@@ -244,12 +245,6 @@ function Dashboard() {
     };
   }
 
-  const SocketOverlay = () => !isConnected && (
-    <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
-      <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-      <span className="text-xs font-bold text-slate-300 uppercase animate-pulse text-center px-4">Esperando<br/>Stream UDP...</span>
-    </div>
-  );
 
   const DbOverlay = () => !isDbLoaded && (
     <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
@@ -265,15 +260,14 @@ function Dashboard() {
       <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
         {/* KPI Panel */}
         <div className="bg-[#1f2937] border border-slate-700 p-4 relative overflow-hidden">
-          <SocketOverlay />
           <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center transition-colors duration-500">
             <div>
               <span className="text-sm font-bold text-slate-300 uppercase">OEE</span>
               <div className="text-3xl font-bold text-teal-400 transition-all duration-300">{liveData.oee}%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">En Vivo</div>
-              <div className="text-sm font-bold text-teal-400">WebSocket</div>
+              <div className={`text-xs ${isConnected ? "text-teal-500" : "text-red-500"}`}>{isConnected ? "🟢 En Vivo" : "🔴 Desconectado"}</div>
+              <div className={`text-sm font-bold ${isConnected ? "text-teal-400" : "text-red-400"}`}>{isConnected ? "UDP Stream" : "DB Local"}</div>
             </div>
           </div>
           
@@ -328,7 +322,6 @@ function Dashboard() {
       <div className="col-span-1 lg:col-span-5 flex flex-col gap-4">
         {/* Main Gauge Panel */}
         <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px] overflow-hidden">
-          <SocketOverlay />
           <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVIDAD DEL TURNO</h3>
           
           {/* Radial SVG Gauge */}
@@ -387,7 +380,6 @@ function Dashboard() {
 
         {/* Output By Line Horizontal Bars */}
         <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow relative overflow-hidden">
-          <SocketOverlay />
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN POR LÍNEA - TURNO ACTUAL</h3>
           <div className="flex flex-col gap-3">
             {[ 
