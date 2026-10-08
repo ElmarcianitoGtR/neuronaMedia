@@ -192,6 +192,14 @@ function Dashboard() {
 
   const { trendData, defectsData, downtimeData } = dbData;
 
+  const displayTrendData = [...trendData];
+  if (displayTrendData.length > 0) {
+    displayTrendData[displayTrendData.length - 1] = { 
+      ...displayTrendData[displayTrendData.length - 1], 
+      produccion: liveData.actualUnits || 0 
+    };
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
       
@@ -238,7 +246,7 @@ function Dashboard() {
           <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN ÚLTIMOS 7 DÍAS</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+              <AreaChart data={displayTrendData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorOutput" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3}/>
@@ -318,13 +326,13 @@ function Dashboard() {
 
         {/* Output By Line Horizontal Bars */}
         <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT BY LINE - CURRENT SHIFT</h3>
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN POR LÍNEA - TURNO ACTUAL</h3>
           <div className="flex flex-col gap-3">
             {[ 
-              {name: 'Line 1', val: 72, col: 'bg-slate-500'}, 
-              {name: 'Line 2', val: 85, col: 'bg-slate-500'}, 
-              {name: 'Line 3', val: 56, col: 'bg-red-500'}, // ALERT
-              {name: 'Line 4', val: 91, col: 'bg-slate-500'} 
+              {name: 'Línea 1', val: Math.round(liveData.productivity || 0), col: (liveData.productivity || 0) >= 85 ? 'bg-teal-500' : ((liveData.productivity || 0) < 60 ? 'bg-red-500' : 'bg-slate-500')}, 
+              {name: 'Línea 2', val: 85, col: 'bg-slate-500'}, 
+              {name: 'Línea 3', val: 56, col: 'bg-red-500'},
+              {name: 'Línea 4', val: 91, col: 'bg-slate-500'} 
             ].map(l => (
               <div key={l.name} className="flex items-center gap-4 text-sm">
                 <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
@@ -342,7 +350,7 @@ function Dashboard() {
       <div className="col-span-1 lg:col-span-3 flex flex-col gap-4">
         {/* Downtime Bar Chart */}
         <div className="bg-[#1f2937] border border-slate-700 p-4">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">DOWNTIME SUMMARY</h3>
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">RESUMEN DE PAROS</h3>
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={downtimeData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
