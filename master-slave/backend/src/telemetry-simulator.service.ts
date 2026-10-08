@@ -92,7 +92,7 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
       const newAlert = this.alertRepository.create({
         lineName: telemetry.maquinaId,
         status: 'OPEN',
-        message: falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)',
+        message: `Código ${falla}: ${falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)'} (Temp: ${telemetry.temp}°C, Presión: ${telemetry.presion} bar)`,
       });
       
       await this.alertRepository.save(newAlert);
