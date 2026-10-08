@@ -76,11 +76,11 @@ export class AppController {
         name: m.machineId,
 
         status: isDanger ? "danger" : ((log?.productivity || 0) > 80 ? "success" : "warning"),
-
         message: isDanger ? machineAlerts[0].message : "Operando Nominal",
-
-        speed: `${log?.actualUnits || 0} u/h`
-
+        speed: `${log?.actualUnits || 0} u/h`,
+        productivity: log?.productivity || 0,
+        actualUnits: log?.actualUnits || 0,
+        targetUnits: log?.targetUnits || 1500
       });
 
     }

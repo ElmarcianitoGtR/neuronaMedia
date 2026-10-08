@@ -222,12 +222,15 @@ function Dashboard() {
     downtimeData: []
   });
 
+  const [liveMachines, setLiveMachines] = useState<Record<string, any>>({});
+
   const [isDbLoaded, setIsDbLoaded] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     socket.on('telemetry_update', (data) => {
       setLiveData(data);
+      setLiveMachines(prev => ({ ...prev, [data.maquinaId]: data }));
       setIsConnected(true);
     });
     
@@ -268,6 +271,28 @@ function Dashboard() {
   }
 
 
+  // Calculate total productivity
+  let totalTarget = 0;
+  let totalActual = 0;
+  
+  const machinesArray = Object.values(liveMachines);
+  if (machinesArray.length > 0) {
+    machinesArray.forEach((m: any) => {
+      totalTarget += m.targetUnits || 1500;
+      totalActual += m.actualUnits || 0;
+    });
+  } else if (lines.length > 0) {
+    lines.forEach((l: any) => {
+      totalTarget += l.targetUnits || 1500;
+      totalActual += l.actualUnits || 0;
+    });
+  } else {
+    totalTarget = liveData.targetUnits || 0;
+    totalActual = liveData.actualUnits || 0;
+  }
+  
+  const totalProductivity = totalTarget > 0 ? parseFloat(((totalActual / totalTarget) * 100).toFixed(1)) : 0;
+
   const DbOverlay = () => !isDbLoaded && (
     <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
       <div className="w-8 h-8 border-2 border-slate-500 border-t-transparent rounded-full animate-spin mb-2"></div>
@@ -284,7 +309,7 @@ function Dashboard() {
         <div className="bg-[#1f2937] border border-slate-700 p-4 relative overflow-hidden">
           <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center transition-colors duration-500">
             <div>
-              <span className="text-sm font-bold text-slate-300 uppercase">OEE</span>
+              <span className="text-sm font-bold text-slate-300 uppercase">OEE Global</span>
               <div className="text-3xl font-bold text-teal-400 transition-all duration-300">{liveData.oee}%</div>
             </div>
             <div className="text-right">
@@ -352,7 +377,7 @@ function Dashboard() {
       <div className="col-span-1 lg:col-span-5 flex flex-col gap-4">
         {/* Main Gauge Panel */}
         <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px] overflow-hidden">
-          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVIDAD DEL TURNO</h3>
+          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVIDAD DEL TURNO (GLOBAL)</h3>
           
           {/* Radial SVG Gauge */}
           <div className="relative w-64 h-32 mt-8 flex flex-col items-center justify-end">
@@ -379,11 +404,11 @@ function Dashboard() {
                 strokeWidth="20" 
                 strokeLinecap="butt"
                 strokeDasharray={251.2} 
-                strokeDashoffset={251.2 - (Math.min(liveData.productivity || 0, 100) / 100) * 251.2}
+                strokeDashoffset={251.2 - (Math.min(totalProductivity, 100) / 100) * 251.2}
                 className="transition-all duration-700 ease-out"
               />
             </svg>
-            <div className="text-5xl font-bold text-white z-10 mb-[-10px]">{liveData.productivity || 0}<span className="text-2xl text-slate-400">%</span></div>
+            <div className="text-5xl font-bold text-white z-10 mb-[-10px]">{totalProductivity}<span className="text-2xl text-slate-400">%</span></div>
           </div>
           <div className="flex justify-center gap-4 mt-8 text-[10px] uppercase text-slate-400 font-bold tracking-wider">
             <div className="flex items-center gap-1">
@@ -398,12 +423,12 @@ function Dashboard() {
           </div>
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
-              <div className="text-xs text-slate-400 uppercase">Objetivo</div>
-              <div className="text-xl font-mono text-slate-200">{liveData.targetUnits}</div>
+              <div className="text-xs text-slate-400 uppercase">Objetivo Global</div>
+              <div className="text-xl font-mono text-slate-200">{totalTarget}</div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-slate-400 uppercase">Unidades</div>
-              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnits}</div>
+              <div className="text-xs text-slate-400 uppercase">Unidades Totales</div>
+              <div className="text-xl font-mono text-slate-200 transition-all duration-300">{totalActual}</div>
             </div>
           </div>
         </div>
