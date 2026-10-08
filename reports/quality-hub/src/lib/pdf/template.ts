@@ -37,7 +37,7 @@ function renderFishboneSvgForLetter(ishikawa: IshikawaFactor[], problema: string
   const problemLines = wrapSvgText(problema, 22, 6);
 
   let svg = `
-  <svg viewBox="0 0 1400 700" style="width: 100%; height: auto; margin: 0 auto; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 700" width="730" height="365" style="width: 730px; height: 365px; margin: 0 auto; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <defs>
       <marker id="fishbone-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
         <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e" />
@@ -722,7 +722,7 @@ export function renderQualityReportHtml(
 
       <!-- DIAGRAMA VISUAL DE ISHIKAWA (ESPINA DE PESCADO) -->
       <div class="section-banner">DIAGRAMA DE ISHIKAWA (ESPINA DE PESCADO — 6M INDUSTRIAL)</div>
-      <div style="margin-bottom: 6px;">
+      <div style="margin-bottom: 6px; width: 100%; text-align: center;">
         ${renderFishboneSvgForLetter(ishikawa, incidente.descripcion)}
       </div>
 
