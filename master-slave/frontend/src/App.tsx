@@ -218,7 +218,8 @@ function Dashboard() {
           setDbData({
             trendData: data.trendData,
             defectsData: data.defectsData,
-            downtimeData: data.downtimeData
+            downtimeData: data.downtimeData,
+            latestAlert: data.latestAlert
           });
           if (!isConnected && data.latestTelemetry) setLiveData(data.latestTelemetry);
           setIsDbLoaded(true);
@@ -235,7 +236,7 @@ function Dashboard() {
     };
   }, []);
 
-  const { trendData, defectsData, downtimeData } = dbData;
+  const { trendData, defectsData, downtimeData, latestAlert } = dbData;
 
   const displayTrendData = [...trendData];
   if (displayTrendData.length > 0) {
@@ -292,6 +293,14 @@ function Dashboard() {
               <div className="text-sm font-bold text-teal-400">+1.33%</div>
             </div>
           </div>
+
+          {latestAlert && (
+            <div className="mt-3 p-3 border border-red-900 bg-red-950/30">
+              <div className="text-xs font-bold text-red-500 uppercase mb-1">Último Incidente</div>
+              <div className="text-sm text-slate-300 font-mono">{latestAlert.lineName} | {latestAlert.message}</div>
+              <div className="text-xs text-slate-500 mt-1">{new Date(latestAlert.createdAt).toLocaleString()}</div>
+            </div>
+          )}
         </div>
 
         {/* Trend Panel */}

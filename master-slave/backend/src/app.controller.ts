@@ -89,13 +89,14 @@ export class AppController {
 
     // Downtime summary (stacked bar: mech, elec, ops)
     const downtimeData = [
-      { name: 'L1', mech: (defectCounts['Mecánica'] || 0) * 10, elec: (defectCounts['Termal'] || 0) * 10, ops: (defectCounts['Presión'] || 0) * 10 },
+      { name: 'L1', mech: (defectCounts['Mecánica'] || 0), elec: (defectCounts['Termal'] || 0), ops: (defectCounts['Presión'] || 0) },
       { name: 'L2', mech: 15, elec: 25, ops: 10 },
       { name: 'L3', mech: 30, elec: 5, ops: 15 },
       { name: 'L4', mech: 10, elec: 15, ops: 20 },
     ];
 
     return {
+      latestAlert: alerts.length > 0 ? alerts[0] : null,
       latestTelemetry: todayLog || { oee: 0, productivity: 0, actualUnits: 0, targetUnits: 0 },
       trendData,
       defectsData: defectsData.length ? defectsData : [
@@ -114,6 +115,7 @@ export class AppController {
     const msg = isDanger ? alerts[0].message : 'Operación nominal detectada.';
 
     return {
+      latestAlert: alerts.length > 0 ? alerts[0] : null,
       id: `INC-${Math.floor(Math.random() * 9000) + 1000}`,
       descripcion: `Desviación en ${lineName}: ${msg}`,
       area: lineName,
