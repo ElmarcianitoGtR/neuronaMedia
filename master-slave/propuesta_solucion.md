@@ -44,7 +44,7 @@ graph TD
     %% Conexiones Capa Fisica a Comunicacion
     S -.->|Datos de hardware| MQTT
     B -.->|Eventos Manuales| MQTT
-    MVP == OPC UA ==>|Simulación MVP| Node
+    MVP == "OPC UA (Simulación MVP)" ==> Node
 
     %% Conexiones Comunicacion a Backend
     MQTT -->|Pub/Sub| Node
