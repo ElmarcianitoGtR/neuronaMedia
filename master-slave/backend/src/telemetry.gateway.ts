@@ -11,16 +11,7 @@ export class TelemetryGateway implements OnGatewayInit {
   server: Server;
 
   afterInit() {
-    // Simulate OPC UA / MATLAB data arriving every 2 seconds
-    setInterval(() => {
-      const mockData = {
-        oee: (60 + Math.random() * 30).toFixed(1), // 60.0 to 90.0
-        productivity: Math.floor(60 + Math.random() * 35), // 60 to 95
-        targetUnits: 1284,
-        actualUnits: Math.floor(800 + Math.random() * 200),
-      };
-      this.broadcastTelemetry(mockData);
-    }, 2000);
+    // The ModbusService will now trigger the broadcast.
   }
 
   // This will be called by the OPC UA / MATLAB service to send data to React
