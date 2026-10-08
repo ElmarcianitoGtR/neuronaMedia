@@ -20,7 +20,7 @@ export class AppController {
     
     // Calculate top defects
     const defectCounts: Record<string, number> = {};
-    alerts.forEach(a => {
+    alerts.forEach((a: any) => {
       if (a.message.includes('Térmica')) defectCounts['Termal'] = (defectCounts['Termal'] || 0) + 1;
       else if (a.message.includes('Presión')) defectCounts['Presión'] = (defectCounts['Presión'] || 0) + 1;
       else defectCounts['Mecánica'] = (defectCounts['Mecánica'] || 0) + 1;
@@ -65,7 +65,7 @@ export class AppController {
 
       const log = await this.telemetryRepository.findOne({ where: { id: m.maxId } });
 
-      const machineAlerts = alerts.filter(a => a.lineName === m.machineId && a.status === "OPEN");
+      const machineAlerts = alerts.filter((a: any) => a.lineName === m.machineId && a.status === "OPEN");
 
       const isDanger = machineAlerts.length > 0;
 

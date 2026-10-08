@@ -9,6 +9,26 @@ const socket = io('http://localhost:3000');
 function App() {
   const [activeTab, setActiveTab] = useState<'andon' | 'dashboard'>('dashboard');
 
+  useEffect(() => {
+    if ('Notification' in window) {
+      Notification.requestPermission();
+    }
+
+    const handleAnomaly = (alert: any) => {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('¡Anomalía Detectada!', {
+          body: `Línea: ${alert.lineName} - ${alert.message}`,
+          icon: '/vite.svg', 
+        });
+      }
+    };
+
+    socket.on('anomaly_alert', handleAnomaly);
+    return () => {
+      socket.off('anomaly_alert', handleAnomaly);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-[#111827] text-slate-200 font-sans">
       {/* Navbar - Solid Matte */}
