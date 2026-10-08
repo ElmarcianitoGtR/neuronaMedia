@@ -169,15 +169,11 @@ onBeforeUnmount(() => {
         <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
         INYECTORA 3D
       </span>
-      <span class="text-slate-400">MOLDE WIREFRAME</span>
     </div>
     <div 
       ref="container" 
       class="w-full flex items-center justify-center bg-transparent overflow-hidden relative select-none pointer-events-none"
       :style="{ height: height, minHeight: height, width: width }"
     ></div>
-    <div class="text-[10px] text-slate-400 text-center font-mono mt-1">
-      Ciclo de apertura/cierre • Pieza en caliente (#F59E0B)
-    </div>
   </div>
 </template>

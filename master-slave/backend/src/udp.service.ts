@@ -11,6 +11,7 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(UdpService.name);
   private server: dgram.Socket;
   private lastFalla: number = 0;
+  private lastSavedUnits: Record<string, number> = {};
 
   constructor(
     private telemetryGateway: TelemetryGateway,
@@ -28,10 +29,15 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       this.server.close();
     });
 
-    this.server.on('message', (msg) => {
+    this.server.on('message', (msg, rinfo) => {
       // Expected payload: 9 uint16 elements = 18 bytes
+      if (process.env.DEBUG_UDP === 'true') {
+        this.logger.log(`UDP Msg from ${rinfo.address}:${rinfo.port} - Size: ${msg.length} bytes`);
+      }
       if (msg.length >= 18) {
         this.processNewData(msg);
+      } else if (process.env.DEBUG_UDP === 'true') {
+        this.logger.warn(`Ignored packet: Expected 18 bytes, got ${msg.length}`);
       }
     });
 
@@ -103,17 +109,37 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
       this.telemetryGateway.broadcastTelemetry(telemetry);
 
       // 2. Log Telemetry to Database
-      const newLog = this.telemetryRepository.create({
-        machineId: telemetry.maquinaId,
-        oee: telemetry.oee,
-        productivity: telemetry.productivity,
-        actualUnits: telemetry.actualUnits,
-        targetUnits: telemetry.targetUnits,
-        temp: telemetry.temp,
-        presion: telemetry.presion,
-        defects: scrap
-      });
-      await this.telemetryRepository.save(newLog);
+      // 2. Log Telemetry to Database (Efficiently: only save if units changed to avoid DB bloat)
+
+      const lastUnits = this.lastSavedUnits[telemetry.maquinaId] || -1;
+
+      if (telemetry.actualUnits > lastUnits) {
+
+        const newLog = this.telemetryRepository.create({
+
+          machineId: telemetry.maquinaId,
+
+          oee: telemetry.oee,
+
+          productivity: telemetry.productivity,
+
+          actualUnits: telemetry.actualUnits,
+
+          targetUnits: telemetry.targetUnits,
+
+          temp: telemetry.temp,
+
+          presion: telemetry.presion,
+
+          defects: telemetry.scrap
+
+        });
+
+        await this.telemetryRepository.save(newLog);
+
+        this.lastSavedUnits[telemetry.maquinaId] = telemetry.actualUnits;
+
+      }
 
       // 3. Log Alert to Database if there's a new fault
       if (falla !== 0 && falla !== this.lastFalla) {

@@ -48,15 +48,11 @@ export const GET: APIRoute = async ({ request }) => {
       });
     }
 
-    // Fallback: Gotenberg no está activo en este momento. Servir vista HTML lista con auto-descarga a PDF tamaño Carta
-    const htmlFallback = pdfResult.html || renderQualityReportHtml(incidente, { autoDownload: true, includeClientScript: true });
-    return new Response(htmlFallback, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'X-Gotenberg-Fallback': 'true'
-      }
-    });
+    // Si Gotenberg falla, devolvemos un 500
+    return new Response(
+      JSON.stringify({ ok: false, error: 'Gotenberg falló al renderizar el PDF' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   } catch (error: any) {
     return new Response(
       JSON.stringify({ ok: false, error: error.message || 'Error al generar documento PDF' }),
@@ -90,15 +86,11 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // Fallback HTML
-    const htmlFallback = pdfResult.html || renderQualityReportHtml(incidente, { autoDownload: true, includeClientScript: true });
-    return new Response(htmlFallback, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'X-Gotenberg-Fallback': 'true'
-      }
-    });
+    // Si Gotenberg falla, retornamos error en lugar de fallback HTML
+    return new Response(
+      JSON.stringify({ ok: false, error: 'Gotenberg falló al renderizar el PDF' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   } catch (error: any) {
     return new Response(
       JSON.stringify({ ok: false, error: error.message || 'Error procesando JSON o generando PDF' }),

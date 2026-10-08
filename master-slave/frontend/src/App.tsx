@@ -14,7 +14,10 @@ function App() {
       {/* Navbar - Solid Matte */}
       <header className="bg-[#1f2937] border-b border-slate-700 p-4 flex justify-between items-center shadow-md z-50">
         <h1 className="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
-          MANUFACTURING KPI DASHBOARD
+          {import.meta.env.VITE_TENANT_LOGO && (
+            <img src={import.meta.env.VITE_TENANT_LOGO} alt="Tenant Logo" className="h-8 w-auto object-contain" />
+          )}
+          {import.meta.env.VITE_TENANT_NAME || 'MANUFACTURING KPI DASHBOARD'}
         </h1>
         <nav className="flex gap-2">
           <button 
@@ -42,16 +45,120 @@ function App() {
 
 function AndonBoard() {
   const [lines, setLines] = useState<any[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const load = () => fetch('http://localhost:3000/api/dashboard/stats').then(r => r.json()).then(d => setLines(d.lines));
     load();
     const int = setInterval(load, 5000);
-    return () => clearInterval(int);
+    socket.on("telemetry_update", (data) => {
+
+      setLines(prev => {
+
+        const arr = [...prev];
+
+        const idx = arr.findIndex(l => l.name === data.maquinaId);
+
+        if (idx !== -1) {
+
+          arr[idx].speed = `${data.actualUnits} u/h`;
+
+          if (data.falla !== 0) {
+
+            arr[idx].status = "danger";
+
+            arr[idx].message = data.falla === 1 ? "Falla Térmica" : "Falla Presión";
+
+          } else {
+
+            arr[idx].status = data.productivity > 80 ? "success" : "warning";
+
+            arr[idx].message = "Operando Nominal";
+
+          }
+
+        }
+
+        return arr;
+
+      });
+
+    });
+
+    return () => {
+      clearInterval(int);
+      socket.off("telemetry_update");
+    };
   }, []);
 
+  const generarDescargarPDF = async (lineName: string) => {
+    setIsGenerating(true);
+    try {
+      // 1. Obtener datos estructurados desde NestJS (alerta real)
+      const reportRes = await fetch(`http://localhost:3000/api/dashboard/report/${lineName}`);
+      if (!reportRes.ok) throw new Error('Error obteniendo datos del backend');
+      const rawData = await reportRes.json();
+
+      // 2. Autogenerar 8D con IA (Gemini) vía Quality Hub
+      const iaRes = await fetch('http://localhost:4321/api/incidentes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: rawData.id,
+          descripcion: rawData.descripcion,
+          area: rawData.area,
+          severidad: rawData.severidad,
+          evidencia: "Lectura anómala de telemetría IoT detectada"
+        })
+      });
+      if (!iaRes.ok) throw new Error('Error generando análisis con IA');
+      const aiResponse = await iaRes.json();
+
+      // Mezclar datos originales con el análisis IA
+      const incidenteData = {
+        ...rawData,
+        analisis: aiResponse.analisis
+      };
+
+      // 3. Mandar datos finales a Astro/Gotenberg para armar el PDF
+      const response = await fetch('http://localhost:4321/api/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(incidenteData)
+      });
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        throw new Error(errJson.error || 'Gotenberg API Error');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Reporte-${lineName}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      alert('Error al generar PDF. Verifica que quality-hub esté corriendo.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative">
+      {isGenerating && (
+        <div className="absolute inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm rounded-lg">
+          <div className="text-center p-6 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl">
+            <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 className="text-white font-bold text-lg mb-2">Generando Reporte Carta</h3>
+            <p className="text-slate-400 text-sm">La Inteligencia Artificial está diagnosticando la falla...</p>
+          </div>
+        </div>
+      )}
       {lines.map((line) => (
         <div key={line.id} className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col">
           <div className="flex justify-between items-center mb-4">
@@ -63,6 +170,14 @@ function AndonBoard() {
             }`}>{line.status}</span>
           </div>
           <p className="text-slate-400 text-sm mb-4">{line.message}</p>
+          <div className="flex gap-2 mb-4">
+            <button 
+              onClick={() => generarDescargarPDF(line.name)}
+              className="px-3 py-1 bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold uppercase rounded-sm"
+            >
+              Generar PDF Carta
+            </button>
+          </div>
           <div className="mt-auto pt-4 border-t border-slate-700 flex justify-between">
             <span className="text-xs text-slate-500 uppercase">Velocidad</span>
             <span className="font-mono text-slate-200">{line.speed}</span>
@@ -75,10 +190,10 @@ function AndonBoard() {
 
 function Dashboard() {
   const [liveData, setLiveData] = useState<any>({
-    oee: '69.2',
-    productivity: 73,
-    targetUnits: 1284,
-    actualUnits: 937
+    oee: 0,
+    productivity: 0,
+    targetUnits: 0,
+    actualUnits: 0
   });
 
   const [dbData, setDbData] = useState<any>({
@@ -87,19 +202,28 @@ function Dashboard() {
     downtimeData: []
   });
 
+  const [isDbLoaded, setIsDbLoaded] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+
   useEffect(() => {
     socket.on('telemetry_update', (data) => {
       setLiveData(data);
+      setIsConnected(true);
     });
     
     const loadDb = () => {
       fetch('http://localhost:3000/api/dashboard/stats')
         .then(r => r.json())
-        .then(data => setDbData({
-          trendData: data.trendData,
-          defectsData: data.defectsData,
-          downtimeData: data.downtimeData
-        }))
+        .then(data => {
+          setDbData({
+            trendData: data.trendData,
+            defectsData: data.defectsData,
+            downtimeData: data.downtimeData,
+            latestAlert: data.latestAlert
+          });
+          if (!isConnected && data.latestTelemetry) setLiveData(data.latestTelemetry);
+          setIsDbLoaded(true);
+        })
         .catch(err => console.error("Error loading dashboard stats", err));
     };
     
@@ -112,7 +236,23 @@ function Dashboard() {
     };
   }, []);
 
-  const { trendData, defectsData, downtimeData } = dbData;
+  const { trendData, defectsData, downtimeData, latestAlert } = dbData;
+
+  const displayTrendData = [...trendData];
+  if (displayTrendData.length > 0) {
+    displayTrendData[displayTrendData.length - 1] = { 
+      ...displayTrendData[displayTrendData.length - 1], 
+      produccion: liveData.actualUnits || 0 
+    };
+  }
+
+
+  const DbOverlay = () => !isDbLoaded && (
+    <div className="absolute inset-0 bg-slate-900/80 z-40 flex flex-col items-center justify-center backdrop-blur-sm">
+      <div className="w-8 h-8 border-2 border-slate-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+      <span className="text-xs font-bold text-slate-400 uppercase animate-pulse text-center px-4">Consultando<br/>PostgreSQL...</span>
+    </div>
+  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
@@ -120,47 +260,56 @@ function Dashboard() {
       {/* Left Column: KPIs & Trend */}
       <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
         {/* KPI Panel */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4">
+        <div className="bg-[#1f2937] border border-slate-700 p-4 relative overflow-hidden">
           <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center transition-colors duration-500">
             <div>
               <span className="text-sm font-bold text-slate-300 uppercase">OEE</span>
               <div className="text-3xl font-bold text-teal-400 transition-all duration-300">{liveData.oee}%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">Live</div>
-              <div className="text-sm font-bold text-teal-400">WebSocket</div>
+              <div className={`text-xs ${isConnected ? "text-teal-500" : "text-red-500"}`}>{isConnected ? "🟢 En Vivo" : "🔴 Desconectado"}</div>
+              <div className={`text-sm font-bold ${isConnected ? "text-teal-400" : "text-red-400"}`}>{isConnected ? "UDP Stream" : "DB Local"}</div>
             </div>
           </div>
           
           <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center">
             <div>
-              <span className="text-sm font-bold text-slate-300 uppercase">Efficiency</span>
+              <span className="text-sm font-bold text-slate-300 uppercase">Eficiencia</span>
               <div className="text-3xl font-bold text-teal-400">74.5%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-xs text-teal-500">↑ Incremento</div>
               <div className="text-sm font-bold text-teal-400">+2.66%</div>
             </div>
           </div>
 
           <div className="bg-[#064e3b] border border-[#047857] p-3 flex justify-between items-center">
             <div>
-              <span className="text-sm font-bold text-slate-300 uppercase">Availability</span>
+              <span className="text-sm font-bold text-slate-300 uppercase">Disponibilidad</span>
               <div className="text-3xl font-bold text-teal-400">92.1%</div>
             </div>
             <div className="text-right">
-              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-xs text-teal-500">↑ Incremento</div>
               <div className="text-sm font-bold text-teal-400">+1.33%</div>
             </div>
           </div>
+
+          {latestAlert && (
+            <div className="mt-3 p-3 border border-red-900 bg-red-950/30">
+              <div className="text-xs font-bold text-red-500 uppercase mb-1">Último Incidente</div>
+              <div className="text-sm text-slate-300 font-mono">{latestAlert.lineName} | {latestAlert.message}</div>
+              <div className="text-xs text-slate-500 mt-1">{new Date(latestAlert.createdAt).toLocaleString()}</div>
+            </div>
+          )}
         </div>
 
         {/* Trend Panel */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT LAST 7 DAYS</h3>
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow relative overflow-hidden">
+          <DbOverlay />
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN ÚLTIMOS 7 DÍAS</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+              <AreaChart data={displayTrendData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorOutput" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3}/>
@@ -181,8 +330,8 @@ function Dashboard() {
       {/* Middle Column: Main Gauge & Output By Line */}
       <div className="col-span-1 lg:col-span-5 flex flex-col gap-4">
         {/* Main Gauge Panel */}
-        <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px]">
-          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVITY SHIFT</h3>
+        <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px] overflow-hidden">
+          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVIDAD DEL TURNO</h3>
           
           {/* Radial SVG Gauge */}
           <div className="relative w-64 h-32 mt-8 flex flex-col items-center justify-end">
@@ -217,7 +366,7 @@ function Dashboard() {
           </div>
           <div className="flex justify-center gap-4 mt-8 text-[10px] uppercase text-slate-400 font-bold tracking-wider">
             <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#14b8a6]"></span> Actual
+              <span className="w-2 h-2 rounded-full bg-[#14b8a6]"></span> Real
             </div>
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#eab308]"></span> Gap (85%)
@@ -228,25 +377,25 @@ function Dashboard() {
           </div>
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
-              <div className="text-xs text-slate-400 uppercase">Target</div>
+              <div className="text-xs text-slate-400 uppercase">Objetivo</div>
               <div className="text-xl font-mono text-slate-200">{liveData.targetUnits}</div>
             </div>
             <div className="text-center">
-              <div className="text-xs text-slate-400 uppercase">Units</div>
+              <div className="text-xs text-slate-400 uppercase">Unidades</div>
               <div className="text-xl font-mono text-slate-200 transition-all duration-300">{liveData.actualUnits}</div>
             </div>
           </div>
         </div>
 
         {/* Output By Line Horizontal Bars */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT BY LINE - CURRENT SHIFT</h3>
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow relative overflow-hidden">
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">PRODUCCIÓN POR LÍNEA - TURNO ACTUAL</h3>
           <div className="flex flex-col gap-3">
             {[ 
-              {name: 'Line 1', val: 72, col: 'bg-slate-500'}, 
-              {name: 'Line 2', val: 85, col: 'bg-slate-500'}, 
-              {name: 'Line 3', val: 56, col: 'bg-red-500'}, // ALERT
-              {name: 'Line 4', val: 91, col: 'bg-slate-500'} 
+              {name: 'Línea 1', val: Math.round(liveData.productivity || 0), col: (liveData.productivity || 0) >= 85 ? 'bg-teal-500' : ((liveData.productivity || 0) < 60 ? 'bg-red-500' : 'bg-slate-500')}, 
+              {name: 'Línea 2', val: 85, col: 'bg-slate-500'}, 
+              {name: 'Línea 3', val: 56, col: 'bg-red-500'},
+              {name: 'Línea 4', val: 91, col: 'bg-slate-500'} 
             ].map(l => (
               <div key={l.name} className="flex items-center gap-4 text-sm">
                 <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
@@ -263,8 +412,9 @@ function Dashboard() {
       {/* Right Column: Downtime & Defects */}
       <div className="col-span-1 lg:col-span-3 flex flex-col gap-4">
         {/* Downtime Bar Chart */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">DOWNTIME SUMMARY</h3>
+        <div className="bg-[#1f2937] border border-slate-700 p-4 relative overflow-hidden">
+          <DbOverlay />
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">RESUMEN DE PAROS</h3>
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={downtimeData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
@@ -281,8 +431,9 @@ function Dashboard() {
         </div>
 
         {/* Defects Pie Chart */}
-        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow flex flex-col">
-          <h3 className="text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">TOP DEFECTS</h3>
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow flex flex-col relative overflow-hidden">
+          <DbOverlay />
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">TOP DEFECTOS</h3>
           <div className="flex-grow flex items-center">
             <div className="w-1/2 h-32">
               <ResponsiveContainer width="100%" height="100%">
@@ -301,7 +452,7 @@ function Dashboard() {
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.fill }}></div>
                     <span className="text-slate-300">{d.name}</span>
                   </div>
-                  <span className="text-slate-400">{d.value}%</span>
+                  <span className="text-slate-400">{d.value} incid.</span>
                 </div>
               ))}
             </div>

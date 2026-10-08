@@ -15,9 +15,18 @@ const resueltas = incidentes.filter(i => i.estado === 'Validada' || i.estado ===
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quality Hub // Mitsubishi Quality Challenge</title>
+  <title>Quality Hub // Neurona y Media Quality Challenge</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body class="min-h-screen flex flex-col bg-[#111827] text-slate-200 font-sans selection:bg-teal-600 selection:text-white">
+  <!-- LOADING MODAL (HIDDEN BY DEFAULT) -->
+  <div id="loadingModal" class="hidden fixed inset-0 bg-slate-900/80 z-[100] flex items-center justify-center backdrop-blur-sm">
+    <div class="text-center p-6 bg-[#1f2937] border border-slate-700 rounded-sm shadow-2xl">
+      <div class="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <h3 class="text-slate-200 font-bold uppercase tracking-wider text-sm mb-2">Generando Reporte Carta</h3>
+      <p class="text-slate-400 text-xs">La Inteligencia Artificial está procesando la telemetría en Memgraph...</p>
+    </div>
+  </div>
 
   <!-- NAVBAR - SOLID INDUSTRIAL MATTE (1:1 master-slave) -->
   <header class="bg-[#1f2937] border-b border-slate-700 p-4 flex flex-wrap justify-between items-center shadow-md z-50 gap-4">
@@ -27,7 +36,7 @@ const resueltas = incidentes.filter(i => i.estado === 'Validada' || i.estado ===
         <h1 class="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-2">
           QUALITY ASSURANCE // 8D AUDIT CONSOLE
         </h1>
-        <p class="text-xs text-slate-400">Mitsubishi Motors Quality Hub • Control y Resolución de No Conformidades</p>
+        <p class="text-xs text-slate-400">Neurona y Media Quality Hub • Control y Resolución de No Conformidades</p>
       </div>
     </div>
 
@@ -262,7 +271,7 @@ const resueltas = incidentes.filter(i => i.estado === 'Validada' || i.estado ===
   <!-- SOLID FOOTER -->
   <footer class="bg-[#1f2937] border-t border-slate-700 p-4 text-center text-xs text-slate-400">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-      <span class="uppercase font-semibold tracking-wider">NeuronaMedia • Mitsubishi Quality Challenge 2026</span>
+      <span class="uppercase font-semibold tracking-wider">NeuronaMedia • Neurona y Media Quality Challenge 2026</span>
       <span>ARQUITECTURA MASTER-SLAVE INTEGRADA // ASTRO • MEMGRAPH • GEMINI • GOTENBERG</span>
     </div>
   </footer>
@@ -295,6 +304,9 @@ const resueltas = incidentes.filter(i => i.estado === 'Validada' || i.estado ===
         const descripcion = (document.getElementById('inputDescripcion') as HTMLTextAreaElement).value;
 
         if (btnEnviar) btnEnviar.setAttribute('disabled', 'true');
+        const loadingModal = document.getElementById('loadingModal');
+        if (loadingModal) loadingModal.classList.remove('hidden');
+
         if (feedback) {
           feedback.className = 'text-xs font-semibold text-teal-400';
           feedback.textContent = 'Procesando metodologías 8D, Ishikawa y 5W en Gemini y Memgraph...';
@@ -317,9 +329,11 @@ const resueltas = incidentes.filter(i => i.estado === 'Validada' || i.estado ===
               window.location.href = `/reportes/${data.id}`;
             }, 600);
           } else {
+            if (loadingModal) loadingModal.classList.add('hidden');
             throw new Error(data.error || 'Error al registrar incidencia');
           }
         } catch (err: any) {
+          if (loadingModal) loadingModal.classList.add('hidden');
           if (feedback) {
             feedback.className = 'text-xs font-semibold text-red-400';
             feedback.textContent = `Error: ${err.message}`;
