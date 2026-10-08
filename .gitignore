@@ -1,2 +1,6 @@
 *~
 node_modules
+# MATLAB / Simulink Cache and Auto-generated files
+slprj/
+*.slxc
+*.asv
