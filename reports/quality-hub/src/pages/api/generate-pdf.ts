@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({ request }) => {
 
     // Si el usuario solicita explícitamente HTML imprimible
     if (format === 'html') {
-      const html = renderQualityReportHtml(incidente);
+      const html = renderQualityReportHtml(incidente, { autoDownload: false, includeClientScript: true });
       return new Response(html, {
         status: 200,
         headers: {
@@ -42,13 +42,13 @@ export const GET: APIRoute = async ({ request }) => {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
-          'Content-Disposition': `inline; filename="Reporte-8D-${id}.pdf"`
+          'Content-Disposition': `attachment; filename="Reporte-8D-${id}-Carta.pdf"`
         }
       });
     }
 
-    // Fallback: Gotenberg no está activo en este momento. Servir vista HTML lista para imprimir
-    const htmlFallback = pdfResult.html || renderQualityReportHtml(incidente);
+    // Fallback: Gotenberg no está activo en este momento. Servir vista HTML lista con auto-descarga a PDF tamaño Carta
+    const htmlFallback = pdfResult.html || renderQualityReportHtml(incidente, { autoDownload: true, includeClientScript: true });
     return new Response(htmlFallback, {
       status: 200,
       headers: {

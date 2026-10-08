@@ -2,7 +2,6 @@ import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/commo
 import { TelemetryGateway } from './telemetry.gateway.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AndonAlert } from './andon-alert.entity.js';
-import { TelemetryLog } from './telemetry.entity.js';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -23,8 +22,6 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
     private telemetryGateway: TelemetryGateway,
     @InjectRepository(AndonAlert)
     private alertRepository: Repository<AndonAlert>,
-    @InjectRepository(TelemetryLog)
-    private telemetryRepository: Repository<TelemetryLog>,
   ) {}
 
   onModuleInit() {
@@ -68,9 +65,6 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
     const totalPiezas = this.piezasOk + this.scrap;
     const oee = totalPiezas > 0 ? (this.piezasOk / totalPiezas) * 100 : 0;
     
-    const targetUnits = 1500;
-    const productivity = parseFloat(((this.piezasOk / targetUnits) * 100).toFixed(1));
-
     const telemetry = {
       maquinaId: 'M-01',
       etapa: this.etapa,
@@ -80,35 +74,23 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
       temp: parseFloat(temp.toFixed(2)),
       presion: parseFloat(presion.toFixed(2)),
       oee: parseFloat(oee.toFixed(1)),
-      productivity,
-      targetUnits,
+      targetUnits: 1500,
       actualUnits: this.piezasOk
     };
 
     // 1. Broadcast to Frontend
     this.telemetryGateway.broadcastTelemetry(telemetry);
 
-    // 2. Log Telemetry to Database
-    const newLog = this.telemetryRepository.create({
-      machineId: telemetry.maquinaId,
-      oee: telemetry.oee,
-      productivity: telemetry.productivity,
-      actualUnits: telemetry.actualUnits,
-      targetUnits: telemetry.targetUnits,
-      temp: telemetry.temp,
-      presion: telemetry.presion,
-      defects: this.scrap
-    });
-    await this.telemetryRepository.save(newLog);
-
-    // 3. Log Alert to Database if there's a new fault
+    // 2. Log Alert to Database if there's a new fault
     if (falla !== 0 && falla !== this.lastFalla) {
       this.logger.warn(`[SIMULATOR] New Andon Alert detected! Machine: ${telemetry.maquinaId}, Fault Code: ${falla}`);
       
       const newAlert = this.alertRepository.create({
         lineName: telemetry.maquinaId,
         status: 'OPEN',
-        message: `Código ${falla}: ${falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)'} (Temp: ${telemetry.temp}°C, Presión: ${telemetry.presion} bar)`,
+        message: falla === 1
+          ? `Falla Térmica (Temperatura ${telemetry.temp}°C fuera de rango)`
+          : `Falla Presión (Tiro Corto a ${telemetry.presion} bar)`,
       });
       
       await this.alertRepository.save(newAlert);

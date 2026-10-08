@@ -1,170 +1,9 @@
-import type { Incidencia, IshikawaFactor } from '../types';
-
-function wrapSvgText(text: string, maxLineLen: number, maxLines: number = 4): string[] {
-  const words = text.split(/\s+/);
-  const lines: string[] = [];
-  let currentLine = '';
-
-  for (const word of words) {
-    if ((currentLine + (currentLine ? ' ' : '') + word).length <= maxLineLen) {
-      currentLine += (currentLine ? ' ' : '') + word;
-    } else {
-      if (currentLine) lines.push(currentLine);
-      currentLine = word;
-      if (lines.length >= maxLines) break;
-    }
-  }
-  if (currentLine && lines.length < maxLines) {
-    lines.push(currentLine);
-  }
-  return lines;
-}
-
-function renderFishboneSvgForLetter(ishikawa: IshikawaFactor[], problema: string): string {
-  const topCats = [
-    { key: 'Maquinaria', label: 'MAQUINARIA', xTip: 250, xSpine: 400, labelX: 140, labelY: 50 },
-    { key: 'Método', label: 'MÉTODO', xTip: 550, xSpine: 700, labelX: 440, labelY: 50 },
-    { key: 'Mano de Obra', label: 'MANO DE OBRA', xTip: 850, xSpine: 1000, labelX: 740, labelY: 50 }
-  ];
-
-  const bottomCats = [
-    { key: 'Materiales', label: 'MATERIALES', xTip: 250, xSpine: 400, labelX: 140, labelY: 650 },
-    { key: 'Medición', label: 'MEDICIÓN', xTip: 550, xSpine: 700, labelX: 440, labelY: 650 },
-    { key: 'Medio Ambiente', label: 'MEDIO AMBIENTE', xTip: 850, xSpine: 1000, labelX: 740, labelY: 650 }
-  ];
-
-  const getFactors = (cat: string) => ishikawa.filter(f => f.categoria.toLowerCase() === cat.toLowerCase());
-  const problemLines = wrapSvgText(problema, 22, 6);
-
-  let svg = `
-  <svg viewBox="0 0 1400 700" style="width: 100%; height: auto; margin: 0 auto; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-    <defs>
-      <marker id="fishbone-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-        <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e" />
-      </marker>
-      <marker id="fishbone-subarrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
-      </marker>
-      <linearGradient id="headGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#1e293b"/>
-        <stop offset="100%" stop-color="#0f172a"/>
-      </linearGradient>
-    </defs>
-
-    <!-- Fondo sutil de la espina -->
-    <rect width="1400" height="700" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" />
-
-    <!-- Columna Vertebral Principal -->
-    <line x1="40" y1="350" x2="1060" y2="350" stroke="#0f766e" stroke-width="6" stroke-linecap="round" marker-end="url(#fishbone-arrow)" />
-
-    <!-- Cabeza del Pescado (Efecto / Problema) -->
-    <g transform="translate(1080, 240)">
-      <rect width="280" height="220" rx="6" fill="url(#headGrad)" stroke="#dc2626" stroke-width="4" />
-      <rect width="280" height="45" rx="4" fill="#b91c1c" />
-      <text x="140" y="30" fill="#ffffff" font-size="20" font-weight="800" text-anchor="middle" letter-spacing="1">EFECTO / DEFECTO</text>
-      <text x="20" y="80" fill="#f1f5f9" font-size="18" font-weight="600">
-        ${problemLines.map((line, idx) => `<tspan x="20" dy="${idx === 0 ? 0 : 26}">${line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</tspan>`).join('')}
-      </text>
-    </g>
-  `;
-
-  // Costillas Superiores
-  topCats.forEach(cat => {
-    const factors = getFactors(cat.key);
-    svg += `
-      <!-- Categoría Superior -->
-      <rect x="${cat.labelX}" y="${cat.labelY - 30}" width="220" height="45" rx="6" fill="#0f766e" />
-      <text x="${cat.labelX + 110}" y="${cat.labelY}" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle" letter-spacing="1">${cat.label}</text>
-      <line x1="${cat.xTip}" y1="${cat.labelY + 15}" x2="${cat.xSpine}" y2="350" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
-    `;
-
-    factors.forEach((f, idx) => {
-      const ratio = (idx + 1) / (factors.length + 1);
-      const branchY = 80 + ratio * 270;
-      const branchXOnRib = cat.xTip + ratio * (cat.xSpine - cat.xTip);
-      const lineLen = 40;
-      const boxWidth = 230;
-      const boxHeight = 40;
-      const startX = branchXOnRib - lineLen;
-      const isRoot = f.esCausaRaiz;
-
-      svg += `
-        <line x1="${startX}" y1="${branchY}" x2="${branchXOnRib}" y2="${branchY}" stroke="${isRoot ? '#dc2626' : '#94a3b8'}" stroke-width="3" marker-end="url(#fishbone-subarrow)" />
-        <rect x="${startX - boxWidth}" y="${branchY - boxHeight/2}" width="${boxWidth}" height="${boxHeight}" rx="4" fill="${isRoot ? '#fee2e2' : '#ffffff'}" stroke="${isRoot ? '#dc2626' : '#cbd5e1'}" stroke-width="${isRoot ? '3' : '2'}" />
-        <text x="${startX - boxWidth/2}" y="${branchY + 6}" fill="${isRoot ? '#991b1b' : '#0f172a'}" font-size="16" font-weight="${isRoot ? '700' : '600'}" text-anchor="middle">
-          ${f.factor.length > 25 ? f.factor.substring(0, 24) + '…' : f.factor}
-        </text>
-      `;
-    });
-  });
-
-  // Costillas Inferiores
-  bottomCats.forEach(cat => {
-    const factors = getFactors(cat.key);
-    svg += `
-      <!-- Categoría Inferior -->
-      <rect x="${cat.labelX}" y="${cat.labelY - 15}" width="220" height="45" rx="6" fill="#0f766e" />
-      <text x="${cat.labelX + 110}" y="${cat.labelY + 15}" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle" letter-spacing="1">${cat.label}</text>
-      <line x1="${cat.xTip}" y1="${cat.labelY - 15}" x2="${cat.xSpine}" y2="350" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
-    `;
-
-    factors.forEach((f, idx) => {
-      const ratio = (idx + 1) / (factors.length + 1);
-      const branchY = 620 - ratio * 270;
-      const branchXOnRib = cat.xTip + ratio * (cat.xSpine - cat.xTip);
-      const lineLen = 40;
-      const boxWidth = 230;
-      const boxHeight = 40;
-      const startX = branchXOnRib - lineLen;
-      const isRoot = f.esCausaRaiz;
-
-      svg += `
-        <line x1="${startX}" y1="${branchY}" x2="${branchXOnRib}" y2="${branchY}" stroke="${isRoot ? '#dc2626' : '#94a3b8'}" stroke-width="3" marker-end="url(#fishbone-subarrow)" />
-        <rect x="${startX - boxWidth}" y="${branchY - boxHeight/2}" width="${boxWidth}" height="${boxHeight}" rx="4" fill="${isRoot ? '#fee2e2' : '#ffffff'}" stroke="${isRoot ? '#dc2626' : '#cbd5e1'}" stroke-width="${isRoot ? '3' : '2'}" />
-        <text x="${startX - boxWidth/2}" y="${branchY + 6}" fill="${isRoot ? '#991b1b' : '#0f172a'}" font-size="16" font-weight="${isRoot ? '700' : '600'}" text-anchor="middle">
-          ${f.factor.length > 25 ? f.factor.substring(0, 24) + '…' : f.factor}
-        </text>
-      `;
-    });
-  });
-
-  svg += `</svg>`;
-  return svg;
-}
-
-export function renderQualityReportHtml(
-  incidente: Incidencia,
-  options: { autoDownload?: boolean; includeClientScript?: boolean } = {}
-): string {
-  const analisis = incidente.analisis;
-  const d = analisis?.disciplinas8d;
-  const ishikawa = analisis?.ishikawa || [];
-  const whys = analisis?.cincoPorques || [];
-  const acciones = analisis?.acciones || [];
-  const evidencias = analisis?.evidencias || [];
-  const autoDownload = options.autoDownload ?? false;
-  const includeClientScript = options.includeClientScript ?? true;
-
-  const severidadColor =
-    incidente.severidad === 'Crítica'
-      ? { bg: '#fee2e2', text: '#991b1b', border: '#f87171' }
-      : incidente.severidad === 'Alta'
-      ? { bg: '#ffedd5', text: '#9a3412', border: '#fb923c' }
-      : incidente.severidad === 'Media'
-      ? { bg: '#fef3c7', text: '#92400e', border: '#fcd34d' }
-      : { bg: '#dcfce7', text: '#166534', border: '#86efac' };
-
-  const estadoColor =
-    incidente.estado === 'Validada' || incidente.estado === 'Mitigada' || incidente.estado === 'Cerrada'
-      ? { bg: '#dcfce7', text: '#166534', border: '#86efac' }
-      : { bg: '#e0f2fe', text: '#075985', border: '#7dd3fc' };
-
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Reporte 8D - ${incidente.id} - Mitsubishi Motors Quality Challenge</title>
-  ${includeClientScript ? '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>' : ''}
+  <title>Reporte 8D - INC-2026-001 - Mitsubishi Motors Quality Challenge</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     /* CONFIGURACIÓN ESTRICTA PARA HOJAS TAMAÑO CARTA (8.5 x 11 pulgadas) */
     @page {
@@ -529,7 +368,7 @@ export function renderQualityReportHtml(
       <span style="display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></span>
       <span style="font-size: 13px; font-weight: bold; letter-spacing: 0.5px;">MITSUBISHI QUALITY ASSURANCE // REPORTE 8D</span>
       <span id="dl-status" style="font-size: 12px; color: #5eead4; margin-left: 8px;">
-        ${autoDownload ? 'Descargando documento PDF tamaño Carta automáticamente...' : 'Formato Carta (Letter 8.5" × 11") listo para descarga'}
+        Formato Carta (Letter 8.5" × 11") listo para descarga
       </span>
     </div>
     <div style="display: flex; gap: 8px;">
@@ -566,13 +405,13 @@ export function renderQualityReportHtml(
           </div>
         </div>
         <div class="meta-cell">
-          <div><strong style="color: #64748b; font-size: 8px;">FOLIO OFICIAL:</strong> <span style="font-weight: 800; font-size: 11px; color: #0f172a;">${incidente.id}</span></div>
+          <div><strong style="color: #64748b; font-size: 8px;">FOLIO OFICIAL:</strong> <span style="font-weight: 800; font-size: 11px; color: #0f172a;">INC-2026-001</span></div>
           <div style="margin-top: 2px;">
-            <span class="badge-pill" style="background-color: ${severidadColor.bg}; color: ${severidadColor.text}; border: 1px solid ${severidadColor.border};">
-              Severidad: ${incidente.severidad}
+            <span class="badge-pill" style="background-color: #fee2e2; color: #991b1b; border: 1px solid #f87171;">
+              Severidad: Crítica
             </span>
-            <span class="badge-pill" style="background-color: ${estadoColor.bg}; color: ${estadoColor.text}; border: 1px solid ${estadoColor.border};">
-              ${incidente.estado}
+            <span class="badge-pill" style="background-color: #e0f2fe; color: #075985; border: 1px solid #7dd3fc;">
+              En Auditoría
             </span>
           </div>
         </div>
@@ -582,19 +421,19 @@ export function renderQualityReportHtml(
       <div class="meta-grid">
         <div class="meta-item">
           <div class="meta-label">Estación / Línea</div>
-          <div class="meta-value">${incidente.area}</div>
+          <div class="meta-value">Línea de Ensamble de Chasis (Estación 04)</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Fecha y Hora de Detección</div>
-          <div class="meta-value">${new Date(incidente.creadoEn).toLocaleString('es-MX')}</div>
+          <div class="meta-value">7/10/2026, 8:17:20 p.m.</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Auditor Responsable</div>
-          <div class="meta-value">${incidente.validadoPor || 'Equipo de Calidad en Planta'}</div>
+          <div class="meta-value">Equipo de Calidad en Planta</div>
         </div>
         <div class="meta-item">
           <div class="meta-label">Código de Trazabilidad</div>
-          <div class="meta-value" style="font-family: monospace;">QA-8D-${incidente.id.replace('INC-', '')}-MITSUBISHI</div>
+          <div class="meta-value" style="font-family: monospace;">QA-8D-2026-001-MITSUBISHI</div>
         </div>
       </div>
 
@@ -603,13 +442,13 @@ export function renderQualityReportHtml(
         <div style="display: table; width: 100%;">
           <div style="display: table-cell; width: 68%; vertical-align: top; padding-right: 8px;">
             <div style="font-size: 8px; font-weight: 800; color: #dc2626; text-transform: uppercase;">Definición del Problema (5W2H)</div>
-            <div style="font-size: 10px; font-weight: 700; color: #0f172a; margin-top: 1px;">${analisis?.titulo || incidente.descripcion}</div>
-            <div style="font-size: 8.5px; color: #334155; margin-top: 3px; line-height: 1.35;">${analisis?.resumen || incidente.descripcion}</div>
+            <div style="font-size: 10px; font-weight: 700; color: #0f172a; margin-top: 1px;">Desviación Crítica de Torque en Ensamble de Frenos</div>
+            <div style="font-size: 8.5px; color: #334155; margin-top: 3px; line-height: 1.35;">Durante la auditoría de calidad al final de línea se detectaron 3 unidades con torque inferior a 85 Nm (especificación 110±5 Nm).</div>
           </div>
           <div style="display: table-cell; width: 32%; vertical-align: top; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 3px; padding: 6px;">
             <div style="font-size: 7.5px; font-weight: 800; color: #991b1b; text-transform: uppercase;">★ Causa Raíz Diagnosticada</div>
             <div style="font-size: 8.5px; font-weight: 700; color: #7f1d1d; margin-top: 2px; line-height: 1.25;">
-              ${incidente.causaRaiz}
+              Falta de sincronización entre el odómetro de ciclos de la atornilladora y el plan de calibración
             </div>
           </div>
         </div>
@@ -623,22 +462,22 @@ export function renderQualityReportHtml(
           <div class="col-8d">
             <span class="d-badge">D1 • EQUIPO</span>
             <div class="d-title">Formación Multidisciplinaria</div>
-            <div class="d-text">${d?.d1_equipo?.join(', ') || 'Líder Calidad, Procesos, Mantenimiento'}</div>
+            <div class="d-text">Ing. Carlos Méndez (Líder Calidad), Laura Torres (Ing. Procesos), Roberto Ruiz (Mantenimiento)</div>
           </div>
           <div class="col-8d">
             <span class="d-badge">D2 • DEFINICIÓN</span>
             <div class="d-title">Descripción Detallada</div>
-            <div class="d-text">${d?.d2_descripcion || incidente.descripcion}</div>
+            <div class="d-text">3 vehículos presentaron torque de 78 Nm en pernos M12 de cáliper en estación 04 del turno vespertino.</div>
           </div>
           <div class="col-8d">
             <span class="d-badge">D3 • CONTENCIÓN</span>
             <div class="d-title">Acciones Inmediatas</div>
-            <div class="d-text">${d?.d3_contencion || 'Contención en línea y segregación de lote'}</div>
+            <div class="d-text">Paro técnico de estación 04. Cuarentena de 42 unidades producidas en el turno para reapriete manual con torquímetro calibrado.</div>
           </div>
           <div class="col-8d root-highlight">
             <span class="d-badge">D4 • CAUSA RAÍZ</span>
             <div class="d-title" style="color: #991b1b;">Análisis Causal Verificado</div>
-            <div class="d-text" style="color: #7f1d1d; font-weight: 600;">${d?.d4_causaRaiz || incidente.causaRaiz}</div>
+            <div class="d-text" style="color: #7f1d1d; font-weight: 600;">El transductor del servocontrolador de la atornilladora automática acumuló deriva térmica por falla del ventilador auxiliar.</div>
           </div>
         </div>
 
@@ -647,27 +486,27 @@ export function renderQualityReportHtml(
           <div class="col-8d">
             <span class="d-badge">D5 • CORRECTIVAS</span>
             <div class="d-title">Acciones Permanentes</div>
-            <div class="d-text">${d?.d5_accionesCorrectivas || 'Ajuste de parámetros y recambio de componentes'}</div>
+            <div class="d-text">Sustitución inmediata del transductor y ventilador. Validación con celda de carga patrón.</div>
           </div>
           <div class="col-8d">
             <span class="d-badge">D6 • VALIDACIÓN</span>
             <div class="d-title">Pruebas en Lote Piloto</div>
-            <div class="d-text">${d?.d6_implementacion || 'Corrida de verificación sensorial y telemetría'}</div>
+            <div class="d-text">Instalación de sensor térmico con enclavamiento al PLC que bloquea el ciclo si la temperatura supera 45°C.</div>
           </div>
           <div class="col-8d">
             <span class="d-badge">D7 • PREVENCIÓN</span>
             <div class="d-title">Control de Recurrencia</div>
-            <div class="d-text">${d?.d7_prevencion || 'Actualización de AMEF y Poka-Yoke sensorial'}</div>
+            <div class="d-text">Incorporación de verificación de temperatura en checklist diario y calibración semanal con torquímetro digital.</div>
           </div>
           <div class="col-8d">
             <span class="d-badge">D8 • CIERRE</span>
             <div class="d-title">Lección Aprendida</div>
-            <div class="d-text">${d?.d8_cierre || 'Reconocimiento y estandarización compartida'}</div>
+            <div class="d-text">Lote liberado al 100% con doble firma. Felicitaciones al equipo de auditoría por detección temprana.</div>
           </div>
         </div>
       </div>
 
-      ${evidencias.length > 0 ? `
+      
       <!-- EVIDENCIAS Y TELEMETRÍA IOT -->
       <div class="section-banner">EVIDENCIA TÉCNICA Y TELEMETRÍA IOT ASOCIADA (RESPALDADA_POR)</div>
       <table class="table-modern">
@@ -679,16 +518,22 @@ export function renderQualityReportHtml(
           </tr>
         </thead>
         <tbody>
-          ${evidencias.map(e => `
+          
             <tr>
-              <td><strong>${e.tipo}</strong></td>
-              <td>${e.descripcion}</td>
-              <td><code style="font-weight: 700; color: #0284c7;">${e.valor || 'OK'}</code></td>
+              <td><strong>Lectura de Torque</strong></td>
+              <td>Perno Cáliper Delantero Izquierdo</td>
+              <td><code style="font-weight: 700; color: #0284c7;">78.2 Nm (Mínimo requerido: 105 Nm)</code></td>
             </tr>
-          `).join('')}
+          
+            <tr>
+              <td><strong>Telemetría PLC</strong></td>
+              <td>Temperatura de carcasa atornilladora</td>
+              <td><code style="font-weight: 700; color: #0284c7;">62.4 °C (Umbral máximo: 45 °C)</code></td>
+            </tr>
+          
         </tbody>
       </table>
-      ` : ''}
+      
 
       <div style="text-align: right; font-size: 7.5px; color: #94a3b8; margin-top: 6px;">
         Página 1 de 2 • Mitsubishi Motors Quality Hub • Reporte Tamaño Carta
@@ -712,7 +557,7 @@ export function renderQualityReportHtml(
           </div>
           <div class="corp-name">
             <div class="corp-title" style="font-size: 11px;">MITSUBISHI MOTORS // DIAGNÓSTICO PROFUNDO & MITIGACIÓN</div>
-            <div class="corp-subtitle" style="font-size: 7.5px;">ANÁLISIS CAUSAL (ISHIKAWA 6M & 5 PORQUÉS) • FOLIO ${incidente.id}</div>
+            <div class="corp-subtitle" style="font-size: 7.5px;">ANÁLISIS CAUSAL (ISHIKAWA 6M & 5 PORQUÉS) • FOLIO INC-2026-001</div>
           </div>
         </div>
         <div class="meta-cell">
@@ -723,19 +568,139 @@ export function renderQualityReportHtml(
       <!-- DIAGRAMA VISUAL DE ISHIKAWA (ESPINA DE PESCADO) -->
       <div class="section-banner">DIAGRAMA DE ISHIKAWA (ESPINA DE PESCADO — 6M INDUSTRIAL)</div>
       <div style="margin-bottom: 6px;">
-        ${renderFishboneSvgForLetter(ishikawa, incidente.descripcion)}
+        
+  <svg viewBox="0 0 1020 400" style="width: 100%; max-width: 900px; height: auto; margin: 0 auto; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <defs>
+      <marker id="fishbone-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e" />
+      </marker>
+      <marker id="fishbone-subarrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
+      </marker>
+      <linearGradient id="headGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1e293b"/>
+        <stop offset="100%" stop-color="#0f172a"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Fondo sutil de la espina -->
+    <rect width="1020" height="400" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+
+    <!-- Columna Vertebral Principal -->
+    <line x1="30" y1="200" x2="795" y2="200" stroke="#0f766e" stroke-width="4.5" stroke-linecap="round" marker-end="url(#fishbone-arrow)" />
+
+    <!-- Cabeza del Pescado (Efecto / Problema) -->
+    <g transform="translate(810, 140)">
+      <rect width="180" height="120" rx="4" fill="url(#headGrad)" stroke="#dc2626" stroke-width="2.5" />
+      <rect width="180" height="28" rx="3" fill="#b91c1c" />
+      <text x="90" y="19" fill="#ffffff" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">EFECTO / DEFECTO</text>
+      <text x="12" y="48" fill="#f1f5f9" font-size="10.5" font-weight="600">
+        <tspan x="12" dy="0">Defecto de torque en</tspan><tspan x="12" dy="16">tornillo de sujeción</tspan><tspan x="12" dy="16">de pinza de freno</tspan><tspan x="12" dy="16">delantero</tspan>
+      </text>
+    </g>
+  
+      <!-- Categoría Superior -->
+      <rect x="100" y="12" width="140" height="26" rx="4" fill="#0f766e" />
+      <text x="170" y="30" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MAQUINARIA</text>
+      <line x1="170" y1="38" x2="270" y2="200" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+    
+        <line x1="195" y1="120" x2="220" y2="120" stroke="#dc2626" stroke-width="2" marker-end="url(#fishbone-subarrow)" />
+        <rect x="50" y="109" width="145" height="22" rx="3" fill="#fee2e2" stroke="#dc2626" stroke-width="2" />
+        <text x="122.5" y="123.5" fill="#991b1b" font-size="9" font-weight="700" text-anchor="middle">
+          Deriva en Servocontrola…
+        </text>
+      
+      <!-- Categoría Superior -->
+      <rect x="350" y="12" width="140" height="26" rx="4" fill="#0f766e" />
+      <text x="420" y="30" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MÉTODO</text>
+      <line x1="420" y1="38" x2="520" y2="200" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+    
+        <line x1="445" y1="120" x2="470" y2="120" stroke="#94a3b8" stroke-width="2" marker-end="url(#fishbone-subarrow)" />
+        <rect x="300" y="109" width="145" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+        <text x="372.5" y="123.5" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">
+          Procedimiento de Verifi…
+        </text>
+      
+      <!-- Categoría Superior -->
+      <rect x="600" y="12" width="140" height="26" rx="4" fill="#0f766e" />
+      <text x="670" y="30" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MANO DE OBRA</text>
+      <line x1="670" y1="38" x2="770" y2="200" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+    
+        <line x1="695" y1="120" x2="720" y2="120" stroke="#94a3b8" stroke-width="2" marker-end="url(#fishbone-subarrow)" />
+        <rect x="550" y="109" width="145" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+        <text x="622.5" y="123.5" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">
+          Rotación de Personal
+        </text>
+      
+      <!-- Categoría Inferior -->
+      <rect x="100" y="362" width="140" height="26" rx="4" fill="#0f766e" />
+      <text x="170" y="380" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MATERIALES</text>
+      <line x1="170" y1="362" x2="270" y2="200" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+    
+        <line x1="195" y1="280" x2="220" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#fishbone-subarrow)" />
+        <rect x="50" y="269" width="145" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+        <text x="122.5" y="283.5" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">
+          Lote de Tornillos M12
+        </text>
+      
+      <!-- Categoría Inferior -->
+      <rect x="350" y="362" width="140" height="26" rx="4" fill="#0f766e" />
+      <text x="420" y="380" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MEDICIÓN</text>
+      <line x1="420" y1="362" x2="520" y2="200" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+    
+        <line x1="445" y1="280" x2="470" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#fishbone-subarrow)" />
+        <rect x="300" y="269" width="145" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+        <text x="372.5" y="283.5" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">
+          Tolerancia del Transduc…
+        </text>
+      
+      <!-- Categoría Inferior -->
+      <rect x="600" y="362" width="140" height="26" rx="4" fill="#0f766e" />
+      <text x="670" y="380" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MEDIO AMBIENTE</text>
+      <line x1="670" y1="362" x2="770" y2="200" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+    
+        <line x1="695" y1="280" x2="720" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#fishbone-subarrow)" />
+        <rect x="550" y="269" width="145" height="22" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+        <text x="622.5" y="283.5" fill="#0f172a" font-size="9" font-weight="600" text-anchor="middle">
+          Temperatura en Estación
+        </text>
+      </svg>
       </div>
 
       <!-- CADENA DE 5 PORQUÉS EN LÍNEA -->
       <div class="section-banner">CADENA SECUENCIAL DE LOS 5 PORQUÉS (CONDUCE_A MEMGRAPH)</div>
       <div class="grid-whys">
-        ${whys.map(w => `
-          <div class="col-why ${w.nivel === 5 ? 'final-root' : ''}">
-            <div class="why-header">PASO ${w.nivel} • POR QUÉ ${w.nivel} ${w.nivel === 5 ? '★ RAÍZ' : ''}</div>
-            <div class="why-q">${w.pregunta}</div>
-            <div class="why-a">→ ${w.respuesta}</div>
+        
+          <div class="col-why ">
+            <div class="why-header">PASO 1 • POR QUÉ 1 </div>
+            <div class="why-q">¿Por qué el tornillo de cáliper no alcanzó el torque especificado?</div>
+            <div class="why-a">→ Porque la herramienta automática se detuvo antes de alcanzar los 110 Nm programados.</div>
           </div>
-        `).join('')}
+        
+          <div class="col-why ">
+            <div class="why-header">PASO 2 • POR QUÉ 2 </div>
+            <div class="why-q">¿Por qué la herramienta se detuvo prematuramente?</div>
+            <div class="why-a">→ Porque el transductor interno reportó erróneamente que ya se había alcanzado el par objetivo.</div>
+          </div>
+        
+          <div class="col-why ">
+            <div class="why-header">PASO 3 • POR QUÉ 3 </div>
+            <div class="why-q">¿Por qué el transductor reportó una lectura errónea?</div>
+            <div class="why-a">→ Porque sufrió una deriva de medición severa por sobrecalentamiento interno del motor.</div>
+          </div>
+        
+          <div class="col-why ">
+            <div class="why-header">PASO 4 • POR QUÉ 4 </div>
+            <div class="why-q">¿Por qué se sobrecalentó el motor de la herramienta?</div>
+            <div class="why-a">→ Porque el microventilador de refrigeración del husillo estaba atascado con pelusa industrial.</div>
+          </div>
+        
+          <div class="col-why final-root">
+            <div class="why-header">PASO 5 • POR QUÉ 5 ★ RAÍZ</div>
+            <div class="why-q">¿Por qué el ventilador estaba atascado sin haberse detectado? (Causa Raíz)</div>
+            <div class="why-a">→ Porque no existía un sensor de flujo de aire ni una rutina de limpieza periódica para la carcasa de la atornilladora.</div>
+          </div>
+        
       </div>
 
       <!-- PLAN DE ACCIONES MITIGADORAS (D3, D5, D7) -->
@@ -751,19 +716,43 @@ export function renderQualityReportHtml(
           </tr>
         </thead>
         <tbody>
-          ${acciones.map(a => `
+          
             <tr>
-              <td><strong style="color: #0f766e;">${a.disciplina}</strong></td>
-              <td><strong>${a.tipo}</strong></td>
-              <td>${a.descripcion}</td>
-              <td>${a.responsable}</td>
+              <td><strong style="color: #0f766e;">D3</strong></td>
+              <td><strong>Contención</strong></td>
+              <td>Segregación y verificación de 42 chasis con torquímetro manual calibrado.</td>
+              <td>Supervisor de Calidad</td>
               <td style="text-align: center;">
-                <span class="badge-pill" style="background: ${a.estado === 'Completada' ? '#dcfce7' : a.estado === 'En Proceso' ? '#fef3c7' : '#f1f5f9'}; color: ${a.estado === 'Completada' ? '#166534' : a.estado === 'En Proceso' ? '#92400e' : '#475569'}; border: 1px solid ${a.estado === 'Completada' ? '#86efac' : a.estado === 'En Proceso' ? '#fcd34d' : '#cbd5e1'};">
-                  ${a.estado}
+                <span class="badge-pill" style="background: #dcfce7; color: #166534; border: 1px solid #86efac;">
+                  Completada
                 </span>
               </td>
             </tr>
-          `).join('')}
+          
+            <tr>
+              <td><strong style="color: #0f766e;">D5</strong></td>
+              <td><strong>Correctiva</strong></td>
+              <td>Reemplazo de transductor dañado y limpieza ultrasónica del sistema de enfriamiento.</td>
+              <td>Mantenimiento Electrónico</td>
+              <td style="text-align: center;">
+                <span class="badge-pill" style="background: #fef3c7; color: #92400e; border: 1px solid #fcd34d;">
+                  En Proceso
+                </span>
+              </td>
+            </tr>
+          
+            <tr>
+              <td><strong style="color: #0f766e;">D7</strong></td>
+              <td><strong>Preventiva</strong></td>
+              <td>Instalación de sensor de flujo térmico con alarma enclavada al PLC de línea.</td>
+              <td>Ingeniería de Automatización</td>
+              <td style="text-align: center;">
+                <span class="badge-pill" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">
+                  Pendiente
+                </span>
+              </td>
+            </tr>
+          
         </tbody>
       </table>
 
@@ -773,16 +762,16 @@ export function renderQualityReportHtml(
           CERTIFICACIÓN DE AUDITORÍA DE CALIDAD • HUMANO EN EL BUCLE (HUMAN-IN-THE-LOOP VERIFICATION)
         </div>
         <div style="font-size: 7.5px; color: #475569; margin-bottom: 6px;">
-          Notas del Auditor: <em>"${incidente.notasAuditor || 'Causa raíz validada mediante datos de telemetría y pruebas funcionales. Acciones de contención y preventivas aprobadas para ejecución inmediata.'}"</em>
+          Notas del Auditor: <em>"Causa raíz validada mediante datos de telemetría y pruebas funcionales. Acciones de contención y preventivas aprobadas para ejecución inmediata."</em>
         </div>
 
         <div class="cert-grid">
           <div class="cert-col">
             <div class="sig-line">
-              ${incidente.validadoPor || 'ING. AUDITOR DE CALIDAD RESPONSABLE'}
+              ING. AUDITOR DE CALIDAD RESPONSABLE
             </div>
             <div class="sig-meta">Auditor de Calidad en Planta // Mitsubishi Motors</div>
-            <div class="sig-meta">Fecha de Validación: ${incidente.fechaValidacion ? new Date(incidente.fechaValidacion).toLocaleDateString('es-MX') : new Date().toLocaleDateString('es-MX')}</div>
+            <div class="sig-meta">Fecha de Validación: 7/10/2026</div>
           </div>
           <div class="cert-col">
             <div class="sig-line">
@@ -811,7 +800,7 @@ export function renderQualityReportHtml(
       if (typeof html2pdf !== 'undefined' && element) {
         const opt = {
           margin:       [0.35, 0.45, 0.35, 0.45],
-          filename:     'Reporte-8D-${incidente.id}-Carta.pdf',
+          filename:     'Reporte-8D-INC-2026-001-Carta.pdf',
           image:        { type: 'jpeg', quality: 0.98 },
           html2canvas:  { scale: 2, useCORS: true, logging: false },
           jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
@@ -829,14 +818,8 @@ export function renderQualityReportHtml(
       }
     }
 
-    ${autoDownload ? `
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(downloadPdfNow, 600);
-    });
-    ` : ''}
+    
   </script>
 
 </body>
 </html>
-`;
-}
