@@ -1,38 +1,35 @@
 import { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'andon' | 'dashboard'>('andon');
+  const [activeTab, setActiveTab] = useState<'andon' | 'dashboard'>('dashboard');
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-200 selection:bg-primary/30">
-      {/* Navbar - Dark Glassmorphism */}
-      <header className="bg-slate-900/50 backdrop-blur-md shadow-lg border-b border-white/10 p-4 flex justify-between items-center sticky top-0 z-50">
-        <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-primary flex items-center gap-2">
-          <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-          NeuronaMedia <span className="text-slate-400 text-sm font-normal tracking-widest uppercase ml-2 border border-white/10 px-2 py-1 rounded-full bg-white/5">v1.0 MVP</span>
+    <div className="min-h-screen flex flex-col bg-[#111827] text-slate-200 font-sans">
+      {/* Navbar - Solid Matte */}
+      <header className="bg-[#1f2937] border-b border-slate-700 p-4 flex justify-between items-center shadow-md z-50">
+        <h1 className="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
+          MANUFACTURING KPI DASHBOARD
         </h1>
-        <nav className="flex gap-3">
+        <nav className="flex gap-2">
           <button 
-            className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${activeTab === 'andon' ? 'bg-primary/20 text-blue-400 border border-primary/30 shadow-[0_0_15px_rgba(29,78,216,0.3)]' : 'bg-white/5 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-slate-200'}`}
+            className={`px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm ${activeTab === 'andon' ? 'bg-teal-600 text-white' : 'bg-[#374151] text-slate-300 hover:bg-[#4b5563]'}`}
             onClick={() => setActiveTab('andon')}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            Tablero Andon
+            Andon
           </button>
           <button 
-            className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${activeTab === 'dashboard' ? 'bg-primary/20 text-blue-400 border border-primary/30 shadow-[0_0_15px_rgba(29,78,216,0.3)]' : 'bg-white/5 text-slate-400 border border-white/5 hover:bg-white/10 hover:text-slate-200'}`}
+            className={`px-4 py-2 text-sm font-semibold uppercase tracking-wider transition-none rounded-sm ${activeTab === 'dashboard' ? 'bg-teal-600 text-white' : 'bg-[#374151] text-slate-300 hover:bg-[#4b5563]'}`}
             onClick={() => setActiveTab('dashboard')}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            Telemetría
+            Dashboard
           </button>
         </nav>
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow p-8 max-w-7xl mx-auto w-full">
+      <main className="flex-grow p-4 md:p-6 w-full">
         {activeTab === 'andon' ? <AndonBoard /> : <Dashboard />}
       </main>
     </div>
@@ -40,144 +37,216 @@ function App() {
 }
 
 function AndonBoard() {
-  // Skeleton data
   const lines = [
-    { id: 1, name: 'Línea de Ensamblaje A', status: 'success', message: 'Operando a capacidad óptima', speed: '1,940 u/h' },
-    { id: 2, name: 'Estación de Soldadura', status: 'danger', message: 'Falla de temperatura en horno 3', speed: '0 u/h' },
-    { id: 3, name: 'Inspección Óptica', status: 'warning', message: 'Variación en tolerancia detectada', speed: '1,200 u/h' },
-    { id: 4, name: 'Empaquetado Final', status: 'success', message: 'Sin anomalías registradas', speed: '1,850 u/h' },
+    { id: 1, name: 'Línea 1', status: 'success', message: 'Operando', speed: '1,940 u/h' },
+    { id: 2, name: 'Línea 2', status: 'danger', message: 'Falla Mecánica', speed: '0 u/h' },
+    { id: 3, name: 'Línea 3', status: 'warning', message: 'Alerta Calidad', speed: '1,200 u/h' },
+    { id: 4, name: 'Línea 4', status: 'success', message: 'Operando', speed: '1,850 u/h' },
   ];
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
-        <span className="w-2 h-8 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span>
-        Estado en Planta (Tiempo Real)
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-        {lines.map((line) => (
-          <div key={line.id} className={`relative rounded-2xl overflow-hidden border backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
-            line.status === 'success' ? 'bg-green-950/20 border-green-500/20 hover:border-green-500/50 hover:shadow-green-900/20' :
-            line.status === 'danger' ? 'bg-red-950/30 border-red-500/30 hover:border-red-500/60 hover:shadow-red-900/30' :
-            'bg-yellow-950/20 border-yellow-500/30 hover:border-yellow-500/60 hover:shadow-yellow-900/20'
-          }`}>
-            {/* Status Glow */}
-            <div className={`absolute top-0 left-0 w-full h-1 ${
-              line.status === 'success' ? 'bg-gradient-to-r from-green-400 to-emerald-600 shadow-[0_0_15px_rgba(52,211,153,0.8)]' :
-              line.status === 'danger' ? 'bg-gradient-to-r from-red-500 to-rose-700 shadow-[0_0_15px_rgba(248,113,113,0.8)]' :
-              'bg-gradient-to-r from-yellow-400 to-orange-500 shadow-[0_0_15px_rgba(251,191,36,0.8)]'
-            }`}></div>
-            
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-white">{line.name}</h3>
-                <span className="relative flex h-3 w-3">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                    line.status === 'success' ? 'bg-green-400' : line.status === 'danger' ? 'bg-red-400' : 'bg-yellow-400'
-                  }`}></span>
-                  <span className={`relative inline-flex rounded-full h-3 w-3 ${
-                    line.status === 'success' ? 'bg-green-500' : line.status === 'danger' ? 'bg-red-500' : 'bg-yellow-500'
-                  }`}></span>
-                </span>
-              </div>
-              <p className="text-slate-300 mb-6 text-sm">{line.message}</p>
-              
-              <div className="pt-4 border-t border-white/10 flex justify-between items-center">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Velocidad Actual</span>
-                <span className="font-mono text-lg font-medium text-white">{line.speed}</span>
-              </div>
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {lines.map((line) => (
+        <div key={line.id} className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-bold text-slate-100 uppercase">{line.name}</h3>
+            <span className={`px-3 py-1 text-xs font-bold uppercase rounded-sm ${
+              line.status === 'success' ? 'bg-teal-900 text-teal-400' :
+              line.status === 'danger' ? 'bg-red-900 text-red-400' :
+              'bg-yellow-900 text-yellow-400'
+            }`}>{line.status}</span>
           </div>
-        ))}
-      </div>
+          <p className="text-slate-400 text-sm mb-4">{line.message}</p>
+          <div className="mt-auto pt-4 border-t border-slate-700 flex justify-between">
+            <span className="text-xs text-slate-500 uppercase">Velocidad</span>
+            <span className="font-mono text-slate-200">{line.speed}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
 function Dashboard() {
-  // Mock data for production over time
-  const data = [
-    { time: '08:00', produccion: 120, scrap: 5, meta: 150 },
-    { time: '09:00', produccion: 250, scrap: 12, meta: 300 },
-    { time: '10:00', produccion: 410, scrap: 18, meta: 450 },
-    { time: '11:00', produccion: 580, scrap: 22, meta: 600 },
-    { time: '12:00', produccion: 720, scrap: 30, meta: 750 },
-    { time: '13:00', produccion: 850, scrap: 35, meta: 900 },
-    { time: '14:00', produccion: 1020, scrap: 40, meta: 1050 },
-    { time: '15:00', produccion: 1240, scrap: 45, meta: 1200 },
+  // Recharts Data matching the dense industrial look
+  const trendData = [
+    { time: 'Lun', produccion: 5200 }, { time: 'Mar', produccion: 6100 },
+    { time: 'Mie', produccion: 5800 }, { time: 'Jue', produccion: 7400 },
+    { time: 'Vie', produccion: 7100 }, { time: 'Sab', produccion: 8500 },
+    { time: 'Dom', produccion: 8200 },
+  ];
+  
+  const defectsData = [
+    { name: 'Labeling', value: 30.7, fill: '#0ea5e9' },
+    { name: 'Sealing', value: 21.2, fill: '#10b981' },
+    { name: 'Alignment', value: 13.9, fill: '#f59e0b' },
+    { name: 'Weight', value: 12.6, fill: '#ef4444' },
+  ];
+
+  const downtimeData = [
+    { name: 'L1', mech: 20, elec: 10, ops: 5 },
+    { name: 'L2', mech: 15, elec: 25, ops: 10 },
+    { name: 'L3', mech: 30, elec: 5, ops: 15 },
+    { name: 'L4', mech: 10, elec: 15, ops: 20 },
   ];
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-8 p-8 rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-white/5 text-white shadow-2xl relative overflow-hidden">
-        {/* Decorative background glow */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-        
-        <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-          <span className="bg-blue-500/20 p-2.5 rounded-xl border border-blue-500/30">
-            <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-          </span>
-          Resumen de Métricas (Turno Actual)
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-800/40 p-6 rounded-2xl border border-white/5 hover:border-blue-500/30 hover:bg-slate-800/60 transition-all duration-300 group">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-              Producción Total
-              <svg className="w-4 h-4 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-            </h3>
-            <p className="text-5xl font-bold text-white tracking-tight">1,240 <span className="text-lg font-normal text-slate-500 ml-1">pz</span></p>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
+      
+      {/* Left Column: KPIs & Trend */}
+      <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
+        {/* KPI Panel */}
+        <div className="bg-[#1f2937] border border-slate-700 p-4">
+          <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center">
+            <div>
+              <span className="text-sm font-bold text-slate-300 uppercase">OEE</span>
+              <div className="text-3xl font-bold text-teal-400">69.2%</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-sm font-bold text-teal-400">+3.22%</div>
+            </div>
           </div>
-          <div className="bg-slate-800/40 p-6 rounded-2xl border border-red-500/10 hover:border-red-500/30 hover:bg-red-900/10 transition-all duration-300 group">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-              Scrap Registrado
-              <svg className="w-4 h-4 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
-            </h3>
-            <p className="text-5xl font-bold text-red-400 tracking-tight">45 <span className="text-lg font-normal text-red-400/50 ml-1">pz (3.5%)</span></p>
+          
+          <div className="bg-[#064e3b] border border-[#047857] p-3 mb-3 flex justify-between items-center">
+            <div>
+              <span className="text-sm font-bold text-slate-300 uppercase">Efficiency</span>
+              <div className="text-3xl font-bold text-teal-400">74.5%</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-sm font-bold text-teal-400">+2.66%</div>
+            </div>
           </div>
-          <div className="bg-slate-800/40 p-6 rounded-2xl border border-green-500/10 hover:border-green-500/30 hover:bg-green-900/10 transition-all duration-300 group">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-              OEE Estimado
-              <svg className="w-4 h-4 text-green-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-            </h3>
-            <p className="text-5xl font-bold text-green-400 tracking-tight">82.1<span className="text-3xl">%</span></p>
+
+          <div className="bg-[#064e3b] border border-[#047857] p-3 flex justify-between items-center">
+            <div>
+              <span className="text-sm font-bold text-slate-300 uppercase">Availability</span>
+              <div className="text-3xl font-bold text-teal-400">92.1%</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-teal-500">↑ Increase</div>
+              <div className="text-sm font-bold text-teal-400">+1.33%</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Trend Panel */}
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT LAST 7 DAYS</h3>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trendData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorOutput" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" />
+                <XAxis dataKey="time" stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
+                <YAxis stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
+                <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151' }} />
+                <Area type="monotone" dataKey="produccion" stroke="#0ea5e9" strokeWidth={2} fill="url(#colorOutput)" activeDot={{ r: 4 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Middle Column: Main Gauge & Output By Line */}
+      <div className="col-span-1 lg:col-span-5 flex flex-col gap-4">
+        {/* Main Gauge Panel */}
+        <div className="bg-[#1f2937] border border-slate-700 p-6 flex flex-col items-center justify-center relative min-h-[300px]">
+          <h3 className="absolute top-4 left-4 text-xs font-bold uppercase text-slate-400 tracking-wider">PRODUCTIVITY SHIFT</h3>
+          
+          {/* Simulated Gauge with SVG */}
+          <div className="relative w-48 h-24 overflow-hidden mt-8">
+            <div className="absolute inset-0 border-[16px] border-[#374151] rounded-t-full border-b-0"></div>
+            <div className="absolute inset-0 border-[16px] border-teal-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(0 0, 73% 0, 73% 100%, 0 100%)' }}></div>
+            <div className="absolute inset-0 border-[16px] border-yellow-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(73% 0, 85% 0, 85% 100%, 73% 100%)' }}></div>
+            <div className="absolute inset-0 border-[16px] border-red-500 rounded-t-full border-b-0" style={{ clipPath: 'polygon(85% 0, 100% 0, 100% 100%, 85% 100%)' }}></div>
+          </div>
+          <div className="text-5xl font-bold text-white mt-2">73<span className="text-2xl text-slate-400">%</span></div>
+          
+          <div className="flex justify-between w-full mt-12 px-8">
+            <div className="text-center">
+              <div className="text-xs text-slate-400 uppercase">Target</div>
+              <div className="text-xl font-mono text-slate-200">1,284</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xs text-slate-400 uppercase">Units</div>
+              <div className="text-xl font-mono text-slate-200">937</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Output By Line Horizontal Bars */}
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow">
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">OUTPUT BY LINE - CURRENT SHIFT</h3>
+          <div className="flex flex-col gap-3">
+            {[ {name: 'Line 1', val: 72, col: 'bg-teal-500'}, {name: 'Line 2', val: 85, col: 'bg-green-500'}, {name: 'Line 3', val: 56, col: 'bg-yellow-500'}, {name: 'Line 4', val: 91, col: 'bg-red-500'} ].map(l => (
+              <div key={l.name} className="flex items-center gap-4 text-sm">
+                <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
+                <div className="flex-grow bg-[#111827] h-5 relative">
+                  <div className={`absolute top-0 left-0 h-full ${l.col}`} style={{ width: `${l.val}%` }}></div>
+                  <span className="absolute inset-0 flex items-center justify-end pr-2 text-xs text-white font-bold drop-shadow-md">{l.val}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column: Downtime & Defects */}
+      <div className="col-span-1 lg:col-span-3 flex flex-col gap-4">
+        {/* Downtime Bar Chart */}
+        <div className="bg-[#1f2937] border border-slate-700 p-4">
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-4 tracking-wider">DOWNTIME SUMMARY</h3>
+          <div className="h-40">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={downtimeData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" />
+                <XAxis dataKey="name" stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
+                <YAxis stroke="#6b7280" tick={{fontSize: 10}} tickLine={false} axisLine={false} />
+                <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151' }} cursor={{fill: '#374151', opacity: 0.4}} />
+                <Bar dataKey="mech" stackId="a" fill="#0ea5e9" />
+                <Bar dataKey="elec" stackId="a" fill="#f59e0b" />
+                <Bar dataKey="ops" stackId="a" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Defects Pie Chart */}
+        <div className="bg-[#1f2937] border border-slate-700 p-4 flex-grow flex flex-col">
+          <h3 className="text-xs font-bold uppercase text-slate-400 mb-2 tracking-wider">TOP DEFECTS</h3>
+          <div className="flex-grow flex items-center">
+            <div className="w-1/2 h-32">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={defectsData} innerRadius={30} outerRadius={50} paddingAngle={2} dataKey="value" stroke="none">
+                    {defectsData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                  </Pie>
+                  <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', fontSize: '12px' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="w-1/2 flex flex-col gap-2 justify-center pl-2">
+              {defectsData.map(d => (
+                <div key={d.name} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.fill }}></div>
+                    <span className="text-slate-300">{d.name}</span>
+                  </div>
+                  <span className="text-slate-400">{d.value}%</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
       
-      <div className="bg-slate-900/50 backdrop-blur-xl p-8 rounded-3xl border border-white/5 shadow-2xl h-[28rem] relative">
-        <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-          <span className="w-2 h-6 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"></span>
-          Avance de Producción vs Meta
-        </h3>
-        <ResponsiveContainer width="100%" height="85%">
-          <AreaChart
-            data={data}
-            margin={{ top: 10, right: 30, left: -20, bottom: 0 }}
-          >
-            <defs>
-              <linearGradient id="colorProd" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-              </linearGradient>
-              <linearGradient id="colorMeta" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.1}/>
-                <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" />
-            <XAxis dataKey="time" stroke="#64748b" tick={{ fill: '#94a3b8' }} tickLine={false} axisLine={false} dy={10} />
-            <YAxis stroke="#64748b" tick={{ fill: '#94a3b8' }} tickLine={false} axisLine={false} />
-            <Tooltip 
-              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '0.75rem', color: '#f8fafc', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)' }}
-              itemStyle={{ color: '#e2e8f0' }}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-            <Area type="monotone" dataKey="meta" stroke="#64748b" strokeDasharray="5 5" fillOpacity={1} fill="url(#colorMeta)" name="Meta Planeada" />
-            <Area type="monotone" dataKey="produccion" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorProd)" name="Piezas Producidas" activeDot={{ r: 8, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }} />
-            <Line type="monotone" dataKey="scrap" stroke="#ef4444" name="Scrap" strokeWidth={2} dot={{ fill: '#ef4444', strokeWidth: 0, r: 4 }} />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
     </div>
   );
 }
