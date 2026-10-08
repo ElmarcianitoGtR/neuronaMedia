@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // ==========================================
 // ESQUEMAS ZOD Y TIPOS TYPESCRIPT ESTRICTOS
-// Mitsubishi Quality Challenge - Quality Hub
+// Neurona y Media Quality Challenge - Quality Hub
 // ==========================================
 
 export const CategoriaIshikawaEnum = z.enum([
@@ -111,7 +111,8 @@ export const IncidenciaSchema = z.object({
   creadoEn: z.string(),
   actualizadoEn: z.string().optional(),
   analisis: AnalisisCalidadSchema.optional(),
-  validadoPor: z.string().optional(),
+  nombreAuditor: z.string().optional(),
+  apellidoAuditor: z.string().optional(),
   fechaValidacion: z.string().optional(),
   notasAuditor: z.string().optional()
 });

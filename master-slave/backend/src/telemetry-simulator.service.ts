@@ -94,7 +94,8 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
           : `Falla Presión (Tiro Corto a ${telemetry.presion} bar)`,
       });
       
-      await this.alertRepository.save(newAlert);
+      const savedAlert = await this.alertRepository.save(newAlert);
+      this.telemetryGateway.broadcastAnomaly(savedAlert);
     }
     this.lastFalla = falla;
   }

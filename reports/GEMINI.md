@@ -145,6 +145,12 @@ El endpoint espera un objeto de tipo `Incidencia` con el siguiente formato JSON.
         "descripcion": "Falla registrada en el sensor de temperatura",
         "valor": "110°C", // Opcional
         "url": "http://link-a-imagen-opcional.com/img.jpg" // Opcional
+      },
+      {
+        "id": "evi-2",
+        "tipo": "Telemetría",
+        "descripcion": "Falla registrada por presión alta (Tiro Corto)",
+        "valor": "150 bar"
       }
     ]
   }

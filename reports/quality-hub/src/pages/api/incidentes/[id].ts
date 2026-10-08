@@ -58,11 +58,12 @@ export const PATCH: APIRoute = async ({ params, request }) => {
 
   try {
     const body = await request.json();
-    const { estado, validadoPor, notasAuditor, causaRaiz, fechaValidacion } = body;
+    const { estado, nombreAuditor, apellidoAuditor, notasAuditor, causaRaiz, fechaValidacion } = body;
 
     const actualizado = await updateIncidente(id, {
       estado,
-      validadoPor,
+      nombreAuditor,
+      apellidoAuditor,
       notasAuditor,
       causaRaiz,
       fechaValidacion: fechaValidacion || new Date().toISOString()

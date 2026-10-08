@@ -428,7 +428,8 @@ export async function getIncidentes(): Promise<Incidencia[]> {
         creadoEn: props.creadoEn || mem?.creadoEn || new Date().toISOString(),
         actualizadoEn: props.actualizadoEn || mem?.actualizadoEn,
         analisis: mem?.analisis,
-        validadoPor: props.validadoPor || mem?.validadoPor,
+        nombreAuditor: props.nombreAuditor || mem?.nombreAuditor,
+        apellidoAuditor: props.apellidoAuditor || mem?.apellidoAuditor,
         fechaValidacion: props.fechaValidacion || mem?.fechaValidacion,
         notasAuditor: props.notasAuditor || mem?.notasAuditor
       };
@@ -494,7 +495,8 @@ export async function getIncidenteById(id: string): Promise<Incidencia | null> {
       causaRaiz: props.causaRaiz,
       creadoEn: props.creadoEn,
       actualizadoEn: props.actualizadoEn,
-      validadoPor: props.validadoPor || mem?.validadoPor,
+      nombreAuditor: props.nombreAuditor || mem?.nombreAuditor,
+      apellidoAuditor: props.apellidoAuditor || mem?.apellidoAuditor,
       fechaValidacion: props.fechaValidacion || mem?.fechaValidacion,
       notasAuditor: props.notasAuditor || mem?.notasAuditor,
       analisis: {
@@ -519,7 +521,7 @@ export async function getIncidenteById(id: string): Promise<Incidencia | null> {
  */
 export async function updateIncidente(
   id: string,
-  updates: Partial<Pick<Incidencia, 'estado' | 'validadoPor' | 'notasAuditor' | 'fechaValidacion' | 'causaRaiz'>>
+  updates: Partial<Pick<Incidencia, 'estado' | 'nombreAuditor' | 'apellidoAuditor' | 'notasAuditor' | 'fechaValidacion' | 'causaRaiz'>>
 ): Promise<boolean> {
   const existente = await getIncidenteById(id);
   if (!existente) return false;
@@ -536,7 +538,8 @@ export async function updateIncidente(
   const query = `
     MATCH (i:Incidencia { id: $id })
     SET i.estado = coalesce($estado, i.estado),
-        i.validadoPor = coalesce($validadoPor, i.validadoPor),
+        i.nombreAuditor = coalesce($nombreAuditor, i.nombreAuditor),
+        i.apellidoAuditor = coalesce($apellidoAuditor, i.apellidoAuditor),
         i.notasAuditor = coalesce($notasAuditor, i.notasAuditor),
         i.fechaValidacion = coalesce($fechaValidacion, i.fechaValidacion),
         i.causaRaiz = coalesce($causaRaiz, i.causaRaiz),
@@ -547,7 +550,8 @@ export async function updateIncidente(
   await runCypherSafe(query, {
     id,
     estado: updates.estado || null,
-    validadoPor: updates.validadoPor || null,
+    nombreAuditor: updates.nombreAuditor || null,
+    apellidoAuditor: updates.apellidoAuditor || null,
     notasAuditor: updates.notasAuditor || null,
     fechaValidacion: updates.fechaValidacion || null,
     causaRaiz: updates.causaRaiz || null,

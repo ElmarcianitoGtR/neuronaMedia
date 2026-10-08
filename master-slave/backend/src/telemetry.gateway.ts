@@ -19,6 +19,10 @@ export class TelemetryGateway implements OnGatewayInit {
     this.server.emit('telemetry_update', data);
   }
 
+  broadcastAnomaly(alert: any) {
+    this.server.emit('anomaly_alert', alert);
+  }
+
   // Example Ping/Pong to check connection
   @SubscribeMessage('ping')
   handlePing(@MessageBody() data: string): string {
