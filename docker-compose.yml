@@ -16,7 +16,7 @@ services:
     container_name: mitsubishi-pdf-headless
     profiles: ["headless", "full"]
     ports:
-      - "4650:4650" 
+      - "4650:3000" 
 
   master-slave-backend:
     build:
@@ -74,7 +74,7 @@ services:
     profiles: ["master-slave-dev", "full"]
     environment:
       - NODE_ENV=development
-      - PDF_RENDERER_URL=http://pdf-renderer:4650
+      - PDF_RENDERER_URL=http://pdf-renderer:3000
     ports:
       - "4321:4321"
     volumes:
