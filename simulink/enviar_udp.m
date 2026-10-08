@@ -8,7 +8,7 @@ function enviar_udp(payload_array)
     if isempty(udpSocket)
         % Inicializar Socket UDP nativo de Java
         udpSocket = java.net.DatagramSocket();
-        address = java.net.InetAddress.getByName('127.0.0.1');
+        address = java.net.InetAddress.getByName('148.220.197.119');
     end
     
     % 1. Convertir los 9 enteros de 16 bits (uint16) a 18 bytes (uint8)

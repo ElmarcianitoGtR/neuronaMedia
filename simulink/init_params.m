@@ -24,5 +24,5 @@ molde_alto = 0.3;
 carrera_apertura = 0.4; % Distancia que abre la mitad móvil del molde
 
 %% 5. Configuración de Red via sockets UDP
-udp_ip = '127.0.0.1'; % IP del servidor
+udp_ip = '148.220.197.119'; % IP del servidor
 udp_port = 4000;      % Puerto de escucha
