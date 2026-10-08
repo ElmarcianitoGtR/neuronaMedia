@@ -6,6 +6,62 @@ Este documento detalla la propuesta de solución para abordar los problemas de f
 
 La solución se basa en una arquitectura IoT (Internet de las Cosas) de tipo **Maestro-Esclavo (Master-Slave)**, combinada con una plataforma web centralizada para el control visual en tiempo real.
 
+```mermaid
+graph TD
+    %% Definición de Estilos
+    classDef mvp fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef hardware fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px;
+    classDef backend fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
+    classDef web fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef contingencia fill:#ffebee,stroke:#d32f2f,stroke-width:2px;
+
+    subgraph Capa_Fisica_Esclavos["1. Capa de Adquisición (Esclavos / Planta)"]
+        S[Sensores: Conteo, Fallas, Scrap]:::hardware
+        B[Botonera Andon / HMI]:::hardware
+        MVP[Simulador MVP: MATLAB OPC UA Server]:::mvp
+    end
+
+    subgraph Capa_Comunicaciones["2. Capa de Comunicación"]
+        MQTT{Broker MQTT / OPC UA}
+    end
+
+    subgraph Capa_Maestra["3. Capa Maestra (Servidor Central)"]
+        Node[Backend API Node.js / Python<br/>Cliente OPC UA]:::backend
+        DB[(Bases de Datos<br/>InfluxDB + PostgreSQL)]:::backend
+    end
+
+    subgraph Capa_Visualizacion["4. Capa Web (Control Visual)"]
+        Andon[Tablero Andon Digital]:::web
+        Dash[Dashboard de Producción]:::web
+        Kanban[Panel de Soporte Kanban]:::web
+    end
+
+    subgraph Capa_Contingencia["5. Sistema Manual de Contingencia"]
+        QR[Escaneo QR Celular]:::contingencia
+        Bot[Bot de Telegram / WhatsApp]:::contingencia
+    end
+
+    %% Conexiones Capa Fisica a Comunicacion
+    S -.->|Datos de hardware| MQTT
+    B -.->|Eventos Manuales| MQTT
+    MVP == OPC UA ==>|Simulación MVP| Node
+
+    %% Conexiones Comunicacion a Backend
+    MQTT -->|Pub/Sub| Node
+    
+    %% Backend y BD
+    Node <-->|Guarda/Consulta| DB
+
+    %% Backend a Web
+    Node == WebSockets ==> Andon
+    Node == WebSockets ==> Dash
+    Node == WebSockets ==> Kanban
+
+    %% Contingencia a Backend
+    QR -->|HTTPS POST| Node
+    Bot -->|Webhooks| Node
+```
+
 ### Capa de Esclavos (Slaves / Nodos de Adquisición)
 Los "esclavos" son dispositivos de hardware (ej. microcontroladores como ESP32, Raspberry Pi Pico o PLCs) instalados directamente en las líneas de producción. Su función es recolectar datos y enviarlos al maestro.
 
