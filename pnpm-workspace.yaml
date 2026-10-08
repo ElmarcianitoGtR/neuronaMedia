@@ -4,5 +4,10 @@ packages:
   - 'docs/slides'
   - 'packages/*'
 
+allowBuilds:
+  esbuild: true
+  sharp: true
+  sqlite3: true
+
 overrides:
   markdown-it: "14.3.2"

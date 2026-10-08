@@ -10,7 +10,7 @@
   "dependencies": {
     "astro": "^4.0.0",
     "@astrojs/node": "^8.0.0",
-    "@google/genai": "^0.1.1",
+    "@google/genai": "^0.2.0",
     "neo4j-driver": "^5.18.0",
     "axios": "^1.6.0"
   }
