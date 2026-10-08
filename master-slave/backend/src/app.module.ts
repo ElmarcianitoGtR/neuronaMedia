@@ -20,7 +20,7 @@ import { TelemetrySimulatorService } from './telemetry-simulator.service.js';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [AndonAlert, TelemetryLog],
-      synchronize: process.env.NODE_ENV !== 'production', // Unsafe for production!
+      synchronize: true, // Unsafe for production!
     }),
     TypeOrmModule.forFeature([AndonAlert, TelemetryLog]),
   ],
