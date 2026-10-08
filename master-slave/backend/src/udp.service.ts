@@ -170,7 +170,8 @@ export class UdpService implements OnModuleInit, OnModuleDestroy {
           message: `Código ${falla}: ${falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)'} (Temp: ${telemetry.temp}°C, Presión: ${telemetry.presion} bar)`,
         });
 
-        await this.alertRepository.save(newAlert);
+        const savedAlert = await this.alertRepository.save(newAlert);
+        this.telemetryGateway.broadcastAnomaly(savedAlert);
 
         // Enviar alerta por Telegram
         const telegramMsg = `🚨 ALERTA ANDON [${telemetry.maquinaId}]\n` +
