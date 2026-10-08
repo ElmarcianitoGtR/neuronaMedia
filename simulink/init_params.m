@@ -9,12 +9,12 @@ t_enfriamiento = 10.0;
 t_apertura = 2.0;
 
 %% 2. Parámetros Físicos Nominales
-T_nom = 220; % Temperatura Nominal del barril (°C)
+T_nom = 259; % Temperatura Nominal del barril (°C)
 P_nom = 120; % Presión Nominal de inyección (bar)
 
 %% 3. Umbrales de Falla
-T_max_fault = 240; % °C para disparar alarma térmica (Scrap)
-T_min_fault = 190; % °C para disparar alarma térmica (Scrap)
+T_max_fault = 275; % °C para disparar alarma térmica (Scrap)
+T_min_fault = 240; % °C para disparar alarma térmica (Scrap)
 P_min_fault = 80;  % bar para disparar alarma de presión (Tiro Corto)
 
 %% 4. Dimensiones Mecánicas en metros
