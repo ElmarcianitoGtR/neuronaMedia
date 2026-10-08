@@ -83,15 +83,12 @@ export class TelemetrySimulatorService implements OnModuleInit, OnModuleDestroy 
 
     // 2. Log Alert to Database if there's a new fault
     if (falla !== 0 && falla !== this.lastFalla) {
-      this.logger.warn(\`[SIMULATOR] New Andon Alert detected! Machine: \${telemetry.maquinaId}, Fault Code: \${falla}\`);
+      this.logger.warn(`[SIMULATOR] New Andon Alert detected! Machine: ${telemetry.maquinaId}, Fault Code: ${falla}`);
       
       const newAlert = this.alertRepository.create({
-        machineId: telemetry.maquinaId,
-        faultCode: falla.toString(),
-        faultDescription: falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)',
-        temperatureAtFault: telemetry.temp,
-        pressureAtFault: telemetry.presion,
+        lineName: telemetry.maquinaId,
         status: 'OPEN',
+        message: falla === 1 ? 'Falla Térmica (Temperatura fuera de rango)' : 'Falla Presión (Tiro Corto)',
       });
       
       await this.alertRepository.save(newAlert);
