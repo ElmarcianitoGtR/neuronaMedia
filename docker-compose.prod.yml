@@ -38,6 +38,7 @@ services:
       - "4000:4000/udp"
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.backend.rule=Host(`api.${DOMAIN_NAME}`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=cloudflare"
@@ -71,10 +72,11 @@ services:
     container_name: ms-frontend-prod
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN_NAME}`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=cloudflare"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.ms-frontend.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.ms-frontend.entrypoints=websecure"
+      - "traefik.http.routers.ms-frontend.tls.certresolver=cloudflare"
+      - "traefik.http.services.ms-frontend.loadbalancer.server.port=80"
     restart: always
     networks:
       - default
@@ -93,6 +95,7 @@ services:
       - GRAPH_DB_URI=bolt://graph-db:7687
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.quality-hub.rule=Host(`reports.${DOMAIN_NAME}`)"
       - "traefik.http.routers.quality-hub.entrypoints=websecure"
       - "traefik.http.routers.quality-hub.tls.certresolver=cloudflare"
@@ -113,6 +116,7 @@ services:
     container_name: slides-prod
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.slides.rule=Host(`slides.${DOMAIN_NAME}`)"
       - "traefik.http.routers.slides.entrypoints=websecure"
       - "traefik.http.routers.slides.tls.certresolver=cloudflare"
