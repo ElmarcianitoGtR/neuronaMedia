@@ -420,7 +420,7 @@ function Dashboard() {
               <div key={l.name} className="flex items-center gap-4 text-sm">
                 <div className="w-16 text-slate-300 bg-[#374151] px-2 py-1 text-xs text-center">{l.name}</div>
                 <div className="flex-grow bg-[#111827] h-5 relative">
-                  <div className={`absolute top-0 left-0 h-full ${l.col}`} style={{ width: `${l.val}%` }}></div>
+                  <div className={`absolute top-0 left-0 h-full ${l.col}`} style={{ width: `${Math.min(l.val, 100)}%` }}></div>
                   <span className="absolute inset-0 flex items-center justify-end pr-2 text-xs text-white font-bold drop-shadow-md">{l.val}%</span>
                 </div>
               </div>
