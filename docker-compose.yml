@@ -8,8 +8,6 @@ services:
     ports:
       - "7687:7687"  
       - "2340:2340"   
-    environment:
-      - MEMGRAPH="--log-level=WARNING"
     volumes:
       - memgraph-data:/var/lib/memgraph
 
@@ -27,15 +25,15 @@ services:
       target: dev
     container_name: ms-backend
     profiles: ["master-slave-dev", "full"]
+    environment:
+      - NODE_ENV=development
+      - SIMULATE_TELEMETRY=true
     ports:
       - "3000:3000"
       - "4000:4000/udp" # UDP Port for MATLAB Simulink
     volumes:
       - .:/app                          # Mount source for hot-reload
       - backend_node_modules:/app/node_modules  # Isolate container's node_modules from host
-    environment:
-      - NODE_ENV=development
-      - SIMULATE_TELEMETRY=true
 
   master-slave-db:
     image: postgres:15-alpine
@@ -60,13 +58,12 @@ services:
     environment:
       - VITE_TENANT_NAME=${TENANT_NAME:-CANACINTRA CORP}
       - VITE_TENANT_LOGO=${TENANT_LOGO:-}
+      - NODE_ENV=development
     ports:
       - "5173:5173"
     volumes:
       - .:/app                           # Mount source for hot-reload
       - frontend_node_modules:/app/node_modules  # Isolate container's node_modules from host
-    environment:
-      - NODE_ENV=development
 
 volumes:
   memgraph-data:
