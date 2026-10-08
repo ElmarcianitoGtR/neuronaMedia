@@ -105,6 +105,23 @@ services:
       - default
       - traefik-net
 
+  slides:
+    build:
+      context: .
+      dockerfile: docs/slides/Dockerfile
+      target: prod
+    container_name: slides-prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.slides.rule=Host(`slides.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.slides.entrypoints=websecure"
+      - "traefik.http.routers.slides.tls.certresolver=cloudflare"
+      - "traefik.http.services.slides.loadbalancer.server.port=80"
+    restart: always
+    networks:
+      - default
+      - traefik-net
+
 networks:
   traefik-net:
     external: true
