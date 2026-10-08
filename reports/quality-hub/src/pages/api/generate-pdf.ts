@@ -43,7 +43,7 @@ export const GET: APIRoute = async ({ request }) => {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
-          'Content-Disposition': \`attachment; filename="Reporte-8D-\${id}-Carta.pdf"\`
+          'Content-Disposition': `attachment; filename="Reporte-8D-${id}-Carta.pdf"`
         }
       });
     }
@@ -81,7 +81,7 @@ export const POST: APIRoute = async ({ request }) => {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
-          'Content-Disposition': \`attachment; filename="Reporte-8D-\${incidente.id}-Carta.pdf"\`
+          'Content-Disposition': `attachment; filename="Reporte-8D-${incidente.id}-Carta.pdf"`
         }
       });
     }
