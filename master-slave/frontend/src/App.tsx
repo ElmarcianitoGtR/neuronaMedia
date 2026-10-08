@@ -79,19 +79,24 @@ function Dashboard() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Métricas de Producción</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-500 mb-1">Producción Total (Turno)</h3>
-          <p className="text-4xl font-bold">1,240 <span className="text-sm font-normal text-slate-400">pz</span></p>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-500 mb-1">Scrap Registrado</h3>
-          <p className="text-4xl font-bold text-danger">45 <span className="text-sm font-normal text-slate-400">pz (3.5%)</span></p>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-500 mb-1">OEE Estimado</h3>
-          <p className="text-4xl font-bold text-success">82%</p>
+      <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-xl">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <span className="bg-primary/20 p-2 rounded-lg"><svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
+          Resumen de Métricas (Turno Actual)
+        </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/10 hover:bg-white/20 transition-all">
+            <h3 className="text-lg font-semibold text-slate-300 mb-1">Producción Total</h3>
+            <p className="text-4xl font-bold text-white">1,240 <span className="text-sm font-normal text-slate-400">pz</span></p>
+          </div>
+          <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-red-500/30 hover:bg-red-500/20 transition-all">
+            <h3 className="text-lg font-semibold text-slate-300 mb-1">Scrap Registrado</h3>
+            <p className="text-4xl font-bold text-red-400">45 <span className="text-sm font-normal text-slate-400">pz (3.5%)</span></p>
+          </div>
+          <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-green-500/30 hover:bg-green-500/20 transition-all">
+            <h3 className="text-lg font-semibold text-slate-300 mb-1">OEE Estimado</h3>
+            <p className="text-4xl font-bold text-green-400">82%</p>
+          </div>
         </div>
       </div>
       
