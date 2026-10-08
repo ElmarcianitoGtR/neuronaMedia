@@ -211,7 +211,17 @@ function Dashboard() {
             </svg>
             <div className="text-5xl font-bold text-white z-10 mb-[-10px]">{liveData.productivity || 0}<span className="text-2xl text-slate-400">%</span></div>
           </div>
-          
+          <div className="flex justify-center gap-4 mt-8 text-[10px] uppercase text-slate-400 font-bold tracking-wider">
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#14b8a6]"></span> Actual
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#eab308]"></span> Gap (85%)
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-[#ef4444]"></span> Margen
+            </div>
+          </div>
           <div className="flex justify-between w-full mt-12 px-8">
             <div className="text-center">
               <div className="text-xs text-slate-400 uppercase">Target</div>
