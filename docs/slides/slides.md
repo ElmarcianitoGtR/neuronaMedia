@@ -1,10 +1,10 @@
 ---
 theme: default
-title: NeuronaMedia - Control Visual y Monitoreo de Producción
+title: Reto Mitsubishi - Captura Única y Análisis 8D
 info: |
-  ## NeuronaMedia
-  Sistema de Control Visual y Monitoreo de Producción en Tiempo Real
-  Arquitectura Master-Slave e Industria 4.0
+  ## Reto Mitsubishi
+  Sistema de Captura Única de Evidencias y Generación Automática de Formatos 8D, Ishikawa y 5 Porqués
+  Monitoreo en Vivo y OEE Derivado
 class: text-slate-100
 highlighter: shiki
 drawings:
@@ -19,20 +19,16 @@ mdc: true
 
 <div class="h-full flex items-center justify-between px-6 pb-12">
   <div class="flex-1 pr-6 text-left">
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-600/50 text-slate-300 text-xs font-mono tracking-wider mb-4">
-      <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-      ARQUITECTURA MASTER-SLAVE • IOT
-    </div>
     <h2 class="text-lg font-medium text-slate-300 mb-6">
-      Sistema de Control Visual y Monitoreo de Producción en Tiempo Real
+      Sistema Digital de Captura Única para Análisis Causa Raíz (8D) y Monitoreo en Vivo
     </h2>
     <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 mb-6">
-      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Sensores IoT</span>
-      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Protocolo MQTT</span>
-      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Andon Digital</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Reto Mitsubishi</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> 8D • Ishikawa • 5 Porqués</span>
+      <span class="px-2.5 py-1 rounded bg-slate-800/60 border border-slate-700/60"> Gatillos IoT & OEE</span>
     </div>
     <div class="text-xs text-slate-400 border-t border-slate-800 pt-3">
-      Presentado por: <strong class="text-slate-200">Equipo de Desarrollo NeuronaMedia</strong>
+      Presentado por: <strong class="text-slate-200">Neurona y Media</strong>
     </div>
   </div>
 
@@ -46,14 +42,11 @@ mdc: true
         <div class="w-full h-full rounded-full overflow-hidden bg-slate-900 border-2 border-slate-800 flex items-center justify-center">
           <img src="/Propuesta_.jpg" alt="Logo" class="w-full h-full object-cover">
         </div>
-        <div class="absolute bottom-1 right-2 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center shadow-lg" title="En línea">
-          <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-        </div>
       </div>
     </div>
     <div class="mt-4 text-center">
-      <div class="text-xs font-semibold text-white">Ponente / Equipo</div>
-      <div class="text-[11px] text-slate-400 font-mono">Líder de Proyecto</div>
+      <div class="text-xs font-semibold text-white">Facultad de Informática</div>
+      <div class="text-[11px] text-slate-400 font-mono">UAQ</div>
     </div>
   </div>
 </div>
@@ -66,9 +59,9 @@ mdc: true
 transition: fade-out
 ---
 
-# El Problema: Ceguera Operativa en Planta
+# El Problema: Captura Redundante y Retraso en Análisis 8D
 
-<p class="text-slate-400 text-sm mb-3">Las líneas de producción sufren demoras críticas por falta de información instantánea:</p>
+<p class="text-slate-400 text-sm mb-3">La captura manual de fallas en inyección dispersa evidencias y demora días la resolución de causa raíz:</p>
 
 <div class="grid grid-cols-5 gap-3.5 items-start">
   <div class="col-span-3 space-y-2">
@@ -76,35 +69,35 @@ transition: fade-out
       <div class="card-clean p-2.5 border-l-4 border-l-rose-500/80">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-rose-500/10 text-rose-300">01</span>
-          <h3 class="text-xs font-bold text-white">Paros No Detectados</h3>
+          <h3 class="text-xs font-bold text-white">Gatillos Desconectados</h3>
         </div>
-        <p class="text-[11px] text-slate-300 leading-tight">Fallas mecánicas o atascos en molde pasan inadvertidos hasta aviso manual.</p>
+        <p class="text-[11px] text-slate-300 leading-tight">Fallas en máquina o molde detienen la línea sin detonar una toma digital de evidencia.</p>
       </div>
       <div class="card-clean p-2.5 border-l-4 border-l-amber-500/80">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-amber-500/10 text-amber-300">02</span>
-          <h3 class="text-xs font-bold text-white">Scrap Silencioso</h3>
+          <h3 class="text-xs font-bold text-white">Scrap sin Evidencia</h3>
         </div>
-        <p class="text-[11px] text-slate-300 leading-tight">Piezas defectuosas se acumulan en merma sin registro oportuno por lote.</p>
+        <p class="text-[11px] text-slate-300 leading-tight">Piezas con defecto se acumulan en merma sin vincular fotos, lote ni variables al instante.</p>
       </div>
       <div class="card-clean p-2.5 border-l-4 border-l-slate-400">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-slate-700 text-slate-300">03</span>
-          <h3 class="text-xs font-bold text-white">Bitácoras Manuales</h3>
+          <h3 class="text-xs font-bold text-white">Captura Redundante</h3>
         </div>
-        <p class="text-[11px] text-slate-300 leading-tight">Datos en papel propensos a error humano y sin trazabilidad en tiempo real.</p>
+        <p class="text-[11px] text-slate-300 leading-tight">Operadores rellenan múltiples formatos en papel y hojas de cálculo para un mismo defecto.</p>
       </div>
       <div class="card-clean p-2.5 border-l-4 border-l-cyan-500/80">
         <div class="flex items-center gap-1.5 mb-1">
           <span class="text-[10px] font-mono font-bold px-1 py-0.5 rounded bg-cyan-500/10 text-cyan-300">04</span>
-          <h3 class="text-xs font-bold text-white">Respuesta Lenta</h3>
+          <h3 class="text-xs font-bold text-white">Análisis 8D Tardío</h3>
         </div>
-        <p class="text-[11px] text-slate-300 leading-tight">Sin canal centralizado, soporte no tiene prioridad ni métricas de atención.</p>
+        <p class="text-[11px] text-slate-300 leading-tight">Los formatos 8D, Ishikawa y 5 Porqués se llenan días después con datos incompletos.</p>
       </div>
     </div>
     <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/60 text-[11px] text-slate-300 flex items-center justify-between">
       <span class="font-semibold text-rose-400">Consecuencia:</span>
-      <span>Baja disponibilidad • Scrap oculto • Caída en OEE</span>
+      <span>Evidencias perdidas • Días de retraso en reportes 8D • Recaptura manual</span>
     </div>
   </div>
   <div class="col-span-2">
@@ -118,49 +111,49 @@ transition: fade-out
 
 ---
 
-# La Solución: Ecosistema 360° en Tiempo Real
+# La Solución: Captura Única y Ecosistema Integrado
 
 <div class="text-slate-400 text-sm mb-4">
-Integración continua de extremo a extremo: del sensor en máquina a la pantalla del supervisor.
+Plataforma integral donde cada incidente se registra una sola vez para nutrir la gestión de calidad y control visual:
 </div>
 
 <div class="grid grid-cols-3 gap-4">
   <div class="card-clean p-4 flex flex-col justify-between">
     <div>
       <div class="w-7 h-7 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs mb-3 font-mono">01</div>
-      <h3 class="text-sm font-bold text-white mb-2">Captura en Piso (Esclavos)</h3>
+      <h3 class="text-sm font-bold text-white mb-2">Gatillos en Piso (Esclavos)</h3>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Hardware en cada estación: sensores de conteo, detección de paro y botoneras Andon manuales para reporte ágil.
+        Sensores en máquina/molde y botoneras detectan paros y scrap, disparando inmediatamente el flujo de captura de evidencia.
       </p>
     </div>
     <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-cyan-300">
-      ESP32 • Sensores I/O • HMI
+      Falla Molde • Scrap • Andon
     </div>
   </div>
 
   <div class="card-clean p-4 flex flex-col justify-between">
     <div>
       <div class="w-7 h-7 rounded-md bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs mb-3 font-mono">02</div>
-      <h3 class="text-sm font-bold text-white mb-2">Canalización Inmediata</h3>
+      <h3 class="text-sm font-bold text-white mb-2">Captura Única (8D)</h3>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Protocolos industriales ultraligeros de suscripción/publicación que transfieren telemetría con latencia inferior a 100 ms.
+        Un solo punto de ingreso digital donde el operador sube fotos y variables; alimenta automáticamente los formatos 8D, Ishikawa y 5 Porqués.
       </p>
     </div>
     <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-300">
-      Broker MQTT • WebSockets
+      Captura Única • 8D • Ishikawa
     </div>
   </div>
 
   <div class="card-clean p-4 flex flex-col justify-between">
     <div>
       <div class="w-7 h-7 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs mb-3 font-mono">03</div>
-      <h3 class="text-sm font-bold text-white mb-2">Control Visual Activo</h3>
+      <h3 class="text-sm font-bold text-white mb-2">Monitoreo Derivado & OEE</h3>
       <p class="text-xs text-slate-300 leading-relaxed">
-        Tableros Andon digitales proyectados en planta, dashboards de OEE y panel Kanban para resolución cronometrada de tickets.
+        Dashboard de control derivado que proyecta en Smart TVs el estado Andon en vivo, Kanban de soporte y cálculo continuo de OEE.
       </p>
     </div>
     <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-amber-300">
-      Andon Digital • Kanban • OEE
+      Control Derivado • OEE • Andon
     </div>
   </div>
 </div>
@@ -171,20 +164,20 @@ Integración continua de extremo a extremo: del sensor en máquina a la pantalla
 
 ---
 
-# Arquitectura General: Master-Slave
+# Arquitectura General: Captura Única y Alimentación Automática
 
 <div class="text-slate-400 text-sm mb-2">
-Diseño desacoplado y resiliente para la continuidad operativa de la planta:
+Ecosistema digital: las alertas en piso gatillan la captura única y alimentan 8D, Ishikawa y OEE en tiempo real:
 </div>
 
 <ArchitectureFlow height="255px"></ArchitectureFlow>
 
 <div class="grid grid-cols-2 gap-4 mt-1 text-xs">
   <div class="card-clean p-2.5 text-slate-300">
-    <strong class="text-cyan-400">Resiliencia Local:</strong> Cada esclavo sigue operando de forma autónoma aunque exista una interrupción temporal en la red.
+    <strong class="text-cyan-400">Gatillo y Captura Única:</strong> La alerta en máquina/molde abre la captura digital en piso; la evidencia se ingresa una sola vez y alimenta automáticamente 8D, Ishikawa y 5 Porqués.
   </div>
   <div class="card-clean p-2.5 text-slate-300">
-    <strong class="text-emerald-400">Actualización en Vivo:</strong> WebSockets distribuyen el estado de las máquinas a todas las pantallas de planta simultáneamente.
+    <strong class="text-emerald-400">Control Derivado y OEE:</strong> A partir de las evidencias y eventos capturados, el sistema proyecta en vivo el monitoreo Andon y calcula el OEE sin recapturas manuales.
   </div>
 </div>
 
@@ -351,45 +344,45 @@ Tres interfaces diseñadas para cada nivel operativo de la empresa:
 
 ---
 
-# Flujo Operativo: De la Falla a la Solución
+# Flujo Operativo: Del Gatillo al Formato 8D
 
 <div class="text-slate-400 text-sm mb-4">
-Secuencia cronometrada de respuesta ante una contingencia en planta:
+Secuencia integrada: el gatillo en piso inicia la captura única y genera los reportes de calidad:
 </div>
 
 <div class="space-y-2.5">
   <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-rose-500">
     <span class="font-mono text-rose-400 font-bold text-xs w-16">0.0 seg</span>
     <div class="text-xs">
-      <strong class="text-white">Detección de Incidencia:</strong> Sensor detecta paro o el operador presiona la <span class="text-rose-400 font-semibold">Botonera Andon</span>.
+      <strong class="text-white">Gatillo de Incidencia:</strong> Sensor detecta paro en molde o scrap y dispara la alerta operativa en piso.
     </div>
   </div>
 
   <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-amber-500">
     <span class="font-mono text-amber-400 font-bold text-xs w-16">0.2 seg</span>
     <div class="text-xs">
-      <strong class="text-white">Publicación MQTT:</strong> El esclavo envía el payload JSON al broker local maestro (<code class="text-cyan-300">planta/linea-1/alerta</code>).
+      <strong class="text-white">Apertura de Captura Digital:</strong> La terminal en estación abre la interfaz guiada de ingreso de evidencia.
     </div>
   </div>
 
   <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-cyan-500">
     <span class="font-mono text-cyan-400 font-bold text-xs w-16">0.5 seg</span>
     <div class="text-xs">
-      <strong class="text-white">Alerta en Pantalla Andon:</strong> El backend emite vía WebSockets. La TV de la nave parpadea en rojo y se crea ticket en Kanban.
+      <strong class="text-white">Captura Única en Piso:</strong> Operador adjunta fotos, causa preliminar y variables una sola vez en el sistema.
     </div>
   </div>
 
   <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-slate-400">
     <span class="font-mono text-slate-300 font-bold text-xs w-16">1.5 seg</span>
     <div class="text-xs">
-      <strong class="text-white">Asignación de Técnico:</strong> Mantenimiento toma el ticket desde su dispositivo; el estado cambia a "En Atención".
+      <strong class="text-white">Alimentación Automática 8D:</strong> El motor estructura el evento al instante en formatos 8D, Ishikawa y 5 Porqués.
     </div>
   </div>
 
   <div class="card-clean p-3 flex items-center gap-4 border-l-4 border-l-emerald-500">
     <span class="font-mono text-emerald-400 font-bold text-xs w-16">Cierre</span>
     <div class="text-xs">
-      <strong class="text-white">Reanudación y Auditoría:</strong> Línea reanuda en <span class="text-emerald-400 font-semibold">Verde</span> y el tiempo de paro queda registrado para el OEE.
+      <strong class="text-white">Control Derivado y OEE:</strong> El tablero Andon reanuda en verde y el OEE se recalcula sin recaptura manual.
     </div>
   </div>
 </div>
@@ -408,27 +401,27 @@ Mejoras cuantificables proyectadas en piso de producción:
 
 <div class="grid grid-cols-4 gap-4">
   <div class="card-clean p-4 text-center">
-    <div class="text-3xl font-extrabold text-rose-400 mb-1">-40%</div>
-    <div class="text-xs font-bold text-white mb-1">Tiempo de Respuesta</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Reducción del MTTR al eliminar demoras en aviso de mantenimiento</div>
+    <div class="text-3xl font-extrabold text-rose-400 mb-1">-75%</div>
+    <div class="text-xs font-bold text-white mb-1">Tiempo en Reportes 8D</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Generación instantánea de 8D e Ishikawa eliminando papeleo manual</div>
   </div>
 
   <div class="card-clean p-4 text-center">
     <div class="text-3xl font-extrabold text-emerald-400 mb-1">+15%</div>
     <div class="text-xs font-bold text-white mb-1">Incremento en OEE</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Mayor disponibilidad de máquinas al resolver micro-paros</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Resolución acelerada de paros de máquina con acciones correctivas inmediatas</div>
   </div>
 
   <div class="card-clean p-4 text-center">
     <div class="text-3xl font-extrabold text-amber-400 mb-1">-25%</div>
     <div class="text-xs font-bold text-white mb-1">Reducción de Scrap</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Detección temprana de piezas defectuosas antes de lotes mayores</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Identificación de causa raíz con 5 Porqués antes de producir merma en lote</div>
   </div>
 
   <div class="card-clean p-4 text-center">
     <div class="text-3xl font-extrabold text-cyan-400 mb-1">100%</div>
-    <div class="text-xs font-bold text-white mb-1">Trazabilidad Digital</div>
-    <div class="text-[10px] text-slate-400 leading-tight">Auditoría continua de turnos sin depender de bitácoras manuales</div>
+    <div class="text-xs font-bold text-white mb-1">Captura Única Digital</div>
+    <div class="text-[10px] text-slate-400 leading-tight">Cero recapturas de información y trazabilidad auditable de punta a punta</div>
   </div>
 </div>
 
@@ -454,19 +447,19 @@ class: text-center
 <div class="h-full flex flex-col justify-center items-center pb-12">
 
   <h1 class="text-4xl font-extrabold text-white mb-3">
-    Control Visual. Respuesta Rápida. Cero Paros Ciegos.
+    Captura Única. Calidad Inmediata. Cero Recapturas.
   </h1>
 
   <p class="text-slate-300 text-sm max-w-lg mb-8">
-    Conectando la telemetría en piso con la toma de decisiones inmediata.
+    Integrando gatillos en piso con la generación automática de 8D, Ishikawa y control visual en tiempo real.
   </p>
 
   <div class="card-clean p-4 max-w-md w-full text-left">
     <div class="text-xs font-mono text-cyan-400 mb-1">ESTADO DEL MVP:</div>
     <div class="text-xs text-slate-300 mb-3 space-y-1">
-      <div>✔ Arquitectura Master-Slave funcional</div>
-      <div>✔ Integración MQTT, OPC UA y WebSockets</div>
-      <div>✔ Tableros Andon y telemetría en tiempo real</div>
+      <div>✔ Captura digital única de evidencias y contexto de falla</div>
+      <div>✔ Alimentación automática de formatos 8D, Ishikawa y 5 Porqués</div>
+      <div>✔ Gatillos IoT en máquina/molde y dashboards OEE derivados</div>
     </div>
     <div class="text-center font-bold text-sm text-white pt-2 border-t border-slate-800">
       ¿Preguntas o comentarios?
