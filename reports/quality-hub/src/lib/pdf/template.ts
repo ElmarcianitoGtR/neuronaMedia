@@ -132,6 +132,8 @@ function renderFishboneSvgForLetter(ishikawa: IshikawaFactor[], problema: string
   return svg;
 }
 
+import { logoColorB64, logoBnB64 } from '../logos';
+
 export function renderQualityReportHtml(
   incidente: Incidencia,
   options: { autoDownload?: boolean; includeClientScript?: boolean } = {}
@@ -163,7 +165,7 @@ export function renderQualityReportHtml(
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Reporte 8D - ${incidente.id} - Mitsubishi Motors Quality Challenge</title>
+  <title>Reporte 8D - ${incidente.id} - Neurona y Media Quality Challenge</title>
   ${includeClientScript ? '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>' : ''}
   <style>
     /* CONFIGURACIÓN ESTRICTA PARA HOJAS TAMAÑO CARTA (8.5 x 11 pulgadas) */
@@ -225,7 +227,22 @@ export function renderQualityReportHtml(
       page-break-before: always;
     }
 
-    /* ENCABEZADO CORPORATIVO MITSUBISHI */
+    /* MARCA DE AGUA */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      opacity: 0.05;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .content-front {
+      position: relative;
+      z-index: 10;
+    }
+    /* ENCABEZADO CORPORATIVO */
     .top-header {
       display: table;
       width: 100%;
@@ -527,7 +544,7 @@ export function renderQualityReportHtml(
   <div class="no-print" style="position: sticky; top: 0; z-index: 1000; background: #0f172a; color: #ffffff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); border-bottom: 2px solid #0d9488;">
     <div style="display: flex; align-items: center; gap: 10px;">
       <span style="display: inline-block; width: 10px; height: 10px; background: #10b981; border-radius: 50%;"></span>
-      <span style="font-size: 13px; font-weight: bold; letter-spacing: 0.5px;">MITSUBISHI QUALITY ASSURANCE // REPORTE 8D</span>
+      <span style="font-size: 13px; font-weight: bold; letter-spacing: 0.5px;">NEURONA Y MEDIA QUALITY ASSURANCE // REPORTE 8D</span>
       <span id="dl-status" style="font-size: 12px; color: #5eead4; margin-left: 8px;">
         ${autoDownload ? 'Descargando documento PDF tamaño Carta automáticamente...' : 'Formato Carta (Letter 8.5" × 11") listo para descarga'}
       </span>
@@ -548,20 +565,18 @@ export function renderQualityReportHtml(
     <!-- HOJA 1 (TAMAÑO CARTA): RESUMEN EJECUTIVO & METODOLOGÍA 8D -->
     <!-- ======================================================== -->
     <div class="page-sheet">
+      <img src="${logoBnB64}" class="watermark" />
+      <div class="content-front">
 
       <!-- TOP HEADER CON LOGO OFICIAL DE LOS TRES DIAMANTES -->
       <div class="top-header">
         <div class="brand-cell">
           <div class="logo-badge">
-            <!-- Logo Oficial Mitsubishi Three Diamonds (SVG Puro) -->
-            <svg viewBox="0 0 100 95" width="28" height="26">
-              <polygon points="50,10 65,36 50,62 35,36" fill="#dc2626"/>
-              <polygon points="50,62 80,62 95,88 65,88" fill="#dc2626"/>
-              <polygon points="50,62 35,88 5,88 20,62" fill="#dc2626"/>
-            </svg>
+            <!-- Logo Oficial Neurona y Media Three Diamonds (SVG Puro) -->
+            <img src="${logoColorB64}" style="width: 32px; height: auto;" />
           </div>
           <div class="corp-name">
-            <div class="corp-title">MITSUBISHI MOTORS // QUALITY HUB</div>
+            <div class="corp-title">NEURONA Y MEDIA // QUALITY HUB</div>
             <div class="corp-subtitle">INFORME OFICIAL DE RESOLUCIÓN 8D & CONTROL DE CALIDAD</div>
           </div>
         </div>
@@ -594,7 +609,7 @@ export function renderQualityReportHtml(
         </div>
         <div class="meta-item">
           <div class="meta-label">Código de Trazabilidad</div>
-          <div class="meta-value" style="font-family: monospace;">QA-8D-${incidente.id.replace('INC-', '')}-MITSUBISHI</div>
+          <div class="meta-value" style="font-family: monospace;">QA-8D-${incidente.id.replace('INC-', '')}-NEURONAYMEDIA</div>
         </div>
       </div>
 
@@ -690,8 +705,9 @@ export function renderQualityReportHtml(
       </table>
       ` : ''}
 
-      <div style="text-align: right; font-size: 7.5px; color: #94a3b8; margin-top: 6px;">
-        Página 1 de 2 • Mitsubishi Motors Quality Hub • Reporte Tamaño Carta
+      </div>
+      <div style="text-align: right; font-size: 7.5px; color: #94a3b8; margin-top: 6px; position:relative; z-index:10;">
+        Página 1 de 2 • Neurona y Media Quality Hub • Reporte Tamaño Carta
       </div>
     </div>
 
@@ -699,19 +715,17 @@ export function renderQualityReportHtml(
     <!-- HOJA 2 (TAMAÑO CARTA): DIAGRAMA ISHIKAWA, 5 PORQUÉS Y PLAN DE MITIGACIÓN -->
     <!-- ========================================================================= -->
     <div class="page-sheet page-break">
+      <img src="${logoBnB64}" class="watermark" />
+      <div class="content-front">
 
       <!-- ENCABEZADO DE SEGUNDA HOJA -->
       <div class="top-header" style="padding-bottom: 5px; margin-bottom: 8px;">
         <div class="brand-cell">
           <div class="logo-badge">
-            <svg viewBox="0 0 100 95" width="22" height="20">
-              <polygon points="50,10 65,36 50,62 35,36" fill="#dc2626"/>
-              <polygon points="50,62 80,62 95,88 65,88" fill="#dc2626"/>
-              <polygon points="50,62 35,88 5,88 20,62" fill="#dc2626"/>
-            </svg>
+            <img src="${logoColorB64}" style="width: 26px; height: auto;" />
           </div>
           <div class="corp-name">
-            <div class="corp-title" style="font-size: 11px;">MITSUBISHI MOTORS // DIAGNÓSTICO PROFUNDO & MITIGACIÓN</div>
+            <div class="corp-title" style="font-size: 11px;">NEURONA Y MEDIA // DIAGNÓSTICO PROFUNDO & MITIGACIÓN</div>
             <div class="corp-subtitle" style="font-size: 7.5px;">ANÁLISIS CAUSAL (ISHIKAWA 6M & 5 PORQUÉS) • FOLIO ${incidente.id}</div>
           </div>
         </div>
@@ -781,7 +795,7 @@ export function renderQualityReportHtml(
             <div class="sig-line">
               ${incidente.validadoPor || 'ING. AUDITOR DE CALIDAD RESPONSABLE'}
             </div>
-            <div class="sig-meta">Auditor de Calidad en Planta // Mitsubishi Motors</div>
+            <div class="sig-meta">Auditor de Calidad en Planta // Neurona y Media</div>
             <div class="sig-meta">Fecha de Validación: ${incidente.fechaValidacion ? new Date(incidente.fechaValidacion).toLocaleDateString('es-MX') : new Date().toLocaleDateString('es-MX')}</div>
           </div>
           <div class="cert-col">
@@ -789,13 +803,14 @@ export function renderQualityReportHtml(
               GERENCIA DE INGENIERÍA DE PROCESOS Y MANUFACTURA
             </div>
             <div class="sig-meta">Aprobación Final y Cierre de No Conformidad</div>
-            <div class="sig-meta">Sello de Conformidad: QA-MITSUBISHI-8D-VERIFIED</div>
+            <div class="sig-meta">Sello de Conformidad: QA-NEURONAYMEDIA-8D-VERIFIED</div>
           </div>
         </div>
       </div>
 
-      <div style="display: table; width: 100%; font-size: 7.5px; color: #94a3b8; margin-top: 8px;">
-        <div style="display: table-cell;">MITSUBISHI QUALITY ASSURANCE SYSTEM • DOCUMENTO OFICIAL CONTROLADO</div>
+      </div>
+      <div style="display: table; width: 100%; font-size: 7.5px; color: #94a3b8; margin-top: 8px; position:relative; z-index:10;">
+        <div style="display: table-cell;">NEURONA Y MEDIA QUALITY ASSURANCE SYSTEM • DOCUMENTO OFICIAL CONTROLADO</div>
         <div style="display: table-cell; text-align: right;">Página 2 de 2 • Tamaño Carta (Letter)</div>
       </div>
 

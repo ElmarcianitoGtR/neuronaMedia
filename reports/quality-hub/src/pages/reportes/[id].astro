@@ -27,7 +27,8 @@ const evidencias = analisis?.evidencias || [];
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Auditoría 8D - {incidente.id} // Mitsubishi Quality Hub</title>
+  <title>Auditoría 8D - {incidente.id} // Neurona y Media Quality Hub</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body class="min-h-screen flex flex-col bg-[#111827] text-slate-200 font-sans selection:bg-teal-600 selection:text-white">
 
@@ -134,7 +135,7 @@ const evidencias = analisis?.evidencias || [];
               <input
                 type="text"
                 id="auditorInput"
-                value={incidente.validadoPor || 'Ing. Auditor de Planta Mitsubishi'}
+                value={incidente.validadoPor || 'Ing. Auditor de Planta Neurona y Media'}
                 class="w-full bg-[#111827] border border-slate-700 text-slate-200 px-3 py-2 text-sm rounded-sm focus:outline-none focus:border-teal-500"
               />
             </div>
@@ -349,7 +350,7 @@ const evidencias = analisis?.evidencias || [];
   <!-- SOLID INDUSTRIAL FOOTER -->
   <footer class="bg-[#1f2937] border-t border-slate-700 p-4 text-center text-xs text-slate-400">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-      <span class="uppercase font-semibold tracking-wider">Mitsubishi Motors Quality Hub • 8D Assurance System</span>
+      <span class="uppercase font-semibold tracking-wider">Neurona y Media Quality Hub • 8D Assurance System</span>
       <span>VALIDACIÓN DE AUDITOR • NODOS EN MEMGRAPH • GOTENBERG EXPORT</span>
     </div>
   </footer>

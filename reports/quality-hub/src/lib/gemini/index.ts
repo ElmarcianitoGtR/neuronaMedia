@@ -123,7 +123,7 @@ function createDeterministicAnalysis(input: AnalisisInput): AnalisisCalidad {
     resumen: `Incidencia detectada en ${area}: ${desc}. Se aplica metodología estándar 8D con espina de pescado (6M) y 5 Porqués para mitigar defectos en producción.`,
     severidad: ['Baja', 'Media', 'Alta', 'Crítica'].includes(severidad) ? severidad : 'Alta',
     disciplinas8d: {
-      d1_equipo: ['Supervisor de Turno', 'Ingeniero de Calidad Mitsubishi', 'Técnico de Mantenimiento Mecatrónico'],
+      d1_equipo: ['Supervisor de Turno', 'Ingeniero de Calidad Neurona y Media', 'Técnico de Mantenimiento Mecatrónico'],
       d2_descripcion: `En el área ${area}, se detectó: ${desc}. Afecta los estándares de tolerancia y ensamble requeridos.`,
       d3_contencion: 'Detención preventiva de estación, segregación del lote de piezas y verificación dimensional al 100%.',
       d4_causaRaiz: `Desviación recurrente en parámetros operativos debido a ${desc.toLowerCase()}.`,
@@ -289,7 +289,7 @@ export async function runGeminiAnalysis(input: AnalisisInput): Promise<AnalisisC
   try {
     const ai = new GoogleGenAI({ apiKey });
     const prompt = `
-Eres un ingeniero experto en aseguramiento de calidad automotriz bajo la metodología de Mitsubishi Motors.
+Eres un ingeniero experto en aseguramiento de calidad automotriz bajo la metodología de Neurona y Media.
 Analiza la siguiente incidencia de planta y elabora un diagnóstico integral en una sola respuesta estructurada JSON que cubra simultáneamente:
 1. Las 8 Disciplinas (8D) completas (D1 a D8).
 2. Diagrama de Ishikawa con análisis en las 6M (Mano de Obra, Maquinaria, Materiales, Método, Medio Ambiente, Medición).
