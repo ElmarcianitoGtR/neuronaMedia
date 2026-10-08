@@ -33,13 +33,21 @@ services:
       - DB_NAME=${POSTGRES_DB:-ms_database}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
-      - FRONTEND_URL=http://localhost:8080
+      - FRONTEND_URL=https://${DOMAIN_NAME}
     ports:
-      - "3000:3000"
       - "4000:4000/udp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=cloudflare"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
     depends_on:
       - master-slave-db
     restart: always
+    networks:
+      - default
+      - traefik-net
 
   master-slave-db:
     image: postgres:15-alpine
@@ -58,12 +66,19 @@ services:
       dockerfile: master-slave/frontend/Dockerfile
       target: prod
       args:
-        - VITE_BACKEND_URL=http://localhost:3000
-        - VITE_REPORTS_URL=http://localhost:4321
+        - VITE_BACKEND_URL=https://api.${DOMAIN_NAME}
+        - VITE_REPORTS_URL=https://reports.${DOMAIN_NAME}
     container_name: ms-frontend-prod
-    ports:
-      - "8080:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=cloudflare"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
     restart: always
+    networks:
+      - default
+      - traefik-net
 
   quality-hub:
     build:
@@ -76,12 +91,23 @@ services:
       - PDF_RENDERER_URL=http://pdf-renderer:3000
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - GRAPH_DB_URI=bolt://graph-db:7687
-    ports:
-      - "4321:4321"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quality-hub.rule=Host(`reports.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.quality-hub.entrypoints=websecure"
+      - "traefik.http.routers.quality-hub.tls.certresolver=cloudflare"
+      - "traefik.http.services.quality-hub.loadbalancer.server.port=4321"
     depends_on:
       - graph-db
       - pdf-renderer
     restart: always
+    networks:
+      - default
+      - traefik-net
+
+networks:
+  traefik-net:
+    external: true
 
 volumes:
   memgraph-data:
